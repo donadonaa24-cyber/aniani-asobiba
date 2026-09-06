@@ -17,6 +17,11 @@
 - `index.html`
 - `aniani.css`
 - `aniani.js`
+- `galaxy.css`（宇宙ライブラリの表示）
+- `galaxy.js`（ゲームソフトの周回・選択操作）
+- `images/galaxy-library.png`（生成した銀河背景）
+- `images/tumikomi-loading.png`（翠路ロジスティクスの紹介画像）
 - `assets/images/card-back.png`
 - `assets/images/events/monomono-kokan.png`
 - `assets/images/cards/*.png`（材料カード15種）
+- `images/*.png`（推し駒battle用画像）

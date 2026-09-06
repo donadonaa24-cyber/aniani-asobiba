@@ -107,6 +107,11 @@
     const miniTabPanels = miniTabsRoot
         ? Array.from(miniTabsRoot.querySelectorAll("[data-mini-panel]"))
         : [];
+    const virtualPadButtons = Array.from(document.querySelectorAll("[data-pad-dir]"));
+    const miniGameSection = document.getElementById("mini-game");
+    const modalTriggers = Array.from(document.querySelectorAll("[data-modal-target]"));
+    const modalSections = Array.from(document.querySelectorAll(".modal-section"));
+    let lastModalTrigger = null;
 
     function loadArray(key, fallback) {
         const raw = localStorage.getItem(key);
@@ -199,6 +204,8 @@
             return;
         }
 
+        miniTabsRoot.dataset.activeMini = tabKey;
+
         miniTabButtons.forEach((button) => {
             const active = button.dataset.miniTab === tabKey;
             button.classList.toggle("is-active", active);
@@ -234,6 +241,49 @@
     function getActiveMiniGameKey() {
         const active = miniTabButtons.find((button) => button.classList.contains("is-active"));
         return String(active?.dataset.miniTab || "");
+    }
+
+    function closeOpenModal() {
+        const openModal = modalSections.find((section) => section.classList.contains("is-open"));
+        if (!openModal) {
+            return;
+        }
+
+        openModal.classList.remove("is-open");
+        openModal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+
+        if (lastModalTrigger) {
+            lastModalTrigger.focus();
+        }
+    }
+
+    function openModalById(id, trigger = null) {
+        const target = document.getElementById(id);
+        if (!(target instanceof HTMLElement) || !target.classList.contains("modal-section")) {
+            return;
+        }
+
+        modalSections.forEach((section) => {
+            const active = section === target;
+            section.classList.toggle("is-open", active);
+            section.setAttribute("aria-hidden", active ? "false" : "true");
+        });
+
+        lastModalTrigger = trigger;
+        document.body.classList.add("modal-open");
+
+        const closeButton = target.querySelector("[data-modal-close]");
+        if (closeButton instanceof HTMLElement) {
+            closeButton.focus();
+        }
+
+        if (id === "mini-game") {
+            const activeKey = getActiveMiniGameKey() || "ttt";
+            window.setTimeout(() => {
+                setActiveMiniGame(activeKey);
+            }, 0);
+        }
     }
 
     let articles = loadArray(STORAGE.articles, defaultArticles);
@@ -2346,75 +2396,138 @@
         });
     }
 
-    window.addEventListener("keydown", (event) => {
+    function getDirectionFromKey(eventKey) {
+        if (eventKey === "ArrowUp") {
+            return "up";
+        }
+        if (eventKey === "ArrowRight") {
+            return "right";
+        }
+        if (eventKey === "ArrowLeft") {
+            return "left";
+        }
+        if (eventKey === "ArrowDown") {
+            return "down";
+        }
+
+        const normalized = eventKey.toLowerCase();
+        if (normalized === "w") {
+            return "up";
+        }
+        if (normalized === "d") {
+            return "right";
+        }
+        if (normalized === "s") {
+            return "down";
+        }
+        if (normalized === "a") {
+            return "left";
+        }
+
+        return "";
+    }
+
+    function moveBreakoutByDirection(direction) {
+        if (!breakoutCanvasEl || (direction !== "left" && direction !== "right")) {
+            return false;
+        }
+
+        const step = 30;
+        const next = breakoutState.paddleX + (direction === "left" ? -step : step);
+        breakoutState.paddleX = Math.max(
+            0,
+            Math.min(breakoutCanvasEl.width - BREAKOUT_PADDLE_WIDTH, next)
+        );
+        drawBreakout();
+        return true;
+    }
+
+    function handleDirectionalInput(direction) {
         const activeKey = getActiveMiniGameKey();
 
         if (activeKey === "snake" && snakeState.running) {
-            if (event.key === "ArrowUp") {
+            if (direction === "up") {
                 setSnakeDirection(0, -1);
-                event.preventDefault();
-                return;
+                return true;
             }
-            if (event.key === "ArrowLeft") {
+            if (direction === "left") {
                 setSnakeDirection(-1, 0);
-                event.preventDefault();
-                return;
+                return true;
             }
-            if (event.key === "ArrowDown") {
+            if (direction === "down") {
                 setSnakeDirection(0, 1);
-                event.preventDefault();
-                return;
+                return true;
             }
-            if (event.key === "ArrowRight") {
+            if (direction === "right") {
                 setSnakeDirection(1, 0);
-                event.preventDefault();
-                return;
+                return true;
             }
         }
 
+        if (activeKey === "breakout") {
+            return moveBreakoutByDirection(direction);
+        }
+
         if (activeKey === "tetris" && tetrisState.running) {
-            if (event.key === "ArrowLeft") {
+            if (direction === "left") {
                 moveTetris(-1, 0);
                 drawTetris();
-                event.preventDefault();
-                return;
+                return true;
             }
-            if (event.key === "ArrowRight") {
+            if (direction === "right") {
                 moveTetris(1, 0);
                 drawTetris();
-                event.preventDefault();
-                return;
+                return true;
             }
-            if (event.key === "ArrowUp") {
+            if (direction === "up") {
                 rotateTetris();
-                event.preventDefault();
-                return;
+                return true;
             }
-            if (event.key === "ArrowDown") {
+            if (direction === "down") {
                 tetrisTick();
-                event.preventDefault();
-                return;
+                return true;
             }
         }
 
         if (activeKey !== "drop" || !dropState.running || !dropState.current) {
+            return false;
+        }
+
+        if (direction === "left") {
+            moveDropPiece(-1, 0);
+            renderDropBoard();
+            return true;
+        }
+        if (direction === "right") {
+            moveDropPiece(1, 0);
+            renderDropBoard();
+            return true;
+        }
+        if (direction === "down") {
+            dropTick();
+            return true;
+        }
+
+        return false;
+    }
+
+    virtualPadButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            handleDirectionalInput(button.dataset.padDir || "");
+        });
+    });
+
+    window.addEventListener("keydown", (event) => {
+        const target = event.target;
+        const isEditingText = target instanceof HTMLInputElement ||
+            target instanceof HTMLTextAreaElement ||
+            target instanceof HTMLSelectElement;
+        if (isEditingText || !miniGameSection?.classList.contains("is-open")) {
             return;
         }
 
-        if (event.key === "ArrowLeft") {
-            moveDropPiece(-1, 0);
-            renderDropBoard();
-            event.preventDefault();
-            return;
-        }
-        if (event.key === "ArrowRight") {
-            moveDropPiece(1, 0);
-            renderDropBoard();
-            event.preventDefault();
-            return;
-        }
-        if (event.key === "ArrowDown") {
-            dropTick();
+        const direction = getDirectionFromKey(event.key);
+        if (direction && handleDirectionalInput(direction)) {
             event.preventDefault();
         }
     });
@@ -2439,6 +2552,34 @@
             setActiveMiniGame(key);
         });
     }
+
+    modalTriggers.forEach((trigger) => {
+        trigger.addEventListener("click", () => {
+            const id = trigger.dataset.modalTarget;
+            if (!id) {
+                return;
+            }
+            openModalById(id, trigger);
+        });
+    });
+
+    modalSections.forEach((section) => {
+        section.addEventListener("click", (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) {
+                return;
+            }
+            if (target === section || target.closest("[data-modal-close]")) {
+                closeOpenModal();
+            }
+        });
+    });
+
+    window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            closeOpenModal();
+        }
+    });
 
     updateAdminUI();
     renderArticles();

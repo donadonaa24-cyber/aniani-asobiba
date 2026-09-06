@@ -1,19 +1,30 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>あにあにの遊び場</title>
-    <meta name="description" content="インディーゲームのポータル。Battle a la carte / 今後制作予定のゲームへ移動し、更新記事とコメントを確認できます。">
+    <meta name="description" content="あにあに制作ゲームのポータル。Battle a la carte / 翠路ロジスティクス / 推し駒battle / ミニゲーム / 更新記事をモーダルで確認できます。">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="aniani.css?v=20260429t1">
+    <link rel="stylesheet" href="aniani.css?v=20260907g1">
+    <link rel="stylesheet" href="galaxy.css?v=20260907g1">
 </head>
 <body>
     <div class="bg-glow bg-glow-a"></div>
     <div class="bg-glow bg-glow-b"></div>
     <div class="bg-grid"></div>
+    <div class="meteor-field meteor-field-left" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <div class="meteor-field meteor-field-right" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
 
     <header class="site-header">
         <div class="header-inner">
@@ -22,35 +33,80 @@
                 <h1>あにあにの遊び場</h1>
             </a>
             <nav class="header-nav">
-                <a href="#games">ゲーム一覧</a>
-                <a href="#articles">更新記事</a>
-                <a href="#comments">コメント</a>
-                <a href="#mini-game">ミニゲーム</a>
-                <a href="#links">リンク</a>
+                <button type="button" data-modal-target="games">ゲーム一覧</button>
+                <button type="button" data-modal-target="roadmap">制作予定</button>
+                <button type="button" data-modal-target="articles">更新記事</button>
+                <button type="button" data-modal-target="comments">コメント</button>
+                <button type="button" data-modal-target="mini-game">ミニゲーム</button>
+                <button type="button" data-modal-target="links">リンク</button>
             </nav>
         </div>
     </header>
 
     <main id="top">
-        <section class="hero">
-            <div class="hero-inner">
-                <p class="hero-kicker">GAME NAVIGATION HUB</p>
-                <h2>ゲームページと更新情報を<br>まとめて確認できるポータル</h2>
-                <p class="hero-lead">
-                    公開中ゲーム、制作中プロジェクト、今後の予定を1ページに集約。
-                    更新記事へのリアクションや、簡単なミニゲームも楽しめます。
-                </p>
-                <div class="hero-actions">
-                    <a class="btn btn-primary" href="#games">ゲームをみる</a>
-                    <a class="btn btn-ghost" href="#articles">更新記事へ</a>
+        <section class="hero galaxy-home" aria-label="ゲームライブラリ">
+            <div class="galaxy-intro">
+                <p class="hero-kicker">ANIANI / THE ORBITAL COLLECTION</p>
+                <h2>それはまるで<br>宇宙のように。</h2>
+                <p>まだ知らない、遊びの星へ。</p>
+                <button class="about-link" type="button" data-modal-target="about">この宇宙について ↗</button>
+            </div>
+            <div class="orbit-stage" id="orbit-stage" role="region" aria-label="円軌道を巡るゲームソフト">
+                <div class="orbit-ring" aria-hidden="true"></div>
+                <div class="orbit-core" aria-hidden="true"><span>ANIANI</span><small>PLAY UNIVERSE</small></div>
+                <button class="game-case" type="button" data-orbit="0" data-modal-target="battle-detail" data-title="Battle a la carte" data-status="公開中" data-description="料理とバトルが交差する、あなただけの一皿。" style="--case-accent:#ffc979">
+                    <span class="case-spine" aria-hidden="true">ANIANI ORIGINAL</span>
+                    <span class="case-face"><span class="case-brand">ANIANI ORIGINAL / 01</span><img src="assets/images/events/monomono-kokan.png" alt=""><span class="case-caption"><small>COOKING × BATTLE</small><strong>Battle<br>a la carte</strong><em>公開中</em></span></span>
+                </button>
+                <button class="game-case" type="button" data-orbit="1" data-modal-target="tumikomi" data-title="翠路ロジスティクス" data-status="公開中・制作途中" data-description="積む、守る、届ける。荷物の先の、未来まで。" style="--case-accent:#87e6ce">
+                    <span class="case-spine" aria-hidden="true">SUIRO LOGISTICS</span>
+                    <span class="case-face"><span class="case-brand">ANIANI ORIGINAL / 02</span><img src="images/tumikomi-loading.png" alt=""><span class="case-caption"><small>LOGISTICS SIMULATION</small><strong>翠路<br>ロジスティクス</strong><em>公開中・制作途中</em></span></span>
+                </button>
+                <button class="game-case" type="button" data-orbit="2" data-modal-target="oshi-detail" data-title="推し駒battle" data-status="近日公開予定" data-description="あなたの推しが、次の一手になる。新しい星を制作中。" style="--case-accent:#bdb9ff">
+                    <span class="case-spine" aria-hidden="true">OSHI KOMA BATTLE</span>
+                    <span class="case-face"><span class="case-brand">ANIANI ORIGINAL / 03</span><img src="images/yui-cat-bishop.png" alt=""><span class="case-caption"><small>COMING SOON</small><strong>推し駒<br>battle</strong><em>近日公開予定</em></span></span>
+                </button>
+                <button class="game-case" type="button" data-orbit="3" data-modal-target="roadmap" data-title="混ぜるな危険" data-status="制作予定" data-description="まだ見ぬ遊びが、この宇宙のどこかで生まれる。" style="--case-accent:#c9e66b">
+                    <span class="case-spine" aria-hidden="true">NEXT PROJECT</span>
+                    <span class="case-face mystery-cover"><span class="case-brand">ANIANI ORIGINAL / 04</span><span class="mystery-symbol" aria-hidden="true">×</span><span class="case-caption"><small>UNKNOWN REACTION</small><strong>混ぜるな<br>危険</strong><em>制作予定</em></span></span>
+                </button>
+            </div>
+            <div class="selection-panel">
+                <p class="selection-status" id="orbit-status">01 / 04 · 公開中</p>
+                <h3 id="orbit-title">Battle a la carte</h3>
+                <p id="orbit-description">料理とバトルが交差する、あなただけの一皿。</p>
+                <div class="orbit-controls">
+                    <button type="button" id="orbit-prev" aria-label="前の作品">←</button>
+                    <button type="button" id="orbit-open">作品をひらく ↗</button>
+                    <button type="button" id="orbit-next" aria-label="次の作品">→</button>
+                    <button type="button" id="orbit-pause" aria-pressed="false">周回を停止</button>
                 </div>
+                <p class="orbit-hint">← → で選択 / Enter でひらく / スワイプ対応</p>
+            </div>
+            <nav class="console-dock" aria-label="ポータルメニュー">
+                <button type="button" data-modal-target="games"><span aria-hidden="true">▣</span>ゲーム一覧</button>
+                <button type="button" data-modal-target="mini-game"><span aria-hidden="true">✣</span>ミニゲーム</button>
+                <button type="button" data-modal-target="roadmap"><span aria-hidden="true">◇</span>制作予定</button>
+                <button type="button" data-modal-target="articles"><span aria-hidden="true">≡</span>更新記事</button>
+                <button type="button" data-modal-target="comments"><span aria-hidden="true">○</span>コメント</button>
+                <button type="button" data-modal-target="links"><span aria-hidden="true">↗</span>リンク</button>
+            </nav>
+        </section>
+        <section id="about" class="section modal-section" aria-hidden="true">
+            <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="about-title">
+                <button class="modal-close" type="button" data-modal-close aria-label="閉じる">×</button>
+                <div class="section-heading"><p class="section-label">ABOUT THIS UNIVERSE</p><h3 id="about-title">それはまるで宇宙のように</h3></div>
+                <p>広大な宇宙に浮かぶ星を探すように。</p><p>私の作品を見つけてくれてありがとう。</p>
+                <p>私の作品はこのネットの広大な宇宙にひっそりと存在します。</p>
+                <p>一つ一つ小さくても流れ星のように一瞬でも存在したという形を残します。あにあにをどうぞよろしくね</p>
             </div>
         </section>
-
-        <section id="games" class="section">
+        <section id="games" class="section modal-section" aria-hidden="true">
+            <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="games-title">
+            <button class="modal-close" type="button" data-modal-close aria-label="閉じる">×</button>
             <div class="section-heading">
                 <p class="section-label">GAMES</p>
-                <h3>ゲーム一覧ポータル</h3>
+                <h3 id="games-title">ゲーム一覧ポータル</h3>
             </div>
 
             <div class="game-grid">
@@ -68,21 +124,62 @@
                     </div>
                 </article>
 
-                <article class="game-card future">
-                    <div class="game-status">予定</div>
-                    <h4>次回作（仮）</h4>
-                    <p>今後制作する新作ゲームをここに順次追加します。</p>
+                <article class="game-card active">
+                    <div class="game-status">公開中・制作途中</div>
+                    <a class="game-visual-link" href="https://donadonaa24-cyber.github.io/tumikomi/" target="_blank" rel="noopener noreferrer">
+                        <img class="game-visual" src="images/tumikomi-loading.png" alt="フォークリフトでトラックに荷物を積み込む場面" loading="lazy">
+                    </a>
+                    <h4>翠路ロジスティクス</h4>
+                    <p>フォークリフトで荷物を運び、重さやバランスを考えてトラックに積み込もう。未完成の制作途中版を公開しています。</p>
                     <div class="game-actions">
-                        <button class="btn btn-mini btn-disabled" type="button" disabled>準備中</button>
+                        <a class="btn btn-mini btn-primary" href="https://donadonaa24-cyber.github.io/tumikomi/" target="_blank" rel="noopener noreferrer">ゲームページへ</a>
+                        <button class="btn btn-mini btn-ghost" type="button" data-modal-target="tumikomi">詳しく見る</button>
+                    </div>
+                </article>
+
+                <article class="game-card coming-soon">
+                    <div class="game-status">近日公開予定</div>
+                    <div class="oshi-gallery" aria-label="推し駒battle イメージ">
+                        <img src="images/yui-cat-bishop.png" alt="推し駒battle キャラクター1" loading="lazy">
+                        <img src="images/ren-dog-rook.png" alt="推し駒battle キャラクター2" loading="lazy">
+                        <img src="images/enemy-bishop-deer.png" alt="推し駒battle キャラクター3" loading="lazy">
+                        <img src="images/enemy-silver-wolf.png" alt="推し駒battle キャラクター4" loading="lazy">
+                    </div>
+                    <h4>推し駒battle</h4>
+                    <p>現在進行形で制作中の新作ゲームです。公開準備が整いしだいゲームページを追加します。</p>
+                    <div class="game-actions">
+                        <button class="btn btn-mini btn-disabled" type="button" disabled>近日公開予定</button>
                     </div>
                 </article>
             </div>
+            </div>
         </section>
 
-        <section id="comments" class="section">
+        <section id="tumikomi" class="section modal-section" aria-hidden="true">
+            <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="tumikomi-title">
+                <button class="modal-close" type="button" data-modal-close aria-label="閉じる">×</button>
+                <div class="section-heading">
+                    <p class="section-label">PUBLIC STAR / 公開中・制作途中</p>
+                    <h3 id="tumikomi-title">翠路ロジスティクス</h3><p>積む、守る、届ける。</p>
+                </div>
+                <img class="tumikomi-detail-image" src="images/tumikomi-loading.png" alt="緑のトラックへパレットを積み込む場面" loading="lazy">
+                <p>積む。守る。届け切れ！ 架空の運送会社「翠路ロジスティクス」の安全アカデミーを舞台にしたブラウザゲームです。</p>
+                <p>フォークリフトでパレットを運び、トラックに積み付け。荷物の重さや重心を考えて配置し、コンパネ・発泡材・ベルトで固定して、発車前点検に挑戦しよう。</p>
+                <p>現在は未完成の制作途中版を公開しています。これからの更新もお楽しみに。</p>
+                <div class="game-actions">
+                    <a class="btn btn-primary" href="https://donadonaa24-cyber.github.io/tumikomi/" target="_blank" rel="noopener noreferrer">ゲームページへ</a>
+                    <a class="btn btn-ghost" href="https://donadonaa24-cyber.github.io/tumikomi/index.html?view=web" target="_blank" rel="noopener noreferrer">ウェブ版で遊ぶ</a>
+                    <a class="btn btn-ghost" href="https://donadonaa24-cyber.github.io/tumikomi/index.html?view=mobile" target="_blank" rel="noopener noreferrer">スマホ版で遊ぶ</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="comments" class="section modal-section" aria-hidden="true">
+            <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="comments-title">
+            <button class="modal-close" type="button" data-modal-close aria-label="閉じる">×</button>
             <div class="section-heading">
                 <p class="section-label">COMMENTS</p>
-                <h3>来訪者コメント</h3>
+                <h3 id="comments-title">来訪者コメント</h3>
             </div>
 
             <div class="comments-layout">
@@ -107,12 +204,15 @@
                     </form>
                 </article>
             </div>
+            </div>
         </section>
 
-        <section id="mini-game" class="section section-alt">
+        <section id="mini-game" class="section section-alt modal-section" aria-hidden="true">
+            <div class="modal-panel wide mini-modal-panel" role="dialog" aria-modal="true" aria-labelledby="mini-game-title">
+            <button class="modal-close" type="button" data-modal-close aria-label="閉じる">×</button>
             <div class="section-heading">
                 <p class="section-label">MINI GAME</p>
-                <h3>ミニゲームアーケード</h3>
+                <h3 id="mini-game-title">ミニゲームアーケード</h3>
             </div>
 
             <div id="mini-games-tabs" class="mini-games-tabs">
@@ -268,13 +368,44 @@
                     <button id="mini-tab-tetris" class="mini-game-tab" type="button" data-mini-tab="tetris" role="tab" aria-selected="false" aria-controls="mini-panel-tetris">簡単テトリス</button>
                     <button id="mini-tab-drop" class="mini-game-tab" type="button" data-mini-tab="drop" role="tab" aria-selected="false" aria-controls="mini-panel-drop">落ちものパズル</button>
                 </aside>
+
+                <div class="virtual-pad" aria-label="スマホ用仮想十字キー">
+                    <button class="virtual-pad-button virtual-pad-up" type="button" data-pad-dir="up" aria-label="上へ移動">W</button>
+                    <button class="virtual-pad-button virtual-pad-left" type="button" data-pad-dir="left" aria-label="左へ移動">A</button>
+                    <button class="virtual-pad-button virtual-pad-down" type="button" data-pad-dir="down" aria-label="下へ移動">S</button>
+                    <button class="virtual-pad-button virtual-pad-right" type="button" data-pad-dir="right" aria-label="右へ移動">D</button>
+                </div>
+            </div>
             </div>
         </section>
 
-        <section id="links" class="section">
+        <section id="roadmap" class="section modal-section" aria-hidden="true">
+            <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="roadmap-title">
+            <button class="modal-close" type="button" data-modal-close aria-label="閉じる">×</button>
+            <div class="section-heading">
+                <p class="section-label">NEXT WORKS</p>
+                <h3 id="roadmap-title">制作予定</h3>
+            </div>
+
+            <div class="roadmap-board">
+                <article class="roadmap-item">
+                    <h4>混ぜるな危険</h4>
+                    <p>混ぜるな危険の制作も予定しております。</p>
+                </article>
+                <article class="roadmap-item">
+                    <h4>ミニゲーム</h4>
+                    <p>ミニゲームも続々制作予定です。</p>
+                </article>
+            </div>
+            </div>
+        </section>
+
+        <section id="links" class="section modal-section" aria-hidden="true">
+            <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="links-title">
+            <button class="modal-close" type="button" data-modal-close aria-label="閉じる">×</button>
             <div class="section-heading">
                 <p class="section-label">LINKS</p>
-                <h3>外部リンク</h3>
+                <h3 id="links-title">外部リンク</h3>
             </div>
 
             <div class="social-grid">
@@ -291,12 +422,15 @@
                     <p>公式ホームページ</p>
                 </a>
             </div>
+            </div>
         </section>
 
-        <section id="articles" class="section section-alt">
+        <section id="articles" class="section section-alt modal-section" aria-hidden="true">
+            <div class="modal-panel wide" role="dialog" aria-modal="true" aria-labelledby="articles-title">
+            <button class="modal-close" type="button" data-modal-close aria-label="閉じる">×</button>
             <div class="section-heading">
                 <p class="section-label">ARTICLES</p>
-                <h3>更新記事ボード</h3>
+                <h3 id="articles-title">更新記事ボード</h3>
             </div>
 
             <div class="articles-layout">
@@ -339,7 +473,35 @@
                     </form>
                 </article>
             </div>
+            </div>
         </section>
+<section id="battle-detail" class="section modal-section" aria-hidden="true"><div class="modal-panel work-detail" role="dialog" aria-modal="true" aria-label="Battle a la carte"><button class="modal-close" type="button" data-modal-close aria-label="閉じる">×</button><article class="game-card active">
+                    <div class="game-status">公開中</div>
+                    <a class="game-visual-link" href="https://donadonaa24-cyber.github.io/battle-a-la-carte--/" title="Battle a la carte 公式トップへ" target="_blank" rel="noopener noreferrer">
+                        <img class="game-visual" src="assets/images/events/monomono-kokan.png" alt="Battle a la carte イラスト" loading="lazy">
+                    </a>
+                    <h4>Battle a la carte</h4>
+                    <p>公式トップ、Web版、モバイル版へ移動できます。</p>
+                    <div class="game-actions">
+                        <a class="btn btn-mini btn-primary" href="https://donadonaa24-cyber.github.io/battle-a-la-carte--/" target="_blank" rel="noopener noreferrer">公式トップ</a>
+                        <a class="btn btn-mini btn-ghost" href="https://donadonaa24-cyber.github.io/battle-a-la-carte--/web.html" target="_blank" rel="noopener noreferrer">Web版</a>
+                        <a class="btn btn-mini btn-ghost" href="https://donadonaa24-cyber.github.io/battle-a-la-carte--/mobile/mobile.html" target="_blank" rel="noopener noreferrer">モバイル版</a>
+                    </div>
+                </article></div></section>
+<section id="oshi-detail" class="section modal-section" aria-hidden="true"><div class="modal-panel work-detail" role="dialog" aria-modal="true" aria-label="推し駒battle"><button class="modal-close" type="button" data-modal-close aria-label="閉じる">×</button><article class="game-card coming-soon">
+                    <div class="game-status">近日公開予定</div>
+                    <div class="oshi-gallery" aria-label="推し駒battle イメージ">
+                        <img src="images/yui-cat-bishop.png" alt="推し駒battle キャラクター1" loading="lazy">
+                        <img src="images/ren-dog-rook.png" alt="推し駒battle キャラクター2" loading="lazy">
+                        <img src="images/enemy-bishop-deer.png" alt="推し駒battle キャラクター3" loading="lazy">
+                        <img src="images/enemy-silver-wolf.png" alt="推し駒battle キャラクター4" loading="lazy">
+                    </div>
+                    <h4>推し駒battle</h4>
+                    <p>現在進行形で制作中の新作ゲームです。公開準備が整いしだいゲームページを追加します。</p>
+                    <div class="game-actions">
+                        <button class="btn btn-mini btn-disabled" type="button" disabled>近日公開予定</button>
+                    </div>
+                </article></div></section>
     </main>
 
     <footer class="site-footer">
@@ -347,6 +509,7 @@
         <a href="https://donadonaa24-cyber.github.io/battle-a-la-carte--/" target="_blank" rel="noopener noreferrer">Battle a la carte 公式ホームページへ</a>
     </footer>
 
-    <script src="aniani.js?v=20260429t1"></script>
+    <script src="aniani.js?v=20260503o3"></script>
+    <script src="galaxy.js?v=20260907g1"></script>
 </body>
 </html>

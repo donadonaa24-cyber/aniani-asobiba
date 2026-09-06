@@ -1,0 +1,91 @@
+/* The orbital home is isolated from the arcade and existing dialogs. */
+body { background: #02050d url('images/galaxy-library.png') center / cover fixed no-repeat; }
+body::before { content: ''; position: fixed; inset: 0; background: linear-gradient(180deg, #02061055, transparent 45%, #020610dd); pointer-events: none; }
+.bg-grid, .bg-glow { display: none; }
+.site-header { background: transparent; border: 0; backdrop-filter: none; }
+.header-inner { max-width: none; padding: 22px 4vw; }
+.brand-tag { font-size: 9px; letter-spacing: .32em; color: #a9bdcf; }
+.brand h1 { font-size: 20px; }
+.header-nav { display: none; }
+.site-footer { background: transparent; border: 0; backdrop-filter: none; font-size: 9px; padding: 4px; opacity: .6; }
+.site-footer a { display: none; }
+.galaxy-home { height: 100dvh; min-height: 0; padding: 0; position: relative; display: block; }
+.galaxy-intro { position: absolute; left: 5vw; top: 14%; z-index: 5; pointer-events: none; }
+.galaxy-intro .hero-kicker { font-size: 9px; letter-spacing: .3em; color: #a7c1d7; }
+.galaxy-intro h2 { font-size: clamp(26px, 3vw, 46px); line-height: 1.5; font-weight: 500; letter-spacing: .08em; }
+.galaxy-intro > p:not(.hero-kicker) { font-size: 12px; color: #b2c0ce; letter-spacing: .15em; }
+.about-link { pointer-events: auto; border: 0; background: none; color: #a4b8c9; padding: 10px 0; cursor: pointer; font-size: 11px; }
+.orbit-stage { position: absolute; inset: 18% 3% 25% 24%; touch-action: pan-y; }
+.orbit-ring { position: absolute; width: 82%; height: 52%; left: 9%; top: 33%; border: 1px solid #9dccea42; border-radius: 50%; box-shadow: 0 0 20px #68bbff18, inset 0 0 25px #68bbff12; transform: rotate(-8deg); pointer-events: none; }
+.orbit-ring::after { content: ''; position: absolute; inset: -12%; border: 1px solid #bde3ff12; border-radius: 50%; }
+.orbit-core { position: absolute; left: 50%; top: 54%; transform: translate(-50%,-50%); text-align: center; color: #daf3ff88; letter-spacing: .4em; pointer-events: none; }
+.orbit-core span { display: block; font-size: 15px; }
+.orbit-core small { font-size: 7px; }
+.game-case { position: absolute; left: 50%; top: 49%; width: clamp(125px, 12vw, 198px); aspect-ratio: 2 / 3; padding: 0; background: none; border: 0; color: white; cursor: pointer; transform: translate(-50%,-50%); transform-style: preserve-3d; will-change: transform; text-align: left; font-family: inherit; }
+.case-face { position: absolute; inset: 0; display: block; border-radius: 3px 7px 7px 3px; border: 1px solid #cfeaff65; overflow: hidden; background: #081321; box-shadow: 8px 16px 25px #0009, inset 0 0 0 4px #ffffff0c; }
+.case-face::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, #fff2, transparent 30%, transparent 65%, #fff1); pointer-events: none; }
+.case-face img { position: absolute; inset: 8% 0 0; width: 100%; height: 92%; object-fit: cover; }
+.case-brand { position: absolute; top: 0; left: 0; right: 0; height: 8%; padding: 5px 8px; font: 7px Georgia, serif; letter-spacing: .12em; background: #101c29; z-index: 1; }
+.case-caption { position: absolute; inset: 40% 0 0; padding: 30% 10px 12px; display: flex; flex-direction: column; justify-content: end; background: linear-gradient(transparent, #03101deb 52%, #020611); }
+.case-caption small { color: var(--case-accent); font-size: 7px; letter-spacing: .12em; }
+.case-caption strong { font-family: 'Shippori Mincho', serif; font-size: clamp(17px, 1.7vw, 25px); line-height: 1.15; margin: 6px 0 9px; }
+.case-caption em { font-size: 8px; font-style: normal; color: #d1deea; }
+.case-spine { position: absolute; width: 12px; height: 100%; left: -11px; top: 1px; background: linear-gradient(90deg,#020509,#3a4b5c,#122332); writing-mode: vertical-rl; font-size: 6px; letter-spacing: .18em; text-align: center; border: 1px solid #adc3de55; transform: skewY(-15deg); }
+.game-case.is-selected .case-face { border-color: var(--case-accent); box-shadow: 0 0 28px color-mix(in srgb, var(--case-accent) 25%, transparent), 8px 20px 30px #000a; }
+.game-case:focus-visible { outline: 2px solid white; outline-offset: 10px; }
+.mystery-cover { background: radial-gradient(ellipse at 50% 30%, #5c6b2c, #0a1414 60%); }
+.mystery-symbol { position: absolute; top: 12%; left: 0; right: 0; text-align: center; font-size: 95px; font-weight: 400; color: #d6ed8a; text-shadow: 0 0 30px #c3e64a66; }
+.selection-panel { position: absolute; left: 5vw; bottom: 15%; max-width: 48%; z-index: 6; }
+.selection-status { font-size: 9px; letter-spacing: .2em; color: #a2d6ec; }
+.selection-panel h3 { font-family: 'Shippori Mincho', serif; font-size: clamp(22px, 2.5vw, 34px); margin: 8px 0; }
+#orbit-description { color: #a7bac9; font-size: 12px; margin: 0 0 16px; }
+.orbit-controls { display: flex; gap: 8px; }
+.orbit-controls button { border: 1px solid #a8d8ef40; background: #071221bb; color: #e6f6ff; border-radius: 4px; padding: 10px 14px; cursor: pointer; font: inherit; font-size: 11px; }
+.orbit-controls #orbit-open { background: #d9edf2; color: #0a2533; }
+.orbit-controls button:hover, .console-dock button:hover { background: #30536b; color: #fff; }
+.orbit-hint { font-size: 9px; color: #8b9aab; }
+.console-dock { position: absolute; bottom: 4%; left: 5vw; right: 5vw; display: flex; justify-content: center; gap: clamp(8px, 4vw, 70px); border-top: 1px solid #beddf325; padding: 15px 0 0; z-index: 7; }
+.console-dock button { display: flex; align-items: center; gap: 8px; padding: 7px; border: 0; background: none; color: #b7c9d9; font: inherit; font-size: 11px; cursor: pointer; border-radius: 4px; }
+.console-dock button span { font-size: 22px; color: #e2f5ff; filter: drop-shadow(0 0 8px #9ddeff66); }
+.work-detail { width: min(640px,100%); }
+.modal-section { z-index: 50; }
+.meteor-field { z-index: 0; }
+.meteor-field-left span:nth-child(1) { animation-delay: 180s; }
+.meteor-field-right span:nth-child(1) { animation-delay: 360s; }
+.meteor-field-left span:nth-child(2) { animation-delay: 540s; }
+.meteor-field-right span:nth-child(2) { animation-delay: 720s; }
+@media (max-width: 700px) {
+    .header-inner { padding: 12px 5vw; }
+    .brand h1 { font-size: 16px; }
+    .brand-tag { font-size: 8px; }
+    .galaxy-intro { top: 11%; }
+    .galaxy-intro h2 { font-size: 24px; line-height: 1.3; }
+    .galaxy-intro h2 br { display: none; }
+    .galaxy-intro > p:not(.hero-kicker) { margin: 8px 0 0; font-size: 10px; }
+    .galaxy-intro .hero-kicker { font-size: 7px; margin-bottom: 6px; }
+    .about-link { font-size: 9px; padding: 6px 0; }
+    .orbit-stage { inset: 26% 0 40%; }
+    .game-case { width: clamp(105px, 28vw, 145px); }
+    .selection-panel { bottom: 16%; max-width: 90%; }
+    .selection-panel h3 { font-size: 22px; margin: 4px 0; }
+    #orbit-description { font-size: 10px; margin-bottom: 8px; }
+    .selection-status { margin: 0; font-size: 8px; }
+    .orbit-controls button { padding: 8px 11px; min-height: 36px; }
+    .orbit-hint { margin: 5px 0 0; font-size: 8px; }
+    .console-dock { bottom: 4%; gap: 0; justify-content: space-between; }
+    .console-dock button { flex-direction: column; gap: 3px; font-size: 8px; padding: 3px; }
+    .console-dock button span { font-size: 20px; }
+}
+@media (max-height: 560px) and (min-width: 701px) {
+    .galaxy-intro { top: 18%; }
+    .galaxy-intro h2 { font-size: 24px; }
+    .galaxy-intro > p, .about-link { display: none; }
+    .game-case { width: 115px; }
+    .selection-panel { bottom: 19%; }
+    .selection-panel h3 { font-size: 22px; }
+    .orbit-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .meteor-field { display: none; }
+    *, *::before, *::after { scroll-behavior: auto !important; }
+}
