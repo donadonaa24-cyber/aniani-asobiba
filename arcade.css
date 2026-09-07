@@ -1,0 +1,45 @@
+/* Keep navigation and controls visible; scroll only the active game's content. */
+#mini-game { padding: 10px; }
+#mini-game .mini-modal-panel { width: min(1180px,100%); height: calc(100dvh - 20px); max-height: none; padding: 14px; }
+#mini-game .section-heading { padding-right: 40px; }
+#mini-game .mini-games-tabs { grid-template-columns: minmax(0,1fr) 180px; grid-template-rows: minmax(0,1fr) auto; grid-template-areas: 'stage tabs' 'stage pad'; gap: 12px; }
+#mini-game .mini-game-stage { grid-area: stage; min-height: 0; height: auto; }
+#mini-game .mini-game-tablist { grid-area: tabs; max-height: none; height: 100%; min-height: 0; overflow: auto; }
+#mini-game .mini-game-tab { flex-shrink: 0; min-height: 44px; }
+#mini-game .mini-game-panel { overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+#mini-game .mini-game-panel > * { flex-shrink: 0; }
+#mini-game .virtual-pad { grid-area: pad; position: static; justify-self: center; padding: 6px; gap: 3px; grid-template-columns: repeat(3,44px); grid-template-rows: repeat(3,36px); }
+#mini-game .virtual-pad-button { touch-action: manipulation; }
+#mini-game .memory-board { width: 100%; max-width: 900px; grid-template-columns: repeat(auto-fit,minmax(110px,1fr)); gap: 10px; }
+#mini-game .memory-card { width: 100%; min-width: 0; aspect-ratio: 2 / 3; }
+#mini-game .memory-face { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+#mini-game .memory-face img { object-fit: contain; background: #091c31; }
+.memory-card-name { position: absolute; bottom: 0; left: 0; right: 0; padding: 4px; background: #071121e8; color: #fff; font-size: 12px; text-align: center; }
+#mini-game .reaction-target { min-height: 230px; padding: 12px; }
+#mini-game .reaction-target img { width: 100%; height: 180px; object-fit: contain; opacity: 1; }
+#mini-game .breakout-canvas { width: min(100%,480px); height: auto; aspect-ratio: 360 / 300; }
+#mini-game .mini-pad-controls, #mini-game .drop-controls { display: none; }
+#mini-game #mini-panel-drop { container-type: size; overflow: hidden; scrollbar-gutter: auto; }
+#mini-panel-drop .panel-note { display: none; }
+#mini-game .drop-board { flex: none; width: min(100%,300px,calc((100cqh - 155px) * .6)); margin-top: 8px; gap: 2px; }
+@media (max-width: 980px) {
+    #mini-game .mini-games-tabs { grid-template-columns: minmax(0,1fr); grid-template-rows: auto minmax(0,1fr) auto; grid-template-areas: 'tabs' 'stage' 'pad'; gap: 8px; }
+    #mini-game .mini-game-tablist { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 5px; overflow: visible; height: auto; }
+    #mini-game .mini-game-tab { font-size: 11px; padding: 6px; text-align: center; }
+    #mini-game .section-heading h3 { font-size: 22px; }
+    #mini-game .virtual-pad { grid-template-rows: repeat(3,30px); }
+}
+@media (max-width: 480px) {
+    #mini-game { padding: 4px; }
+    #mini-game .mini-modal-panel { height: calc(100dvh - 8px); padding: 10px; }
+    #mini-game .section-label { display: none; }
+    #mini-game .section-heading h3 { font-size: 19px; }
+    #mini-game .mini-game-tablist { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    #mini-game .memory-board { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+    #mini-game .mini-game-panel { padding: 10px; }
+    #mini-game .mini-game-panel h4 { font-size: 16px; }
+}
+@media (max-height: 500px) and (min-width: 481px) {
+    #mini-game .mini-games-tabs { grid-template-columns: minmax(0,1fr) 220px; grid-template-rows: minmax(0,1fr) auto; grid-template-areas: 'stage tabs' 'stage pad'; }
+    #mini-game .mini-game-tablist { grid-template-columns: repeat(2,minmax(0,1fr)); overflow: auto; height: 100%; }
+}

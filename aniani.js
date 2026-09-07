@@ -869,7 +869,7 @@
                 <button class="memory-card${flippedClass}${matchedClass}" type="button" data-memory-id="${safeId}" ${disabled} aria-label="${safeName}">
                     <span class="memory-card-inner">
                         <span class="memory-face back"><img src="${safeBack}" alt="カード裏面" loading="lazy"></span>
-                        <span class="memory-face front"><img src="${safePath}" alt="${safeName}" loading="lazy"></span>
+                        <span class="memory-face front"><img src="${safePath}" alt="${safeName}" loading="lazy"><span class="memory-card-name">${safeName}</span></span>
                     </span>
                 </button>
             `;
@@ -1189,8 +1189,30 @@
         running: false,
         ready: false,
         readyAt: 0,
-        timerId: 0
+        timerId: 0,
+        loadVersion: 0,
+        waitImage: REACTION_WAIT_IMAGES[0],
+        readyImage: REACTION_READY_IMAGES[0]
     };
+
+    const reactionImageCache = new Map();
+    function preloadReactionImage(path) {
+        if (!reactionImageCache.has(path)) {
+            const image = new Image();
+            const loaded = new Promise((resolve, reject) => {
+                image.onload = async () => {
+                    try {
+                        if (image.decode) await image.decode();
+                        resolve(image);
+                    } catch (error) { reject(error); }
+                };
+                image.onerror = () => reject(new Error(`Image unavailable: ${path}`));
+                image.src = path;
+            }).catch(error => { reactionImageCache.delete(path); throw error; });
+            reactionImageCache.set(path, loaded);
+        }
+        return reactionImageCache.get(path);
+    }
 
     function setReactionStatus(text) {
         if (reactionStatusEl) {
@@ -1214,13 +1236,13 @@
         if (mode === "wait") {
             reactionTargetButton.classList.add("is-wait");
             reactionSignalEl.textContent = "WAIT";
-            reactionImageEl.src = REACTION_WAIT_IMAGES[Math.floor(Math.random() * REACTION_WAIT_IMAGES.length)];
+            reactionImageEl.src = reactionState.waitImage;
             return;
         }
         if (mode === "ready") {
             reactionTargetButton.classList.add("is-ready");
             reactionSignalEl.textContent = "TAP!";
-            reactionImageEl.src = REACTION_READY_IMAGES[Math.floor(Math.random() * REACTION_READY_IMAGES.length)];
+            reactionImageEl.src = reactionState.readyImage;
             return;
         }
 
@@ -1235,8 +1257,30 @@
         }
     }
 
-    function startReactionTest() {
+    async function startReactionTest() {
         clearReactionTimer();
+        const version = ++reactionState.loadVersion;
+        reactionState.running = false;
+        reactionState.waitImage = REACTION_WAIT_IMAGES[Math.floor(Math.random() * REACTION_WAIT_IMAGES.length)];
+        reactionState.readyImage = REACTION_READY_IMAGES[Math.floor(Math.random() * REACTION_READY_IMAGES.length)];
+        reactionStartButton.disabled = true;
+        reactionTargetButton.disabled = true;
+        setReactionStatus("画像を読み込み中です…");
+        try {
+            await Promise.all([
+                preloadReactionImage(reactionState.waitImage),
+                preloadReactionImage(reactionState.readyImage)
+            ]);
+        } catch {
+            if (version !== reactionState.loadVersion) return;
+            reactionStartButton.disabled = false;
+            reactionTargetButton.disabled = false;
+            setReactionStatus("画像を読み込めませんでした。通信状態を確認してスタートで再試行してください。");
+            return;
+        }
+        if (version !== reactionState.loadVersion) return;
+        reactionStartButton.disabled = false;
+        reactionTargetButton.disabled = false;
         reactionState.running = true;
         reactionState.ready = false;
         reactionState.readyAt = 0;
@@ -1255,6 +1299,9 @@
 
     function resetReactionTest() {
         clearReactionTimer();
+        reactionState.loadVersion += 1;
+        if (reactionStartButton) reactionStartButton.disabled = false;
+        if (reactionTargetButton) reactionTargetButton.disabled = false;
         reactionState.running = false;
         reactionState.ready = false;
         reactionState.readyAt = 0;
@@ -1320,6 +1367,11 @@
         "assets/images/recipes/onigiri.png"
     ].map((path) => {
         const image = new Image();
+        image.addEventListener("load", () => drawBreakout());
+        image.addEventListener("error", () => {
+            setBreakoutStatus("一部の料理画像を読み込めません。色付きブロックでプレイできます。");
+            drawBreakout();
+        });
         image.src = path;
         return image;
     });
@@ -1414,7 +1466,7 @@
             breakoutCtx.beginPath();
             breakoutCtx.rect(brick.x, brick.y, brick.width, brick.height);
             breakoutCtx.clip();
-            if (brick.image && brick.image.complete) {
+            if (brick.image && brick.image.complete && brick.image.naturalWidth > 0) {
                 breakoutCtx.drawImage(brick.image, brick.x, brick.y, brick.width, brick.height);
             } else {
                 breakoutCtx.fillStyle = "rgba(255, 194, 74, 0.45)";

@@ -17,6 +17,7 @@
 - `index.html`
 - `aniani.css`
 - `aniani.js`
+- `arcade.css`（スマホのミニゲーム一覧・カードサイズ・スクロール調整）
 - `galaxy.css`（宇宙ライブラリの表示）
 - `galaxy.js`（ゲームソフトの周回・選択操作）
 - `images/galaxy-library.png`（生成した銀河背景）
