@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
     const STORAGE = {
         articles: "aniani_articles_v2",
         articleComments: "aniani_article_comments_v1",
@@ -244,6 +244,7 @@
     }
 
     function closeOpenModal() {
+        if (window.arcadeExitPlay?.()) return;
         const openModal = modalSections.find((section) => section.classList.contains("is-open"));
         if (!openModal) {
             return;
@@ -627,32 +628,30 @@
         });
     }
 
-    const WIN_LINES = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6]
-    ];
-
-    let tttBoard = ["", "", "", "", "", "", "", "", ""];
+    const TTT_SIZE = 9;
+    const TTT_GOAL = 5;
+    let tttBoard = Array(TTT_SIZE * TTT_SIZE).fill("");
     let tttTurn = "○";
     let tttFinished = false;
     let tttWinLine = [];
-
     function findWinLine(board) {
-        for (const line of WIN_LINES) {
-            const [a, b, c] = line;
-            if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-                return line;
+        for (let row = 0; row < TTT_SIZE; row++) {
+            for (let col = 0; col < TTT_SIZE; col++) {
+                const mark = board[row * TTT_SIZE + col];
+                if (!mark) continue;
+                for (const [dx, dy] of [[1,0],[0,1],[1,1],[-1,1]]) {
+                    const line = [];
+                    for (let n = 0; n < TTT_GOAL; n++) {
+                        const x = col + dx * n, y = row + dy * n;
+                        if (x < 0 || x >= TTT_SIZE || y >= TTT_SIZE || board[y * TTT_SIZE + x] !== mark) break;
+                        line.push(y * TTT_SIZE + x);
+                    }
+                    if (line.length === TTT_GOAL) return line;
+                }
             }
         }
         return [];
     }
-
     function updateTttStatus(text) {
         if (tttStatusEl) {
             tttStatusEl.textContent = text;
@@ -672,7 +671,7 @@
     }
 
     function resetTtt() {
-        tttBoard = ["", "", "", "", "", "", "", "", ""];
+        tttBoard = Array(TTT_SIZE * TTT_SIZE).fill("");
         tttTurn = "○";
         tttFinished = false;
         tttWinLine = [];
@@ -693,7 +692,7 @@
             }
 
             const index = Number(button.dataset.tttIndex);
-            if (Number.isNaN(index) || index < 0 || index > 8) {
+            if (Number.isNaN(index) || index < 0 || index >= TTT_SIZE * TTT_SIZE) {
                 return;
             }
 
@@ -1016,13 +1015,7 @@
         memoryResetButton.addEventListener("click", resetMemoryGameToIdle);
     }
 
-    const MOLE_IMAGE_PATHS = [
-        "assets/images/events/monomono-kokan.png",
-        "assets/images/events/osouji.png",
-        "assets/images/events/shokuzai-tansaku.png",
-        "assets/images/events/yarinaoshi.png",
-        "assets/images/events/bakugai.png"
-    ];
+    const MOLE_IMAGE_PATHS = ["images/arcade-mole.png", "images/arcade-rabbit.png", "images/arcade-dog.png"];
 
     const moleState = {
         running: false,
@@ -1075,7 +1068,7 @@
             const safePath = escapeHtml(imagePath);
             return `
                 <button class="mole-hole${activeClass}" type="button" data-mole-index="${index}" ${disabled} aria-label="もぐら穴${index + 1}">
-                    <img src="${safePath}" alt="もぐらたたきターゲット" loading="lazy">
+                    <img src="${safePath}" alt="もぐら・うさぎ・犬" loading="eager">
                 </button>
             `;
         }).join("");
@@ -1090,7 +1083,7 @@
             next = (next + 1) % 9;
         }
         moleState.activeIndex = next;
-        moleState.activeImagePath = MOLE_IMAGE_PATHS[Math.floor(Math.random() * MOLE_IMAGE_PATHS.length)];
+        moleState.activeImagePath = MOLE_IMAGE_PATHS[Math.random() < 0.75 ? 0 : (Math.random() < 0.5 ? 1 : 2)];
         renderMoleBoard();
     }
 
@@ -1104,7 +1097,24 @@
         setMoleStatus(`終了！ スコア ${moleState.score}`);
     }
 
-    function startMoleGame() {
+    let moleLoadVersion = 0;
+    async function startMoleGame() {
+        const version = ++moleLoadVersion;
+        stopMoleTimers();
+        moleState.running = false;
+        moleStartButton.disabled = true;
+        setMoleStatus("動物の画像を準備しています…");
+        try {
+            await Promise.all(MOLE_IMAGE_PATHS.map(preloadReactionImage));
+        } catch (_) {
+            if (version === moleLoadVersion) {
+                moleStartButton.disabled = false;
+                setMoleStatus("画像を読み込めませんでした。もう一度スタートしてください。");
+            }
+            return;
+        }
+        if (version !== moleLoadVersion) return;
+        moleStartButton.disabled = false;
         moleState.running = true;
         moleState.score = 0;
         moleState.remainingMs = 20000;
@@ -1129,6 +1139,8 @@
     }
 
     function resetMoleGame() {
+        moleLoadVersion += 1;
+        if (moleStartButton) moleStartButton.disabled = false;
         moleState.running = false;
         moleState.score = 0;
         moleState.remainingMs = 20000;
@@ -1156,9 +1168,10 @@
             }
 
             if (index === moleState.activeIndex) {
-                moleState.score += 1;
+                const friendly = moleState.activeImagePath !== MOLE_IMAGE_PATHS[0];
+                moleState.score += friendly ? -2 : 1;
                 updateMoleHud();
-                setMoleStatus("ヒット！");
+                setMoleStatus(friendly ? "うさぎ・犬は叩かないで！ −2点" : "もぐらヒット！ ＋1点");
                 spawnMole();
             }
         });
@@ -1172,18 +1185,8 @@
         moleResetButton.addEventListener("click", resetMoleGame);
     }
 
-    const REACTION_WAIT_IMAGES = [
-        "assets/images/character-icons/akatsuki-icons.png",
-        "assets/images/character-icons/chizuru-icons.png",
-        "assets/images/character-icons/mai-icons.png",
-        "assets/images/character-icons/takumi-icons.png"
-    ];
-    const REACTION_READY_IMAGES = [
-        "assets/images/skill-cutins/akatsuki-skill-cutin.png",
-        "assets/images/skill-cutins/chizuru-skill-cutin.png",
-        "assets/images/skill-cutins/mai-skill-cutin.png",
-        "assets/images/skill-cutins/takumi-skill-cutin.png"
-    ];
+    const REACTION_WAIT_IMAGES = ["images/arcade-cowboy.png"];
+    const REACTION_READY_IMAGES = ["images/arcade-cowboy.png"];
 
     const reactionState = {
         running: false,
@@ -1232,21 +1235,21 @@
             return;
         }
 
-        reactionTargetButton.classList.remove("is-wait", "is-ready");
+        reactionTargetButton.classList.remove("is-wait", "is-ready", "is-defeated");
         if (mode === "wait") {
             reactionTargetButton.classList.add("is-wait");
-            reactionSignalEl.textContent = "WAIT";
+            reactionSignalEl.textContent = "合図を待て…";
             reactionImageEl.src = reactionState.waitImage;
             return;
         }
         if (mode === "ready") {
             reactionTargetButton.classList.add("is-ready");
-            reactionSignalEl.textContent = "TAP!";
+            reactionSignalEl.textContent = "！";
             reactionImageEl.src = reactionState.readyImage;
             return;
         }
 
-        reactionSignalEl.textContent = "READY";
+        reactionSignalEl.textContent = "決闘スタート";
         reactionImageEl.src = REACTION_WAIT_IMAGES[0];
     }
 
@@ -1292,7 +1295,7 @@
             reactionState.ready = true;
             reactionState.readyAt = performance.now();
             setReactionVisual("ready");
-            setReactionStatus("今だ！ すぐクリック！");
+            setReactionStatus("撃て！ タップ / クリック！");
             reactionState.timerId = 0;
         }, delay);
     }
@@ -1328,7 +1331,9 @@
         reactionState.running = false;
         reactionState.ready = false;
         setReactionVisual("idle");
-        setReactionStatus(`反応速度: ${elapsed} ms`);
+        reactionTargetButton.classList.add("is-defeated");
+        reactionSignalEl.textContent = "WIN!";
+        setReactionStatus(`相手を倒した！ 反応速度: ${elapsed} ms`);
 
         if (!reactionBestMs || elapsed < reactionBestMs) {
             reactionBestMs = elapsed;
@@ -2038,8 +2043,18 @@
         }
     }
 
-    function spawnTetrisPiece() {
-        tetrisState.piece = randomTetrisPiece();
+    function renderTetrisQueue() {
+        const root = document.getElementById("tetris-next");
+        if (!root) return;
+        root.innerHTML = tetrisState.queue.map((piece, index) => {
+            let cells = "";
+            for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) {
+                cells += '<i style="background:' + (piece.shape[y]?.[x] ? TETRIS_COLORS[piece.color] : "transparent") + '"></i>';
+            }
+            return '<div><small>' + (index ? "NEXT + 1" : "NEXT") + '</small><div class="next-shape">' + cells + '</div></div>';
+        }).join("");
+    }
+    function spawnTetrisPiece() { tetrisState.piece = tetrisState.queue.shift(); tetrisState.queue.push(randomTetrisPiece()); renderTetrisQueue();
         if (!canPlaceTetris(tetrisState.piece.shape, tetrisState.piece.x, tetrisState.piece.y)) {
             tetrisState.running = false;
             stopTetrisLoop();
@@ -2069,7 +2084,7 @@
             return;
         }
         const rotated = rotateMatrixCW(tetrisState.piece.shape);
-        const tryOffsets = [0, -1, 1];
+        const tryOffsets = [0, -1, 1, -2, 2];
         for (const offset of tryOffsets) {
             const nx = tetrisState.piece.x + offset;
             if (canPlaceTetris(rotated, nx, tetrisState.piece.y)) {
@@ -2102,6 +2117,8 @@
         stopTetrisLoop();
         tetrisState.running = false;
         tetrisState.board = createTetrisBoard();
+        tetrisState.queue = [randomTetrisPiece(), randomTetrisPiece()];
+        renderTetrisQueue();
         tetrisState.piece = randomTetrisPiece();
         tetrisState.score = 0;
         tetrisState.lines = 0;
@@ -2160,14 +2177,8 @@
 
     const DROP_ROWS = 10;
     const DROP_COLS = 6;
-    const DROP_IMAGE_PATHS = [
-        "assets/images/cards/rice.png",
-        "assets/images/cards/nori.png",
-        "assets/images/cards/banana.png",
-        "assets/images/cards/curry.png",
-        "assets/images/cards/chicken.png",
-        "assets/images/cards/egg.png"
-    ];
+    const DROP_COLORS = ["#ff5364", "#4d9cff", "#ffd449", "#4cd994", "#b68bff", "#ff9c45"];
+    const DROP_SYMBOLS = ["●","◆","★","▲","■","✚"];
 
     const dropState = {
         running: false,
@@ -2222,8 +2233,8 @@
                 if (typeIndex === null || typeIndex === undefined) {
                     cells.push("<div class=\"drop-cell\"></div>");
                 } else {
-                    const path = escapeHtml(DROP_IMAGE_PATHS[typeIndex]);
-                    cells.push(`<div class="drop-cell${fallingClass}"><img src="${path}" alt="落ちものブロック" loading="lazy"></div>`);
+                    const color = DROP_COLORS[typeIndex];
+                    cells.push(`<div class="drop-cell${fallingClass}"><span style="background:${color}">${DROP_SYMBOLS[typeIndex]}</span></div>`);
                 }
             }
         }
@@ -2239,7 +2250,7 @@
     }
 
     function spawnDropPiece() {
-        const type = Math.floor(Math.random() * DROP_IMAGE_PATHS.length);
+        const type = Math.floor(Math.random() * DROP_COLORS.length);
         const x = Math.floor(DROP_COLS / 2);
         const y = 0;
         if (!canPlaceDropPiece(x, y)) {
@@ -2633,6 +2644,10 @@
         }
     });
 
+    document.addEventListener("arcade-exit", () => {
+        resetTtt(); resetMemoryGameToIdle(); resetMoleGame(); resetReactionTest();
+        resetBreakoutGame(); resetSnakeGame(); resetTetrisGame(); resetDropGame();
+    });
     updateAdminUI();
     renderArticles();
     renderGuestbook();

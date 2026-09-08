@@ -26,3 +26,11 @@
 - `assets/images/events/monomono-kokan.png`
 - `assets/images/cards/*.png`（材料カード15種）
 - `images/*.png`（推し駒battle用画像）
+
+## 2026-09-09 arcade update
+- arcade-layout.js: viewport fitting, fullscreen entry/exit and memory landscape fallback.
+- arcade.css: fixed game UI and upper-right directional pad; no game scrolling.
+- images/arcade-{mole,rabbit,dog,cowboy}.png: generated game artwork.
+- 9x9 board uses five-in-a-row rules; Tetris shows two queued pieces.
+- Fullscreen/orientation APIs depend on the browser. Unsupported browsers use a viewport layout.
+- Publish index.html, aniani.js, arcade.css, arcade-layout.js and the four arcade images together.

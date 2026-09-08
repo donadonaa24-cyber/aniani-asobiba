@@ -1,45 +1,75 @@
-/* Keep navigation and controls visible; scroll only the active game's content. */
-#mini-game { padding: 10px; }
-#mini-game .mini-modal-panel { width: min(1180px,100%); height: calc(100dvh - 20px); max-height: none; padding: 14px; }
-#mini-game .section-heading { padding-right: 40px; }
-#mini-game .mini-games-tabs { grid-template-columns: minmax(0,1fr) 180px; grid-template-rows: minmax(0,1fr) auto; grid-template-areas: 'stage tabs' 'stage pad'; gap: 12px; }
-#mini-game .mini-game-stage { grid-area: stage; min-height: 0; height: auto; }
-#mini-game .mini-game-tablist { grid-area: tabs; max-height: none; height: 100%; min-height: 0; overflow: auto; }
-#mini-game .mini-game-tab { flex-shrink: 0; min-height: 44px; }
-#mini-game .mini-game-panel { overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
-#mini-game .mini-game-panel > * { flex-shrink: 0; }
-#mini-game .virtual-pad { grid-area: pad; position: static; justify-self: center; padding: 6px; gap: 3px; grid-template-columns: repeat(3,44px); grid-template-rows: repeat(3,36px); }
-#mini-game .virtual-pad-button { touch-action: manipulation; }
-#mini-game .memory-board { width: 100%; max-width: 900px; grid-template-columns: repeat(auto-fit,minmax(110px,1fr)); gap: 10px; }
-#mini-game .memory-card { width: 100%; min-width: 0; aspect-ratio: 2 / 3; }
+/* The selection menu and every game use the viewport, never a scroll container. */
+#mini-game { padding: 0; overflow: hidden; }
+#mini-game .mini-modal-panel { position: relative; width: 100%; max-width: none; height: 100dvh; max-height: none; padding: 48px 12px 12px; margin: 0; border-radius: 0; overflow: hidden; box-sizing: border-box; background: radial-gradient(ellipse at top, #193652, #050d1b 75%); }
+#mini-game .modal-close { position: absolute; top: 6px; right: 10px; width: 40px; height: 40px; z-index: 30; }
+#mini-game .section-heading { flex: none; margin: 0 0 12px; }
+#mini-game .mini-games-tabs { display: grid; grid-template-columns: minmax(0,1fr); grid-template-rows: minmax(0,1fr); gap: 8px; min-height: 0; height: 100%; width: 100%; align-items: stretch; }
+#mini-game .mini-game-stage, #mini-game .virtual-pad, #mini-game #tetris-next { display: none; }
+#mini-game .mini-game-tablist { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); grid-template-rows: repeat(2,minmax(0,1fr)); position: static; height: 100%; max-height: none; overflow: hidden; align-self: stretch; gap: 12px; }
+#mini-game .mini-game-tab { text-align: center; font-size: clamp(13px,2vw,22px); padding: 8px; min-height: 0; }
+#mini-game.is-playing .section-heading, #mini-game.is-playing .mini-game-tablist { display: none; }
+#mini-game.is-playing .mini-game-stage { display: block; min-width: 0; min-height: 0; height: 100%; grid-column: 1; grid-row: 1 / 3; }
+#mini-game.is-playing .mini-games-tabs { grid-template-rows: minmax(0,1fr); }
+#mini-game.is-playing[data-game='breakout'] .mini-games-tabs,
+#mini-game.is-playing[data-game='snake'] .mini-games-tabs,
+#mini-game.is-playing[data-game='tetris'] .mini-games-tabs,
+#mini-game.is-playing[data-game='drop'] .mini-games-tabs { grid-template-columns: minmax(0,1fr) 144px; grid-template-rows: 144px minmax(0,1fr); }
+#mini-game.is-playing .mini-games-tabs[data-active-mini='breakout'] .virtual-pad,
+#mini-game.is-playing .mini-games-tabs[data-active-mini='snake'] .virtual-pad,
+#mini-game.is-playing .mini-games-tabs[data-active-mini='tetris'] .virtual-pad,
+#mini-game.is-playing .mini-games-tabs[data-active-mini='drop'] .virtual-pad { display: grid; position: static; grid-column: 2; grid-row: 1; align-self: start; justify-self: end; grid-template-columns: repeat(3,44px); grid-template-rows: repeat(3,44px); gap: 2px; padding: 2px; margin: 0; }
+#mini-game .virtual-pad-button { padding: 0; min-width: 0; touch-action: manipulation; font-size: 22px; }
+#mini-game .mini-game-panel { height: 100%; min-height: 0; padding: 8px; overflow: hidden; box-sizing: border-box; gap: 0; }
+#mini-game .mini-game-panel > * { flex: none; }
+#mini-game .mini-game-panel h4 { font-size: clamp(13px,2vw,19px); margin: 0 0 4px; line-height: 1.3; }
+#mini-game .panel-note { font-size: 11px; margin: 0 0 4px; line-height: 1.35; }
+#mini-game .mini-hud, #mini-game .memory-hud { display: flex; flex-wrap: wrap; gap: 2px 12px; margin: 2px 0 4px; }
+#mini-game .mini-hud p, #mini-game .memory-hud p, #mini-game #ttt-status { font-size: 12px; line-height: 1.3; margin: 0; }
+#mini-game .form-actions { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0 0; }
+#mini-game .form-actions .btn, #mini-game .memory-button-row .btn { padding: 6px 10px; min-height: 32px; font-size: 12px; }
+#mini-game .mini-pad-controls, #mini-game .drop-controls { display: none; }
+#mini-game #ttt-board, #mini-game #memory-board, #mini-game #mole-board, #mini-game #drop-board, #mini-game canvas, #mini-game #reaction-target { flex: none; max-width: none; min-height: 0; min-width: 0; margin: 2px auto; box-sizing: border-box; }
+#mini-game #ttt-board { grid-template-columns: repeat(9,minmax(0,1fr)); grid-template-rows: repeat(9,minmax(0,1fr)); gap: 2px; }
+#mini-game .ttt-cell { min-width: 0; min-height: 0; padding: 0; border-radius: 4px; font-size: clamp(12px,3vmin,28px); aspect-ratio: auto; }
+#mini-game #mole-board { grid-template-columns: repeat(3,minmax(0,1fr)); grid-template-rows: repeat(3,minmax(0,1fr)); gap: 4px; }
+#mini-game .mole-hole { min-height: 0; padding: 0; aspect-ratio: auto; overflow: hidden; }
+#mini-game .mole-hole img { width: 100%; height: 100%; object-fit: cover; }
+#mini-game #drop-board { gap: 2px; grid-template-columns: repeat(6,minmax(0,1fr)); grid-template-rows: repeat(10,minmax(0,1fr)); }
+#mini-game .drop-cell { aspect-ratio: auto; min-height: 0; min-width: 0; padding: 0; border-radius: 3px; }
+#mini-game .drop-cell span { display: grid; place-items: center; width: 100%; height: 100%; color: #fff; text-shadow: 0 1px 3px #000; font-size: clamp(9px,2vmin,18px); }
+#mini-game #tetris-next { grid-column: 2; grid-row: 2; align-self: start; gap: 8px; padding: 6px; }
+#mini-game.is-playing[data-game='tetris'] #tetris-next { display: flex; flex-wrap: wrap; }
+#tetris-next small { display: block; font-size: 10px; color: #cde3fa; margin-bottom: 4px; }
+.next-shape { display: grid; grid-template-columns: repeat(4,12px); grid-template-rows: repeat(4,12px); gap: 1px; }
+.next-shape i { display: block; border-radius: 2px; }
+#mini-game #memory-board { gap: 4px; }
+#mini-game .memory-card { width: 100%; height: 100%; min-height: 0; min-width: 0; aspect-ratio: auto; border-radius: 4px; }
 #mini-game .memory-face { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
 #mini-game .memory-face img { object-fit: contain; background: #091c31; }
-.memory-card-name { position: absolute; bottom: 0; left: 0; right: 0; padding: 4px; background: #071121e8; color: #fff; font-size: 12px; text-align: center; }
-#mini-game .reaction-target { min-height: 230px; padding: 12px; }
-#mini-game .reaction-target img { width: 100%; height: 180px; object-fit: contain; opacity: 1; }
-#mini-game .breakout-canvas { width: min(100%,480px); height: auto; aspect-ratio: 360 / 300; }
-#mini-game .mini-pad-controls, #mini-game .drop-controls { display: none; }
-#mini-game #mini-panel-drop { container-type: size; overflow: hidden; scrollbar-gutter: auto; }
-#mini-panel-drop .panel-note { display: none; }
-#mini-game .drop-board { flex: none; width: min(100%,300px,calc((100cqh - 155px) * .6)); margin-top: 8px; gap: 2px; }
-@media (max-width: 980px) {
-    #mini-game .mini-games-tabs { grid-template-columns: minmax(0,1fr); grid-template-rows: auto minmax(0,1fr) auto; grid-template-areas: 'tabs' 'stage' 'pad'; gap: 8px; }
-    #mini-game .mini-game-tablist { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 5px; overflow: visible; height: auto; }
-    #mini-game .mini-game-tab { font-size: 11px; padding: 6px; text-align: center; }
-    #mini-game .section-heading h3 { font-size: 22px; }
-    #mini-game .virtual-pad { grid-template-rows: repeat(3,30px); }
+#mini-game .memory-card-name { position: absolute; bottom: 0; left: 0; right: 0; background: #071121e8; font-size: 8px; line-height: 1.1; color: white; }
+#mini-game .memory-controls { display: flex; flex-wrap: nowrap; align-items: center; gap: 6px; margin: 0; }
+#mini-game .memory-controls label, #mini-game .memory-ranking { display: none; }
+#mini-game .memory-controls input { width: 130px; max-width: 35%; padding: 4px 8px; height: 30px; }
+#mini-game .memory-button-row { display: flex; gap: 4px; margin: 0; }
+#mini-game #memory-timer { font-size: 14px; }
+#mini-game #reaction-target { position: relative; padding: 0; overflow: hidden; background: #342417; }
+#mini-game #reaction-image { display: block; width: 100%; height: 100%; object-fit: cover; opacity: 1; transition: transform .35s, opacity .35s; }
+#mini-game #reaction-signal { position: absolute; inset: 0; display: grid; place-items: center; color: #fff6bf; font-size: clamp(16px,5vmin,42px); text-shadow: 0 3px 8px #000; pointer-events: none; }
+#mini-game .is-ready #reaction-signal { font-size: clamp(70px,20vmin,180px); color: #ffe248; }
+#mini-game .is-defeated #reaction-image { transform: translateY(40%) rotate(16deg) scale(.8); opacity: .25; }
+@media (max-width: 600px) {
+ #mini-game .mini-game-tablist { grid-template-columns: repeat(2,minmax(0,1fr)); grid-template-rows: repeat(4,minmax(0,1fr)); gap: 6px; }
+ #mini-game .mini-modal-panel { padding: 46px 4px 4px; }
+ #mini-game .mini-game-panel { padding: 4px; }
+ #mini-game .panel-note { font-size: 10px; }
 }
-@media (max-width: 480px) {
-    #mini-game { padding: 4px; }
-    #mini-game .mini-modal-panel { height: calc(100dvh - 8px); padding: 10px; }
-    #mini-game .section-label { display: none; }
-    #mini-game .section-heading h3 { font-size: 19px; }
-    #mini-game .mini-game-tablist { grid-template-columns: repeat(2,minmax(0,1fr)); }
-    #mini-game .memory-board { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
-    #mini-game .mini-game-panel { padding: 10px; }
-    #mini-game .mini-game-panel h4 { font-size: 16px; }
+/* iOS and browsers without orientation locking still get a landscape card table. */
+@media (orientation: portrait) and (max-width: 700px) {
+ #mini-game.is-playing[data-game='memory'] .mini-modal-panel { position: absolute; width: 100dvh; height: 100dvw; max-width: none; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(90deg); }
+ #mini-game.is-playing[data-game='memory'] .panel-note { display: none; }
 }
-@media (max-height: 500px) and (min-width: 481px) {
-    #mini-game .mini-games-tabs { grid-template-columns: minmax(0,1fr) 220px; grid-template-rows: minmax(0,1fr) auto; grid-template-areas: 'stage tabs' 'stage pad'; }
-    #mini-game .mini-game-tablist { grid-template-columns: repeat(2,minmax(0,1fr)); overflow: auto; height: 100%; }
+@media (max-height: 500px) {
+ #mini-game .panel-note { display: none; }
+ #mini-game .mini-modal-panel { padding-top: 44px; }
+ #mini-game .section-heading p { display: none; }
 }
