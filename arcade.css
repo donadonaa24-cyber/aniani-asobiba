@@ -96,3 +96,7 @@
  #mini-game #tetris-rotate { min-height: 44px; font-size: 17px; padding: 4px; }
  #mini-game .tetris-tools { gap: 4px; }
 }
+
+/* Keep the escape control outside the rotating memory table and above game layers. */
+#mini-game > .modal-close { position: absolute; top: max(6px,env(safe-area-inset-top)); right: max(8px,env(safe-area-inset-right)); width: 48px; height: 48px; z-index: 1000; pointer-events: auto; touch-action: manipulation; transform: none; font-size: 28px; background: #081b32; border: 2px solid #d5eaff; }
+#mini-game .mini-modal-panel { padding-top: max(58px,calc(env(safe-area-inset-top) + 54px)); }

@@ -2421,8 +2421,10 @@
     });
 
     document.addEventListener("arcade-exit", () => {
-        resetTtt(); resetMemoryGameToIdle(); resetMoleGame(); resetReactionTest();
-        resetBreakoutGame(); resetSnakeGame(); resetTetrisGame(); resetDropGame();
+        for (const reset of [resetTtt, resetMemoryGameToIdle, resetMoleGame, resetReactionTest,
+            resetBreakoutGame, resetSnakeGame, resetTetrisGame, resetDropGame]) {
+            try { reset(); } catch (error) { console.error("Arcade cleanup failed", error); }
+        }
     });
     updateAdminUI();
     renderArticles();
@@ -2445,4 +2447,3 @@
         }
     }
 })();
-

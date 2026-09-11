@@ -4,6 +4,7 @@
     if (!modal || !root) return;
     const close = modal.querySelector('[data-modal-close]');
     let playing = false;
+    let session = 0;
     let frame = 0;
     const number = value => parseFloat(value) || 0;
     function fit() {
@@ -43,44 +44,79 @@
     }
     function schedule() { if (!frame) frame = requestAnimationFrame(fit); }
     function menuTabs() { root.querySelectorAll('[data-mini-tab]').forEach(tab => tab.tabIndex = 0); }
+    function safely(action) {
+        try { return Promise.resolve(action()).catch(() => {}); }
+        catch (_) { return Promise.resolve(); }
+    }
+    function fullscreenElement() { return document.fullscreenElement || document.webkitFullscreenElement; }
+    function leaveFullscreen() {
+        if (fullscreenElement() !== modal) return Promise.resolve();
+        return safely(() => (document.exitFullscreen || document.webkitExitFullscreen)?.call(document));
+    }
     function enter(key) {
+        const currentSession = ++session;
         playing = true;
         modal.dataset.game = key;
         modal.classList.add('is-playing');
         close.setAttribute('aria-label', 'ゲーム一覧に戻る');
         close.focus({preventScroll: true});
         schedule();
-        const fullscreen = document.fullscreenElement === modal ? Promise.resolve() : modal.requestFullscreen?.();
-        Promise.resolve(fullscreen).catch(() => {}).then(() => {
-            if (!playing && document.fullscreenElement === modal) {
-                document.exitFullscreen().catch(() => {});
+        const fullscreen = fullscreenElement() === modal ? Promise.resolve()
+            : safely(() => modal.requestFullscreen?.());
+        fullscreen.then(() => {
+            if (!playing) {
+                leaveFullscreen();
                 return;
             }
-            if (playing && key === 'memory') screen.orientation?.lock?.('landscape').catch(() => {});
+            if (currentSession !== session) return;
+            if (key === 'memory') safely(() => screen.orientation?.lock?.('landscape'));
             schedule();
         });
     }
     function exit() {
-        if (!playing) return false;
+        if (!playing && !modal.classList.contains('is-playing')) return false;
         playing = false;
+        session++;
         modal.classList.remove('is-playing');
-        document.dispatchEvent(new Event('arcade-exit'));
-        try { screen.orientation?.unlock?.(); } catch (_) { /* Unsupported orientation API. */ }
-        if (document.fullscreenElement === modal) document.exitFullscreen().catch(() => {});
         close.setAttribute('aria-label', '閉じる');
         menuTabs();
         root.querySelector(`[data-mini-tab="${modal.dataset.game}"]`)?.focus({preventScroll: true});
+        // Restore navigation before calling any browser APIs or game cleanup.
+        safely(() => document.dispatchEvent(new Event('arcade-exit')));
+        safely(() => screen.orientation?.unlock?.());
+        leaveFullscreen();
         return true;
     }
     window.arcadeExitPlay = exit;
+    function returnHome() {
+        exit();
+        modal.classList.remove('is-open', 'is-playing');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+        leaveFullscreen();
+        document.querySelector('.console-dock [data-modal-target="mini-game"]')?.focus({preventScroll: true});
+    }
+    close.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (exit()) return;
+        returnHome();
+    });
+    document.getElementById('arcade-home')?.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        returnHome();
+    });
     root.addEventListener('click', event => {
         const tab = event.target.closest('[data-mini-tab]');
         if (tab) enter(tab.dataset.miniTab);
     });
-    document.addEventListener('fullscreenchange', () => {
-        if (!document.fullscreenElement && playing) exit();
+    function fullscreenChanged() {
+        if (!fullscreenElement() && playing) exit();
         schedule();
-    });
+    }
+    document.addEventListener('fullscreenchange', fullscreenChanged);
+    document.addEventListener('webkitfullscreenchange', fullscreenChanged);
     window.addEventListener('resize', schedule);
     new ResizeObserver(schedule).observe(root);
     new MutationObserver(schedule).observe(root, {childList: true, subtree: true});
