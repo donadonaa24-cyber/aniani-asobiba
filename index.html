@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="aniani.css?v=20260907g1">
     <link rel="stylesheet" href="galaxy.css?v=20260907g1">
-    <link rel="stylesheet" href="arcade.css?v=20260909a2">
+    <link rel="stylesheet" href="arcade.css?v=20260911a3">
 </head>
 <body>
     <div class="bg-glow bg-glow-a"></div>
@@ -336,27 +336,22 @@
                         <button class="btn btn-ghost btn-mini" type="button" id="tetris-down">↓</button>
                     </div>
                     <div class="form-actions">
-                        <button class="btn btn-ghost btn-mini" type="button" id="tetris-rotate">↻ 回転</button><button class="btn btn-primary btn-mini" type="button" id="tetris-start">スタート</button>
+                        <button class="btn btn-primary btn-mini" type="button" id="tetris-start">スタート</button>
                         <button class="btn btn-ghost btn-mini" type="button" id="tetris-reset">リセット</button>
                     </div>
                 </article>
 
                 <article id="mini-panel-drop" class="panel mini-game-panel drop-panel mini-tab-panel" data-mini-panel="drop" role="tabpanel" aria-labelledby="mini-tab-drop">
-                    <h4>カラードロップ</h4>
-                    <p class="panel-note">同じ色を3つ以上並べると消去。左右移動と高速落下でスコアを伸ばそう。</p>
+                    <h4>8パズル</h4>
+                    <p class="panel-note">空きマスの隣の数字をタップして、1〜8を左上から順番に並べよう。右下は空きマス！</p>
                     <div class="mini-hud">
                         <p id="drop-status">スタートで開始。</p>
-                        <p>スコア: <span id="drop-score">0</span></p>
+                        <p>手数: <span id="drop-score">0</span></p>
                     </div>
-                    <div id="drop-board" class="drop-board" aria-label="落ちものパズル盤面"></div>
-                    <div class="form-actions drop-controls">
-                        <button class="btn btn-ghost btn-mini" type="button" id="drop-left">← 左</button>
-                        <button class="btn btn-ghost btn-mini" type="button" id="drop-right">右 →</button>
-                        <button class="btn btn-ghost btn-mini" type="button" id="drop-down">↓ 落下</button>
-                    </div>
-                    <div class="form-actions">
-                        <button class="btn btn-primary btn-mini" type="button" id="drop-start">スタート</button>
-                        <button class="btn btn-ghost btn-mini" type="button" id="drop-reset">リセット</button>
+                    <div id="drop-board" class="drop-board" aria-label="8パズル盤面"></div>
+<div class="form-actions">
+                        <button class="btn btn-primary btn-mini" type="button" id="drop-start">シャッフル</button>
+                        <button class="btn btn-ghost btn-mini" type="button" id="drop-reset">やり直す</button>
                     </div>
                 </article>
                 </div>
@@ -369,10 +364,10 @@
                     <button id="mini-tab-breakout" class="mini-game-tab" type="button" data-mini-tab="breakout" role="tab" aria-selected="false" aria-controls="mini-panel-breakout">ブロック崩し</button>
                     <button id="mini-tab-snake" class="mini-game-tab" type="button" data-mini-tab="snake" role="tab" aria-selected="false" aria-controls="mini-panel-snake">スネークゲーム</button>
                     <button id="mini-tab-tetris" class="mini-game-tab" type="button" data-mini-tab="tetris" role="tab" aria-selected="false" aria-controls="mini-panel-tetris">簡単テトリス</button>
-                    <button id="mini-tab-drop" class="mini-game-tab" type="button" data-mini-tab="drop" role="tab" aria-selected="false" aria-controls="mini-panel-drop">落ちものパズル</button>
+                    <button id="mini-tab-drop" class="mini-game-tab" type="button" data-mini-tab="drop" role="tab" aria-selected="false" aria-controls="mini-panel-drop">8パズル</button>
                 </aside>
 
-                <aside id="tetris-next" aria-label="次とその次のテトリス"></aside><div class="virtual-pad" aria-label="スマホ用仮想十字キー">
+                <div class="tetris-tools"><aside id="tetris-next" aria-label="上が次、下が2番目のテトリス"></aside><button class="btn" type="button" id="tetris-rotate" aria-label="ブロックを時計回りに回転">↻ 回転する</button></div><div class="virtual-pad" aria-label="スマホ用仮想十字キー">
                     <button class="virtual-pad-button virtual-pad-up" type="button" data-pad-dir="up" aria-label="上へ移動・テトリス回転">↑</button>
                     <button class="virtual-pad-button virtual-pad-left" type="button" data-pad-dir="left" aria-label="左へ移動">←</button>
                     <button class="virtual-pad-button virtual-pad-down" type="button" data-pad-dir="down" aria-label="下へ移動">↓</button>
@@ -512,7 +507,7 @@
         <a href="https://donadonaa24-cyber.github.io/battle-a-la-carte--/" target="_blank" rel="noopener noreferrer">Battle a la carte ホームページへ</a>
     </footer>
 
-    <script src="aniani.js?v=20260909a2"></script>
+    <script src="aniani.js?v=20260911a3"></script>
     <script src="galaxy.js?v=20260907g1"></script>
-<script src="arcade-layout.js?v=20260909a2"></script></body>
+<script src="arcade-layout.js?v=20260911a3"></script></body>
 </html>

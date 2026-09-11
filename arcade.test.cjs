@@ -51,3 +51,23 @@ for (const [width,height] of [[790,240],[650,220],[900,550],[1020,620]]) {
   assert(best>40,'Cards remain identifiable at tested sizes');
 }
 console.log('PASS: 30-card fit across four landscape table sizes.');
+
+vm.runInContext(`${fn('slideNeighbors')} ${fn('slideSolved')} ${fn('shuffledSlideBoard')}
+const slideState={board:[1,2,3,4,5,6,7,0,8],running:true,moves:0};
+const dropStatusEl={textContent:''}; function renderSlideBoard(){}
+${fn('moveSlideTile')}`, ctx);
+for(let i=0;i<1000;i++) {
+  const board=Array.from(vm.runInContext('shuffledSlideBoard()',ctx));
+  assert.deepEqual([...board].sort((a,b)=>a-b),[0,1,2,3,4,5,6,7,8]);
+  let inversions=0;
+  for(let a=0;a<9;a++) for(let b=a+1;b<9;b++) if(board[a]&&board[b]&&board[a]>board[b]) inversions++;
+  assert.equal(inversions%2,0,'Generated puzzle is solvable');
+  assert(!board.every((n,i)=>n===(i+1)%9),'Not already solved');
+}
+assert.equal(vm.runInContext('moveSlideTile(0)',ctx),false);
+assert.equal(vm.runInContext('slideState.moves',ctx),0);
+assert.equal(vm.runInContext('moveSlideTile(8)',ctx),true);
+assert.equal(vm.runInContext('slideState.running',ctx),false);
+assert.equal(vm.runInContext('slideState.moves',ctx),1);
+assert.equal(vm.runInContext('slideNeighbors(2).includes(3)',ctx),false);
+console.log('PASS: 1000 solvable shuffles, valid tile movement, win detection, move count and row boundary.');

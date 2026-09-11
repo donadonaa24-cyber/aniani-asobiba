@@ -22,7 +22,7 @@
             if (child !== board) height -= child.offsetHeight;
         }
         height = Math.max(1, height - 4);
-        let ratio = board.tagName === 'CANVAS' ? board.width / board.height : board.id === 'drop-board' ? .6 : board.id === 'reaction-target' ? 16 / 9 : 1;
+        let ratio = board.tagName === 'CANVAS' ? board.width / board.height : board.id === 'reaction-target' ? 16 / 9 : 1;
         let w = Math.min(width, height * ratio), h = w / ratio;
         if (board.id === 'memory-board') {
             const count = board.children.length || 30;

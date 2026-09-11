@@ -1981,7 +1981,7 @@
             return;
         }
         tetrisCtx.clearRect(0, 0, tetrisCanvasEl.width, tetrisCanvasEl.height);
-        tetrisCtx.fillStyle = "rgba(5, 16, 34, 0.95)";
+        tetrisCtx.fillStyle = "rgba(3, 9, 24, 0.35)";
         tetrisCtx.fillRect(0, 0, tetrisCanvasEl.width, tetrisCanvasEl.height);
 
         for (let y = 0; y < TETRIS_ROWS; y += 1) {
@@ -2051,7 +2051,7 @@
             for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) {
                 cells += '<i style="background:' + (piece.shape[y]?.[x] ? TETRIS_COLORS[piece.color] : "transparent") + '"></i>';
             }
-            return '<div><small>' + (index ? "NEXT + 1" : "NEXT") + '</small><div class="next-shape">' + cells + '</div></div>';
+            return '<div><small>' + (index ? "2番目 / NEXT 2" : "次 / NEXT 1") + '</small><div class="next-shape">' + cells + '</div></div>';
         }).join("");
     }
     function spawnTetrisPiece() { tetrisState.piece = tetrisState.queue.shift(); tetrisState.queue.push(randomTetrisPiece()); renderTetrisQueue();
@@ -2175,289 +2175,77 @@
         });
     }
 
-    const DROP_ROWS = 10;
-    const DROP_COLS = 6;
-    const DROP_COLORS = ["#ff5364", "#4d9cff", "#ffd449", "#4cd994", "#b68bff", "#ff9c45"];
-    const DROP_SYMBOLS = ["●","◆","★","▲","■","✚"];
-
-    const dropState = {
-        running: false,
-        timerId: 0,
-        board: [],
-        current: null,
-        score: 0
-    };
-
-    function setDropStatus(text) {
-        if (dropStatusEl) {
-            dropStatusEl.textContent = text;
-        }
+    // Keep the existing tab ID so saved links and modal navigation remain valid.
+    const slideState = { board: [1,2,3,4,5,6,7,8,0], initial: null, moves: 0, running: false };
+    function slideNeighbors(empty) {
+        return [empty - 3, empty + 3, empty - 1, empty + 1].filter(index =>
+            index >= 0 && index < 9 && Math.abs(Math.floor(index / 3) - Math.floor(empty / 3)) + Math.abs(index % 3 - empty % 3) === 1);
     }
-
-    function updateDropScore() {
-        if (dropScoreEl) {
-            dropScoreEl.textContent = String(dropState.score);
-        }
+    function slideSolved(board) {
+        return board.every((value, index) => value === (index + 1) % 9);
     }
-
-    function stopDropLoop() {
-        if (dropState.timerId) {
-            window.clearInterval(dropState.timerId);
-            dropState.timerId = 0;
+    function shuffledSlideBoard() {
+        const board = [1,2,3,4,5,6,7,8,0];
+        let empty = 8, previous = -1;
+        // Legal moves from the goal guarantee a solvable puzzle.
+        for (let i = 0; i < 24; i++) {
+            const options = slideNeighbors(empty).filter(index => index !== previous);
+            const next = options[Math.floor(Math.random() * options.length)];
+            [board[empty], board[next]] = [board[next], board[empty]];
+            previous = empty;
+            empty = next;
         }
+        if (slideSolved(board)) [board[7], board[8]] = [board[8], board[7]];
+        return board;
     }
-
-    function createDropEmptyBoard() {
-        return Array.from({ length: DROP_ROWS }, () => Array(DROP_COLS).fill(null));
+    function renderSlideBoard() {
+        if (!dropBoardEl) return;
+        const movable = slideNeighbors(slideState.board.indexOf(0));
+        dropBoardEl.innerHTML = slideState.board.map((value, index) => value
+            ? `<button class="slide-tile" type="button" data-slide-index="${index}" ${!slideState.running || !movable.includes(index) ? 'disabled' : ''} aria-label="${value}を空きマスへ移動">${value}</button>`
+            : '<div class="slide-empty" aria-label="空きマス"></div>').join('');
+        if (dropScoreEl) dropScoreEl.textContent = String(slideState.moves);
     }
-
-    function renderDropBoard() {
-        if (!dropBoardEl) {
-            return;
+    function moveSlideTile(index) {
+        const empty = slideState.board.indexOf(0);
+        if (!slideState.running || !slideNeighbors(empty).includes(index)) return false;
+        [slideState.board[empty], slideState.board[index]] = [slideState.board[index], slideState.board[empty]];
+        slideState.moves++;
+        if (slideSolved(slideState.board)) {
+            slideState.running = false;
+            dropStatusEl.textContent = `クリア！ ${slideState.moves}手で完成しました。`;
         }
-
-        const cells = [];
-        for (let row = 0; row < DROP_ROWS; row += 1) {
-            for (let col = 0; col < DROP_COLS; col += 1) {
-                let typeIndex = dropState.board[row]?.[col] ?? null;
-                let fallingClass = "";
-                if (
-                    dropState.current &&
-                    dropState.current.x === col &&
-                    dropState.current.y === row
-                ) {
-                    typeIndex = dropState.current.type;
-                    fallingClass = " is-falling";
-                }
-
-                if (typeIndex === null || typeIndex === undefined) {
-                    cells.push("<div class=\"drop-cell\"></div>");
-                } else {
-                    const color = DROP_COLORS[typeIndex];
-                    cells.push(`<div class="drop-cell${fallingClass}"><span style="background:${color}">${DROP_SYMBOLS[typeIndex]}</span></div>`);
-                }
-            }
-        }
-
-        dropBoardEl.innerHTML = cells.join("");
-    }
-
-    function canPlaceDropPiece(x, y) {
-        if (x < 0 || x >= DROP_COLS || y < 0 || y >= DROP_ROWS) {
-            return false;
-        }
-        return dropState.board[y][x] === null;
-    }
-
-    function spawnDropPiece() {
-        const type = Math.floor(Math.random() * DROP_COLORS.length);
-        const x = Math.floor(DROP_COLS / 2);
-        const y = 0;
-        if (!canPlaceDropPiece(x, y)) {
-            return false;
-        }
-        dropState.current = { x, y, type };
+        renderSlideBoard();
         return true;
     }
-
-    function moveDropPiece(dx, dy) {
-        if (!dropState.current) {
-            return false;
-        }
-        const nextX = dropState.current.x + dx;
-        const nextY = dropState.current.y + dy;
-        if (!canPlaceDropPiece(nextX, nextY)) {
-            return false;
-        }
-        dropState.current.x = nextX;
-        dropState.current.y = nextY;
-        return true;
-    }
-
-    function lockDropPiece() {
-        if (!dropState.current) {
-            return;
-        }
-        const { x, y, type } = dropState.current;
-        if (y >= 0 && y < DROP_ROWS && x >= 0 && x < DROP_COLS) {
-            dropState.board[y][x] = type;
-        }
-        dropState.current = null;
-    }
-
-    function findDropMatches() {
-        const matched = new Set();
-
-        for (let row = 0; row < DROP_ROWS; row += 1) {
-            let runType = null;
-            let runStart = 0;
-            for (let col = 0; col <= DROP_COLS; col += 1) {
-                const type = col < DROP_COLS ? dropState.board[row][col] : null;
-                if (type === runType && type !== null) {
-                    continue;
-                }
-                if (runType !== null && col - runStart >= 3) {
-                    for (let x = runStart; x < col; x += 1) {
-                        matched.add(`${row}:${x}`);
-                    }
-                }
-                runType = type;
-                runStart = col;
-            }
-        }
-
-        for (let col = 0; col < DROP_COLS; col += 1) {
-            let runType = null;
-            let runStart = 0;
-            for (let row = 0; row <= DROP_ROWS; row += 1) {
-                const type = row < DROP_ROWS ? dropState.board[row][col] : null;
-                if (type === runType && type !== null) {
-                    continue;
-                }
-                if (runType !== null && row - runStart >= 3) {
-                    for (let y = runStart; y < row; y += 1) {
-                        matched.add(`${y}:${col}`);
-                    }
-                }
-                runType = type;
-                runStart = row;
-            }
-        }
-
-        return matched;
-    }
-
-    function applyDropGravity() {
-        for (let col = 0; col < DROP_COLS; col += 1) {
-            const stack = [];
-            for (let row = DROP_ROWS - 1; row >= 0; row -= 1) {
-                const value = dropState.board[row][col];
-                if (value !== null) {
-                    stack.push(value);
-                }
-            }
-            for (let row = DROP_ROWS - 1; row >= 0; row -= 1) {
-                dropState.board[row][col] = stack[DROP_ROWS - 1 - row] ?? null;
-            }
-        }
-    }
-
-    function clearDropMatchesAndCascade() {
-        let combo = 0;
-        while (true) {
-            const matches = findDropMatches();
-            if (!matches.size) {
-                break;
-            }
-            combo += 1;
-
-            matches.forEach((key) => {
-                const [rowText, colText] = key.split(":");
-                const row = Number(rowText);
-                const col = Number(colText);
-                if (!Number.isNaN(row) && !Number.isNaN(col)) {
-                    dropState.board[row][col] = null;
-                }
-            });
-
-            dropState.score += matches.size * 10 * combo;
-            applyDropGravity();
-        }
-
-        if (combo > 0) {
-            setDropStatus(`${combo} 連鎖！`);
-            updateDropScore();
-        }
-    }
-
-    function endDropGame() {
-        dropState.running = false;
-        stopDropLoop();
-        setDropStatus("ゲームオーバー。リセットで再挑戦。");
-        renderDropBoard();
-    }
-
-    function dropTick() {
-        if (!dropState.running) {
-            return;
-        }
-
-        if (dropState.current && moveDropPiece(0, 1)) {
-            renderDropBoard();
-            return;
-        }
-
-        lockDropPiece();
-        clearDropMatchesAndCascade();
-
-        if (!spawnDropPiece()) {
-            endDropGame();
-            return;
-        }
-
-        setDropStatus("プレイ中");
-        renderDropBoard();
-    }
-
     function resetDropGame() {
-        stopDropLoop();
-        dropState.running = false;
-        dropState.board = createDropEmptyBoard();
-        dropState.current = null;
-        dropState.score = 0;
-        updateDropScore();
-        setDropStatus("スタートで開始。");
-        renderDropBoard();
+        slideState.board = [1,2,3,4,5,6,7,8,0];
+        slideState.initial = null;
+        slideState.moves = 0;
+        slideState.running = false;
+        if (dropStatusEl) dropStatusEl.textContent = 'シャッフルを押して開始。目標は1〜8を順番に並べること！';
+        renderSlideBoard();
     }
-
-    function startDropGame() {
-        resetDropGame();
-        dropState.running = true;
-        if (!spawnDropPiece()) {
-            endDropGame();
-            return;
-        }
-        setDropStatus("プレイ中");
-        renderDropBoard();
-        dropState.timerId = window.setInterval(dropTick, 520);
-    }
-
-    if (dropStartButton) {
-        dropStartButton.addEventListener("click", startDropGame);
-    }
-
-    if (dropResetButton) {
-        dropResetButton.addEventListener("click", resetDropGame);
-    }
-
-    if (dropLeftButton) {
-        dropLeftButton.addEventListener("click", () => {
-            if (!dropState.running || !dropState.current) {
-                return;
-            }
-            moveDropPiece(-1, 0);
-            renderDropBoard();
-        });
-    }
-
-    if (dropRightButton) {
-        dropRightButton.addEventListener("click", () => {
-            if (!dropState.running || !dropState.current) {
-                return;
-            }
-            moveDropPiece(1, 0);
-            renderDropBoard();
-        });
-    }
-
-    if (dropDownButton) {
-        dropDownButton.addEventListener("click", () => {
-            if (!dropState.running) {
-                return;
-            }
-            dropTick();
-        });
-    }
+    if (dropStartButton) dropStartButton.addEventListener('click', () => {
+        slideState.initial = shuffledSlideBoard();
+        slideState.board = [...slideState.initial];
+        slideState.moves = 0;
+        slideState.running = true;
+        dropStatusEl.textContent = '空きマスの隣をタップ。矢印キー・WASDでも空きマスを動かせます。';
+        renderSlideBoard();
+    });
+    if (dropResetButton) dropResetButton.addEventListener('click', () => {
+        if (!slideState.initial) return;
+        slideState.board = [...slideState.initial];
+        slideState.moves = 0;
+        slideState.running = true;
+        dropStatusEl.textContent = '同じ配置でもう一度！';
+        renderSlideBoard();
+    });
+    if (dropBoardEl) dropBoardEl.addEventListener('click', event => {
+        const tile = event.target.closest('[data-slide-index]');
+        if (tile) moveSlideTile(Number(tile.dataset.slideIndex));
+    });
 
     function getDirectionFromKey(eventKey) {
         if (eventKey === "ArrowUp") {
@@ -2552,28 +2340,16 @@
             }
         }
 
-        if (activeKey !== "drop" || !dropState.running || !dropState.current) {
-            return false;
+        if (activeKey === "drop" && slideState.running) {
+            const empty = slideState.board.indexOf(0);
+            const offsets = { up: -3, down: 3, left: -1, right: 1 };
+            if (Object.hasOwn(offsets, direction)) {
+                moveSlideTile(empty + offsets[direction]);
+                return true;
+            }
         }
-
-        if (direction === "left") {
-            moveDropPiece(-1, 0);
-            renderDropBoard();
-            return true;
-        }
-        if (direction === "right") {
-            moveDropPiece(1, 0);
-            renderDropBoard();
-            return true;
-        }
-        if (direction === "down") {
-            dropTick();
-            return true;
-        }
-
         return false;
     }
-
     virtualPadButtons.forEach((button) => {
         button.addEventListener("click", () => {
             handleDirectionalInput(button.dataset.padDir || "");
