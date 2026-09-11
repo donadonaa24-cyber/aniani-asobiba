@@ -34,3 +34,10 @@
 - 9x9 board uses five-in-a-row rules; Tetris shows two queued pieces.
 - Fullscreen/orientation APIs depend on the browser. Unsupported browsers use a viewport layout.
 - Publish index.html, aniani.js, arcade.css, arcade-layout.js and the four arcade images together.
+
+## 作品紹介の統一ルール
+- このポータルでの積み込みゲームの紹介名は「架空運輸」。リンク先の作品名は変更しない。
+- 公開済み作品の状態は「公開中＆追加要素可能性あり」に統一する。未公開作品は公開予定の表記を維持する。
+- 公開済み作品には短いゲーム説明を付け、ボタンを「ホームページへ」「ウェブ版で遊ぶ」「スマホ版で遊ぶ」の順にそろえる。
+- 今後追加する公開済み作品にも同じルールを適用する。
+- 架空運輸のホームページは index.html?view=home。viewを指定しないとスマホでゲームが自動表示されるため、ホーム用の指定を維持する。
