@@ -1,0 +1,8 @@
+# Local coordination file for parallel Codex tasks
+docs/ACTIVE_TASKS.md
+
+# Local credentials and environment overrides
+supabase.txt
+.env
+.env.*
+!.env.example
