@@ -21,6 +21,10 @@
 - ドキュメントのみの変更のため、フル回帰テストは再実行していない。
 - コード、既存README、Supabase migration、テスト、公開用Git履歴との整合を確認。
 
+### Git記録
+
+- `44c102f` Add project documentation management rules
+
 ## 2026-09-12
 
 ### 追加
