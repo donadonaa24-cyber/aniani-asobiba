@@ -6,3 +6,7 @@ supabase.txt
 .env
 .env.*
 !.env.example
+
+# Separate distribution repository and local release artifacts
+/.publish-battle-3d/
+/release-artifacts/

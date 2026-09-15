@@ -1,6 +1,6 @@
 # ARCHITECTURE
 
-最終確認日: 2026-09-14
+最終確認日: 2026-09-16
 
 ## 全体構成
 
@@ -33,7 +33,7 @@ Browser
 | `arcade.css` | ミニゲーム全画面、固定レイアウト、仮想パッド、レスポンシブ調整 |
 | `common/portal.css` | 共通アカウント、ウォレット、ガチャ、カード図鑑 |
 | `aniani.js` | モーダル、localStorage、記事/コメント、8ミニゲームのロジック |
-| `galaxy.js` | 4作品の円軌道、選択、スワイプ、キーボード、モーション軽減 |
+| `galaxy.js` | 登録作品数に応じた円軌道と総件数表示、選択、スワイプ、キーボード、モーション軽減 |
 | `arcade-layout.js` | ミニゲーム開始/終了、Fullscreen、画面向き、盤面サイズ調整、ホーム復帰 |
 | `common/portal.js` | Supabase Auth、デイリー、ガチャ、図鑑、セッションUI、通信中ガード |
 | `common/api.js` | 公開/認証REST・RPCクライアント、20秒タイムアウト |
@@ -49,6 +49,9 @@ Browser
 - `supabase/`: DB migration、検証SQL、運用記録。
 - `docs/`: Codex向け正式仕様、現在状態、変更履歴、技術構成。
 - `.publish-aniani/`: GitHub Pagesへpushする独立Git作業ツリー。ローカル開発ルートとは別管理。
+- `.publish-battle-3d/`: Unity版専用の紹介・配布リポジトリ作業ツリー。Unityソース一式は含まない。
+- `release-artifacts/`: ローカル配布ZIP。ポータルのGit管理対象外。
+- `images/battle-3d.png`: Unity版の実際の対戦画面を紹介する画像。
 - `assets/images/積み込みゲーム/`: 別作品「翠路ロジスティクス」の同梱ソース。独自のHTML/CSS/JS/Nodeサーバー/テスト/データを持つが、ポータルはこのコピーを起動せず、公開済み `tumikomi` へ外部リンクする。
 
 ## システム間の役割
@@ -65,6 +68,10 @@ Browser
 - `arcade-layout.js` がゲームロジックから独立して、全画面・向き・サイズ・終了導線を管理する。
 - 終了時は `arcade-exit` DOMイベントを発火し、`aniani.js` が各ゲームをリセットする。
 - `data-mini-tab` と `data-mini-panel` の値がゲーム識別子。既存識別子 `drop` は、表示ゲームが8パズルへ変わった後も互換性のため維持している。
+- `arcade-layout.js` は既存の開始・リセット・神経衰弱入力DOMを `#arcade-controls` へ一度だけ移設する。複製しないためIDと登録済みイベント処理は維持される。
+- `.arcade-control-deck`、`.arcade-session-actions`、`.arcade-action-pad` を `arcade.css` の共通Gridで配置する。縦画面は下部、横画面/PCは左右に操作域を確保する。
+- CSS変数 `--pad-key`、`--thumb-zone` と `env(safe-area-inset-*)`、`dvh/dvw` を利用。神経衰弱のCSS回転時は余白の向きも読み替える。
+- プレイ中の `data-directional` により、方向操作不要ゲームのパッド空間を除外する。
 
 ### 共通アカウント
 
@@ -109,6 +116,7 @@ Browser
 ## 外部サービス
 
 - GitHub Pages: 静的公開。リポジトリ `donadonaa24-cyber/aniani-asobiba`。
+- Unity版: `donadonaa24-cyber/battle-a-la-carte-3d` のPages（main/ルート）で紹介、Release `v0.1.0` でWindows ZIPを配布。ポータルへUnityランタイムを埋め込まない。
 - Supabase: Auth、PostgreSQL、PostgREST/RPC、RLS。プロジェクト `aniani-common`、Freeプラン。
 - Google Fonts: `M PLUS Rounded 1c`、`Shippori Mincho`。
 - esm.sh: Supabase JSのES Module配信。
@@ -137,6 +145,7 @@ Browser
 - 公開: 必要ファイルを `.publish-aniani/` に反映し、同Gitリポジトリの `main` をGitHubへpushする。
 - GitHub Pagesの設定詳細（branch/folder）はリポジトリ設定画面で未確認。
 - `supabase.txt` は公開対象外。
+- Unity版ZIPは既存Windows成果物から作成し、デバッグバックアップ、PDB/MDB、ログを除外。exeとData/DLL等の195ファイル一式をReleasesへ保存する。Unityの再ビルドはこのポータル作業では実施しない。
 
 ## 対応状況
 

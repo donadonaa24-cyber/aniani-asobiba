@@ -3,6 +3,20 @@
     const root = document.getElementById('mini-games-tabs');
     if (!modal || !root) return;
     const close = modal.querySelector('[data-modal-close]');
+    const controls = document.getElementById('arcade-controls');
+    const sessions = [];
+    if (controls) {
+        // Move existing buttons, not copies, so game handlers and IDs stay intact.
+        root.querySelectorAll('[data-mini-panel]').forEach(panel => {
+            const actions = panel.querySelector('.memory-controls, .form-actions:not(.mini-pad-controls)');
+            if (!actions) return;
+            actions.classList.add('arcade-session-actions');
+            actions.dataset.controlGame = panel.dataset.miniPanel;
+            actions.hidden = true;
+            controls.append(actions);
+            sessions.push(actions);
+        });
+    }
     let playing = false;
     let session = 0;
     let frame = 0;
@@ -57,6 +71,12 @@
         const currentSession = ++session;
         playing = true;
         modal.dataset.game = key;
+        modal.dataset.directional = String(['breakout', 'snake', 'tetris', 'drop'].includes(key));
+        sessions.forEach(actions => { actions.hidden = actions.dataset.controlGame !== key; });
+        controls?.querySelectorAll('[data-pad-dir]').forEach(button => {
+            button.disabled = (key === 'tetris' && button.dataset.padDir === 'up') ||
+                (key === 'breakout' && ['up', 'down'].includes(button.dataset.padDir));
+        });
         modal.classList.add('is-playing');
         close.setAttribute('aria-label', 'ゲーム一覧に戻る');
         close.focus({preventScroll: true});

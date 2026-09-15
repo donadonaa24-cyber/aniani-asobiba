@@ -7,17 +7,26 @@ function element(classes=[]) {
 }
 async function test(mode) {
  const modal=element(['is-open']),close=element(),home=element(),root=element(),tab=element(),body=element(['modal-open']),trigger=element();
- tab.dataset.miniTab='tetris'; root.querySelectorAll=()=>[tab]; root.querySelector=()=>tab; modal.querySelector=()=>close;
- const events={}, document={body,fullscreenElement:null,querySelector:()=>trigger,getElementById:id=>({'mini-game':modal,'mini-games-tabs':root,'arcade-home':home}[id]),addEventListener:(n,f)=>events[n]=f,dispatchEvent(){if(mode==='cleanup-error')throw Error('cleanup');},exitFullscreen(){if(mode==='exit-throw')throw Error('unsupported');this.fullscreenElement=null;return mode==='void'?undefined:Promise.resolve();}};
+ const controls=element(), actions=element(), memoryActions=element(), up=element(), left=element();
+ up.dataset.padDir='up'; left.dataset.padDir='left';
+ const appended=[]; controls.append=node=>appended.push(node); controls.querySelectorAll=()=>[up,left];
+ const panels=[{dataset:{miniPanel:'tetris'},querySelector:()=>actions},{dataset:{miniPanel:'memory'},querySelector:()=>memoryActions}];
+ tab.dataset.miniTab='tetris'; root.querySelectorAll=selector=>selector==='[data-mini-panel]'?panels:[tab]; root.querySelector=()=>tab; modal.querySelector=()=>close;
+ const events={}, document={body,fullscreenElement:null,querySelector:()=>trigger,getElementById:id=>({'mini-game':modal,'mini-games-tabs':root,'arcade-home':home,'arcade-controls':controls}[id]),addEventListener:(n,f)=>events[n]=f,dispatchEvent(){if(mode==='cleanup-error')throw Error('cleanup');},exitFullscreen(){if(mode==='exit-throw')throw Error('unsupported');this.fullscreenElement=null;return mode==='void'?undefined:Promise.resolve();}};
  modal.requestFullscreen=()=>{if(mode==='request-throw')throw Error('unsupported');document.fullscreenElement=modal;return Promise.resolve();};
  const window={addEventListener(){}};
  vm.runInNewContext(fs.readFileSync('arcade-layout.js','utf8'),{document,window,screen:{orientation:{unlock(){},lock(){}}},Event:class{},Promise,requestAnimationFrame:()=>1,ResizeObserver:class{observe(){}},MutationObserver:class{observe(){}}});
+ assert.deepEqual(appended,[actions,memoryActions],'Existing action nodes are moved without cloning');
+ assert(actions.hidden && memoryActions.hidden,'Session controls hidden in selection menu');
  const click=button=>button.handlers.click({preventDefault(){},stopImmediatePropagation(){}});
  // Selection screen must close directly without needing to enter a game.
  click(close);assert(!modal.classList.contains('is-open'));assert(!body.classList.contains('modal-open'));
  modal.classList.add('is-open');body.classList.add('modal-open');
  root.handlers.click({target:{closest:()=>tab}});await Promise.resolve();await Promise.resolve();
  assert(modal.classList.contains('is-playing'));
+ assert.equal(actions.hidden,false); assert.equal(memoryActions.hidden,true);
+ assert.equal(up.disabled,true,'Touch rotation belongs to opposite thumb'); assert.equal(left.disabled,false);
+ assert.equal(modal.dataset.directional,'true');
  click(close);assert(!modal.classList.contains('is-playing'));assert(modal.classList.contains('is-open'));
  click(close);assert(!modal.classList.contains('is-open'));assert.equal(modal.attrs['aria-hidden'],'true');
  modal.classList.add('is-open');body.classList.add('modal-open');click(home);assert(!modal.classList.contains('is-open'));

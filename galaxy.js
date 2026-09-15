@@ -22,7 +22,7 @@
         const item = cases[index];
         document.getElementById('orbit-title').textContent = item.dataset.title;
         document.getElementById('orbit-description').textContent = item.dataset.description;
-        document.getElementById('orbit-status').textContent = `${String(index + 1).padStart(2, '0')} / 04 · ${item.dataset.status}`;
+        document.getElementById('orbit-status').textContent = `${String(index + 1).padStart(2, '0')} / ${String(cases.length).padStart(2, '0')} · ${item.dataset.status}`;
     }
     function render() {
         let front = 0;

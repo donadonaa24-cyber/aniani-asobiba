@@ -3,6 +3,13 @@ const assert = require('node:assert/strict');
 const html = fs.readFileSync('index.html', 'utf8');
 assert(!/翠路ロジスティクス|制作途中|公式トップ|>ゲームページへ</.test(html));
 assert(html.includes('data-title="架空運輸"'));
+const cases = [...html.matchAll(/data-orbit="(\d+)"[^>]*data-title="([^"]+)"/g)];
+assert.deepEqual(cases.map(m=>m[1]),['0','1','2','3','4']);
+assert.deepEqual(cases.slice(0,3).map(m=>m[2]),['Battle a la carte','Battle à la carte Unity版（3D版）','架空運輸']);
+assert(html.includes('id="battle-3d-detail"'));
+assert(html.includes('Windows版をダウンロード'));
+assert(html.includes('battle-a-la-carte-3d/releases/download/v0.1.0/BattleALaCarte-3D-Windows-v0.1.0.zip'));
+assert(!/href="[^"]+\.exe"/.test(html),'Never launch a Windows exe in-browser');
 const groups = [...html.matchAll(/<div class="game-actions">([\s\S]*?)<\/div>/g)]
   .map(m => [...m[1].matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(a => ({url:a[1],label:a[2]})))
   .filter(links => links.some(a => /github.io\/(tumikomi|battle-a-la-carte--)/.test(a.url)));
