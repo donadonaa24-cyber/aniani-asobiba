@@ -1,64 +1,16 @@
 :root {
     --trial-c: #b5c5d2;
-    --trial-sr: #7de9ff;
-    --trial-ssr: #ffd36b;
-    --trial-ur: #ff78da;
+    --trial-sr: #6eeaff;
+    --trial-ssr: #ffd76c;
+    --trial-ur: #ff65d8;
 }
 
-.orbit-core {
-    pointer-events: auto;
-    z-index: 60;
-}
-
-.gacha-core-app {
-    position: relative;
-    width: clamp(76px, 7vw, 106px);
-    aspect-ratio: 1;
-    display: grid;
-    place-content: center;
-    gap: 3px;
-    border: 1px solid rgba(191, 239, 255, .68);
-    border-radius: 28%;
-    color: #f3fbff;
-    background:
-        radial-gradient(circle at 50% 35%, rgba(255, 255, 255, .38), transparent 8%),
-        radial-gradient(circle, rgba(63, 218, 255, .3), transparent 52%),
-        linear-gradient(145deg, rgba(17, 72, 104, .86), rgba(4, 12, 34, .94));
-    box-shadow: 0 0 34px rgba(69, 206, 255, .28), inset 0 0 20px rgba(157, 232, 255, .14);
-    font: inherit;
-    letter-spacing: .16em;
-    cursor: pointer;
-    overflow: hidden;
-}
-
-.gacha-core-app::before,
-.gacha-core-app::after {
-    content: "";
-    position: absolute;
-    inset: 13%;
-    border: 1px solid rgba(190, 242, 255, .5);
-    border-radius: 50%;
-    animation: trial-core-orbit 9s linear infinite;
-}
-
-.gacha-core-app::after {
-    inset: 25% 9%;
-    transform: rotate(62deg);
-    animation-direction: reverse;
-    animation-duration: 6s;
-}
-
-.gacha-core-app span,
-.gacha-core-app small { position: relative; z-index: 1; }
-.gacha-core-app span { font-size: clamp(11px, 1vw, 15px); font-weight: 800; text-shadow: 0 0 12px #77ddff; }
-.gacha-core-app small { font-size: 7px; color: #bfeeff; letter-spacing: .18em; }
-.gacha-core-app:hover { transform: scale(1.06); box-shadow: 0 0 48px rgba(255, 116, 216, .34), inset 0 0 22px rgba(157, 232, 255, .2); }
-.gacha-core-app:focus-visible { outline: 2px solid #fff; outline-offset: 5px; }
+#trial-gacha [hidden] { display: none !important; }
 
 .trial-gacha-panel {
     width: min(1180px, 100%);
-    height: min(760px, calc(100dvh - 112px));
-    max-height: calc(100dvh - 112px);
+    height: min(780px, calc(100dvh - 88px));
+    max-height: calc(100dvh - 88px);
     overflow: hidden;
     padding: 0;
     border-color: rgba(112, 224, 255, .5);
@@ -69,13 +21,13 @@
 }
 
 .trial-gacha-shell { height: 100%; display: grid; grid-template-rows: auto auto minmax(0, 1fr); }
-.trial-gacha-head { padding: 18px 68px 12px 22px; border-bottom: 1px solid rgba(137, 213, 255, .16); }
+.trial-gacha-head { padding: 17px 68px 11px 22px; border-bottom: 1px solid rgba(137, 213, 255, .16); }
 .trial-gacha-head p { margin: 0; color: #92cce5; font-size: 10px; letter-spacing: .22em; }
 .trial-gacha-head h2 { margin: 4px 0 3px; font: 700 clamp(23px, 3vw, 38px) 'Shippori Mincho', serif; letter-spacing: .08em; }
 .trial-gacha-head small { color: #b2c2d2; }
 .trial-free-badge { display: inline-flex; margin-left: 10px; padding: 4px 8px; border: 1px solid #77e8ff7d; border-radius: 99px; color: #99efff; font: 700 10px 'M PLUS Rounded 1c', sans-serif; vertical-align: middle; }
 
-.trial-gacha-tabs { display: flex; gap: 8px; padding: 10px 22px; background: rgba(3, 13, 33, .75); }
+.trial-gacha-tabs { display: flex; gap: 8px; padding: 9px 22px; background: rgba(3, 13, 33, .75); }
 .trial-gacha-tabs button,
 .trial-filter button {
     min-height: 38px;
@@ -89,49 +41,179 @@
 }
 .trial-gacha-tabs button[aria-pressed="true"],
 .trial-filter button[aria-pressed="true"] { color: #05101f; background: #b9efff; box-shadow: 0 0 20px #76dcff44; }
+.trial-gacha-tabs button:disabled { cursor: wait; opacity: .45; }
 
-.trial-gacha-body { min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 16px 22px 24px; }
-.trial-summon-layout { display: grid; grid-template-columns: minmax(220px, .8fr) minmax(0, 1.8fr); gap: 18px; min-height: 100%; }
-.trial-summon-console { display: flex; flex-direction: column; gap: 12px; }
-.trial-summon-stage {
+.trial-gacha-body { min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 14px 22px 22px; }
+.trial-summon-layout { display: grid; grid-template-columns: minmax(0, 1fr) 270px; gap: 14px; min-height: 100%; }
+
+.trial-summon-experience {
     position: relative;
-    min-height: 270px;
+    min-height: 430px;
+    isolation: isolate;
     display: grid;
-    place-content: center;
-    text-align: center;
+    place-items: center;
     overflow: hidden;
-    border: 1px solid rgba(118, 224, 255, .3);
-    border-radius: 18px;
-    background: radial-gradient(circle at 50% 50%, #266b8355, transparent 30%), linear-gradient(#05152b, #020716);
+    border: 1px solid rgba(118, 224, 255, .28);
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at 50% 48%, #173e664f 0 12%, transparent 34%),
+        radial-gradient(circle at 22% 18%, #6ecbff22, transparent 22%),
+        linear-gradient(155deg, #06162c, #01040f 72%);
+    box-shadow: inset 0 0 80px #0008, 0 16px 45px #0007;
+    cursor: default;
 }
-.trial-summon-stage::before { content: ""; position: absolute; inset: -35%; background: conic-gradient(from 0deg, transparent, #61dcff24, transparent 25%, #ff7ddb20, transparent 52%, #ffe78b18, transparent 80%); animation: trial-stage-spin 18s linear infinite; }
-.trial-summon-ring { position: absolute; width: 170px; aspect-ratio: 1; left: 50%; top: 50%; translate: -50% -50%; border: 1px solid #8adfff99; border-radius: 50%; box-shadow: 0 0 28px #62dcff33, inset 0 0 35px #62dcff20; transition: .5s ease; }
-.trial-summon-ring::before,
-.trial-summon-ring::after { content: ""; position: absolute; inset: 20%; border: 1px solid #ff94df99; border-radius: 50%; transform: rotateX(66deg); }
-.trial-summon-ring::after { inset: -14%; border-color: #ffe9946b; transform: rotateY(68deg); }
-.trial-summon-star { position: relative; z-index: 1; display: block; color: #e9fbff; font-size: 58px; text-shadow: 0 0 12px #fff, 0 0 38px #4bd8ff; }
-.trial-summon-stage strong { position: relative; z-index: 1; margin-top: 74px; font-size: 13px; letter-spacing: .15em; }
-.trial-summon-stage.is-summoning .trial-summon-ring { scale: 2.8; rotate: 540deg; filter: brightness(2.4); }
-.trial-summon-stage.is-summoning .trial-summon-star { animation: trial-star-burst 1.2s ease-in-out both; }
+.trial-summon-experience::before,
+.trial-summon-experience::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+.trial-summon-experience::before {
+    z-index: -2;
+    opacity: .76;
+    background-image:
+        radial-gradient(circle, #fff 0 1px, transparent 1.4px),
+        radial-gradient(circle, #75d8ff 0 1px, transparent 1.5px),
+        radial-gradient(circle, #ffe58a 0 1.2px, transparent 1.7px);
+    background-position: 0 0, 37px 73px, 91px 31px;
+    background-size: 83px 83px, 127px 127px, 163px 163px;
+}
+.trial-summon-experience::after {
+    z-index: -1;
+    opacity: .42;
+    background: conic-gradient(from 0deg at 50% 50%, transparent, #61dcff29, transparent 23%, #ff7ddb26, transparent 51%, #ffe78b20, transparent 78%);
+    animation: trial-space-drift 24s linear infinite;
+}
 
-.trial-draw-button {
-    min-height: 58px;
-    border: 1px solid #fff4b8;
+.trial-cosmos { position: absolute; inset: 0; pointer-events: none; }
+.trial-galaxy-ring {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(48vw, 360px);
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    border: 1px solid #79e5ff88;
+    border-radius: 50%;
+    box-shadow: 0 0 32px #59dfff35, inset 0 0 55px #3acfff1f;
+}
+.trial-galaxy-ring::before,
+.trial-galaxy-ring::after {
+    content: "";
+    position: absolute;
+    inset: 13%;
+    border: 1px solid #ff88df78;
+    border-radius: 50%;
+    transform: rotateX(68deg);
+}
+.trial-galaxy-ring::after { inset: -18%; border-color: #ffe9905c; transform: rotateY(72deg); }
+.trial-galaxy-ring.ring-two { width: min(33vw, 245px); rotate: 42deg; border-style: dashed; opacity: .68; }
+.trial-galaxy-core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    color: #f4fdff;
+    font-size: clamp(52px, 8vw, 92px);
+    text-shadow: 0 0 14px #fff, 0 0 42px #5ae0ff, 0 0 86px #bd70ff;
+}
+.trial-summon-coin {
+    position: absolute;
+    z-index: 6;
+    left: 50%;
+    top: 50%;
+    width: 66px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    translate: -50% 320%;
+    opacity: 0;
+    border: 3px solid #fff0a2;
+    border-radius: 50%;
+    color: #624006;
+    background: radial-gradient(circle at 34% 28%, #fffbd1, #ffdc63 44%, #9b5d00 100%);
+    box-shadow: 0 0 12px #fff, 0 0 44px #ffd65f;
+    font: 900 27px Georgia, serif;
+}
+.trial-shooting-star {
+    position: absolute;
+    z-index: 8;
+    left: -28%;
+    top: 28%;
+    width: 132px;
+    height: 3px;
+    opacity: 0;
+    rotate: -12deg;
+    border-radius: 50%;
+    background: linear-gradient(90deg, transparent, #fff0a7 72%, #fff);
+    box-shadow: 52px 0 18px #fff, 0 0 22px #ffd96a;
+}
+.trial-shooting-star::after { content: "✦"; position: absolute; right: -7px; top: -16px; color: #fff; font-size: 25px; text-shadow: 0 0 14px #fff, 0 0 36px #ffd45d; }
+.trial-whiteout { position: absolute; z-index: 9; inset: 0; opacity: 0; background: #fff; pointer-events: none; }
+
+.trial-idle-copy { position: relative; z-index: 3; width: min(470px, 78%); text-align: center; }
+.trial-idle-copy small { color: #8bdff5; font: 800 9px 'M PLUS Rounded 1c', sans-serif; letter-spacing: .24em; }
+.trial-idle-copy strong { display: block; margin: 12px 0 8px; color: #f2fbff; font: 700 clamp(23px, 3vw, 38px) 'Shippori Mincho', serif; letter-spacing: .08em; text-shadow: 0 0 26px #69dcff55; }
+.trial-idle-copy p { margin: 0; color: #9eb3c3; font-size: 12px; line-height: 1.8; }
+
+.trial-single-reveal { position: absolute; z-index: 12; inset: 14px; display: grid; place-items: center; }
+.trial-reveal-count { position: absolute; z-index: 4; top: 0; left: 0; margin: 0; padding: 6px 12px; border: 1px solid #a2e9ff55; border-radius: 999px; color: #d9f7ff; background: #03101dcc; font: 800 11px Georgia, serif; letter-spacing: .13em; }
+.trial-current-card { width: min(470px, 78%); }
+.trial-ur-quote { width: min(720px, 92%); text-align: center; animation: trial-quote-in .65s cubic-bezier(.16,.84,.28,1) both; }
+.trial-ur-quote span { color: #ffe784; font: 900 10px 'M PLUS Rounded 1c', sans-serif; letter-spacing: .3em; text-shadow: 0 0 15px #ffd54d; }
+.trial-ur-quote blockquote { margin: 18px 0 0; color: #fff; font: 700 clamp(25px, 4vw, 48px) 'Shippori Mincho', serif; letter-spacing: .08em; line-height: 1.45; text-shadow: 0 0 10px #fff, 0 0 35px #ffcb62, 0 0 72px #ff58d1; }
+
+.trial-summon-experience[data-phase="coin"] .trial-idle-copy,
+.trial-summon-experience:not([data-phase="idle"]) .trial-idle-copy { opacity: 0; }
+.trial-summon-experience[data-phase="coin"] .trial-summon-coin { animation: trial-coin-toss .9s cubic-bezier(.19,.75,.28,1) both; }
+.trial-summon-experience[data-phase="vortex"] .trial-galaxy-ring { animation: trial-vortex .54s linear infinite; }
+.trial-summon-experience[data-phase="vortex"] .ring-two { animation-direction: reverse; animation-duration: .38s; }
+.trial-summon-experience[data-phase="vortex"] .trial-galaxy-core { animation: trial-core-charge .72s ease-in-out infinite alternate; }
+.trial-summon-experience[data-phase="whiteout"] .trial-whiteout { animation: trial-whiteout .72s ease both; }
+.trial-summon-experience[data-phase="omen"] { border-color: #ffdf75; box-shadow: inset 0 0 120px #5a3400, 0 0 42px #ffd45c77; }
+.trial-summon-experience[data-phase="omen"] .trial-shooting-star { animation: trial-ur-star 1.35s cubic-bezier(.16,.72,.2,1) both; }
+.trial-summon-experience[data-phase="omen"] .trial-galaxy-ring { border-color: #ffe47c; box-shadow: 0 0 42px #ffda5d7a, inset 0 0 58px #ff4bd32e; }
+.trial-summon-experience[data-phase="quote"] { background: radial-gradient(circle, #5a2a603f, transparent 42%), #01030d; }
+.trial-summon-experience[data-phase="quote"]::after { opacity: 1; animation: trial-vortex 3s linear infinite; }
+.trial-summon-experience[data-phase="card"] { border-color: var(--current-rarity, #8adfff); }
+.trial-summon-experience[data-phase="card"][data-rarity="c"] { --current-rarity: var(--trial-c); }
+.trial-summon-experience[data-phase="card"][data-rarity="sr"] { --current-rarity: var(--trial-sr); box-shadow: inset 0 0 100px #15cfff1f, 0 0 30px #52e6ff42; }
+.trial-summon-experience[data-phase="card"][data-rarity="ssr"] { --current-rarity: var(--trial-ssr); box-shadow: inset 0 0 110px #ffb20024, 0 0 38px #ffd25f54; }
+.trial-summon-experience[data-phase="card"][data-rarity="ur"] { --current-rarity: var(--trial-ur); box-shadow: inset 0 0 130px #f542d830, 0 0 54px #ff64dc75; animation: trial-ur-stage 1.8s ease-in-out infinite alternate; }
+.trial-summon-experience[data-phase="results"] { min-height: 210px; }
+
+.trial-summon-controls { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.trial-draw-button,
+.trial-next-button,
+.trial-skip-button,
+#trial-results-again {
+    min-height: 54px;
     border-radius: 14px;
+    font: 800 15px 'M PLUS Rounded 1c', sans-serif;
+    cursor: pointer;
+}
+.trial-draw-button {
+    border: 1px solid #fff4b8;
     color: #11162a;
     background: linear-gradient(125deg, #f6dd83, #fff8d0 44%, #e8aef4);
     box-shadow: 0 8px 25px #ffe9852e, inset 0 1px #fff;
-    font: 800 17px 'M PLUS Rounded 1c', sans-serif;
-    cursor: pointer;
 }
 .trial-draw-button small { display: block; margin-top: 2px; font-size: 10px; font-weight: 700; }
-.trial-draw-button:disabled { cursor: wait; filter: saturate(.3); }
+.trial-next-button { border: 1px solid #c7f2ff; color: #06111f; background: linear-gradient(120deg, #75ddff, #d8f8ff); box-shadow: 0 0 25px #60dbff35; }
+.trial-skip-button { min-height: 44px; border: 1px solid #8ea7bb55; color: #c4d4df; background: #081829d9; }
+#trial-results-again { min-height: 40px; padding: 7px 15px; border: 1px solid #ffd98588; color: #fff2be; background: #352207aa; font-size: 12px; }
+.trial-draw-button:focus-visible,
+.trial-next-button:focus-visible,
+.trial-skip-button:focus-visible,
+#trial-results-again:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .trial-rates, .trial-gacha-note, #trial-gacha-status { margin: 0; font-size: 11px; line-height: 1.7; color: #aabfce; }
-#trial-gacha-status { color: #d9f7ff; min-height: 2.8em; }
+#trial-gacha-status { min-height: 3.4em; padding: 9px 11px; border-left: 2px solid #77dfff; color: #d9f7ff; background: #071528a8; }
 
-.trial-results-wrap { min-width: 0; }
-.trial-results-wrap h3 { margin: 0 0 10px; font-size: 13px; letter-spacing: .12em; color: #a6d8ec; }
-.trial-gacha-results { display: grid; grid-template-columns: repeat(5, minmax(108px, 1fr)); gap: 10px; align-content: start; }
+.trial-results-wrap { grid-column: 1 / -1; min-width: 0; padding-top: 3px; }
+.trial-results-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 9px; }
+.trial-results-head h3 { margin: 0; font-size: 13px; letter-spacing: .12em; color: #a6d8ec; }
+.trial-gacha-results { display: grid; grid-template-columns: repeat(5, minmax(108px, 1fr)); gap: 9px; align-content: start; }
 .trial-card { position: relative; min-width: 0; padding: 5px; border: 1px solid var(--rarity-color); border-radius: 12px; color: #eef8ff; background: linear-gradient(155deg, color-mix(in srgb, var(--rarity-color) 18%, #071222), #030714 72%); box-shadow: 0 6px 18px #0007, inset 0 0 18px color-mix(in srgb, var(--rarity-color) 11%, transparent); text-align: left; overflow: hidden; }
 .trial-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 25%, #fff5 45%, transparent 62%); translate: -140% 0; pointer-events: none; }
 .trial-card.rarity-c { --rarity-color: var(--trial-c); }
@@ -148,8 +230,18 @@
 .trial-card-meta small { overflow: hidden; color: #91a7b8; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
 .trial-card-meta b { position: absolute; top: 6px; right: 3px; color: var(--rarity-color); font: 800 11px Georgia, serif; }
 .trial-card-meta em { position: absolute; right: 3px; bottom: 3px; padding: 1px 5px; border-radius: 99px; color: #fff; background: #0009; font-size: 8px; font-style: normal; }
-.trial-gacha-results.is-revealing .trial-card { animation: trial-card-reveal .55s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--reveal-index) * 110ms); }
-.trial-gacha-results.is-revealing .trial-card::after { animation: trial-card-shine .75s ease both; animation-delay: calc(var(--reveal-index) * 110ms + 180ms); }
+
+.trial-card.is-featured { width: 100%; padding: 8px; border-width: 2px; border-radius: 18px; animation: trial-featured-reveal .72s cubic-bezier(.14,.82,.22,1) both; box-shadow: 0 0 36px color-mix(in srgb, var(--rarity-color) 50%, transparent), 0 20px 50px #000c; }
+.trial-card.is-featured .trial-card-art { aspect-ratio: 1.54 / 1; border-radius: 12px; }
+.trial-card.is-featured .trial-card-meta { padding: 11px 8px 8px; }
+.trial-card.is-featured .trial-card-meta strong { font-size: clamp(19px, 3vw, 30px); }
+.trial-card.is-featured .trial-card-meta small { font-size: 11px; }
+.trial-card.is-featured .trial-card-meta b { top: 10px; right: 8px; font-size: 20px; text-shadow: 0 0 14px var(--rarity-color); }
+.trial-card.is-featured .trial-card-number { font-size: 10px; }
+.trial-card.is-featured::after { animation: trial-card-shine 1s ease .22s both; }
+.trial-card.is-featured.rarity-ur { animation: trial-featured-reveal .72s cubic-bezier(.14,.82,.22,1) both, trial-ur-card-glow 1.7s ease-in-out .72s infinite alternate; }
+.trial-gacha-results.is-revealing .trial-card { animation: trial-card-reveal .55s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--reveal-index) * 85ms); }
+.trial-gacha-results.is-revealing .trial-card::after { animation: trial-card-shine .72s ease both; animation-delay: calc(var(--reveal-index) * 85ms + 150ms); }
 
 .trial-book-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
 .trial-book-head h3 { margin: 0; font-size: 16px; }
@@ -162,33 +254,41 @@
 .trial-card.is-compact:hover { translate: 0 -3px; }
 .trial-card.is-locked { --rarity-color: #526879; filter: saturate(.3); }
 
-@keyframes trial-core-orbit { to { rotate: 360deg; } }
-@keyframes trial-stage-spin { to { rotate: 360deg; } }
-@keyframes trial-star-burst { 0% { scale: 1; } 45% { scale: 2.2; filter: brightness(3); } 100% { scale: .2; opacity: 0; } }
+@keyframes trial-space-drift { to { rotate: 360deg; scale: 1.08; } }
+@keyframes trial-vortex { to { rotate: 360deg; } }
+@keyframes trial-core-charge { from { scale: .78; filter: brightness(1); } to { scale: 1.35; filter: brightness(2.8); } }
+@keyframes trial-coin-toss { 0% { translate: -50% 320%; rotate: 0deg; opacity: 0; } 22% { opacity: 1; } 72% { translate: -50% -42%; rotate: 760deg; opacity: 1; scale: 1; } 100% { translate: -50% -50%; rotate: 930deg; opacity: 0; scale: .08; } }
+@keyframes trial-whiteout { 0% { opacity: 0; } 45% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes trial-ur-star { 0% { translate: 0 0; opacity: 0; } 12% { opacity: 1; } 72% { translate: 125vw 18vh; opacity: 1; } 100% { translate: 145vw 26vh; opacity: 0; } }
+@keyframes trial-quote-in { from { opacity: 0; filter: blur(12px); scale: .8; } to { opacity: 1; filter: blur(0); scale: 1; } }
+@keyframes trial-featured-reveal { 0% { opacity: 0; transform: perspective(1100px) rotateY(94deg) scale(.58); filter: brightness(3) blur(8px); } 62% { opacity: 1; transform: perspective(1100px) rotateY(-7deg) scale(1.06); filter: brightness(1.35) blur(0); } 100% { transform: perspective(1100px) rotateY(0) scale(1); filter: brightness(1); } }
 @keyframes trial-card-reveal { from { opacity: 0; transform: perspective(700px) rotateY(90deg) scale(.72); } to { opacity: 1; transform: perspective(700px) rotateY(0) scale(1); } }
 @keyframes trial-card-shine { from { translate: -140% 0; } to { translate: 140% 0; } }
+@keyframes trial-ur-stage { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(24deg) brightness(1.12); } }
+@keyframes trial-ur-card-glow { from { box-shadow: 0 0 25px #ff65d870, 0 20px 50px #000c; } to { box-shadow: 0 0 58px #ffd86da8, 0 0 92px #ff65d849, 0 20px 50px #000c; } }
 
 @media (max-width: 900px) {
-    .trial-summon-layout { grid-template-columns: 1fr; }
-    .trial-summon-console { display: grid; grid-template-columns: minmax(190px, .8fr) minmax(190px, 1fr); }
-    .trial-summon-stage { grid-row: span 5; min-height: 230px; }
+    .trial-summon-layout { grid-template-columns: minmax(0, 1fr) 230px; }
+    .trial-summon-experience { min-height: 390px; }
     .trial-gacha-book { grid-template-columns: repeat(5, minmax(90px, 1fr)); }
 }
 
 @media (max-width: 700px) {
-    .orbit-core { top: 55%; }
-    .gacha-core-app { width: 66px; border-radius: 20px; }
     .trial-gacha-panel { height: calc(100dvh - max(18px, env(safe-area-inset-top)) - max(12px, env(safe-area-inset-bottom))); max-height: none; border-radius: 14px; }
     #trial-gacha.modal-section { padding: max(9px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(9px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); }
-    .trial-gacha-head { padding: 13px 52px 9px 14px; }
-    .trial-gacha-head h2 { font-size: 23px; }
+    .trial-gacha-head { padding: 12px 52px 8px 14px; }
+    .trial-gacha-head h2 { font-size: 22px; }
     .trial-gacha-head small { display: block; font-size: 9px; }
-    .trial-gacha-tabs { padding: 8px 13px; }
+    .trial-gacha-tabs { padding: 7px 12px; }
     .trial-gacha-tabs button { flex: 1; min-height: 40px; }
-    .trial-gacha-body { padding: 10px 12px 18px; }
-    .trial-summon-console { display: flex; }
-    .trial-summon-stage { min-height: 190px; }
-    .trial-summon-ring { width: 125px; }
+    .trial-gacha-body { padding: 9px 10px max(14px, env(safe-area-inset-bottom)); }
+    .trial-summon-layout { grid-template-columns: 1fr; gap: 10px; }
+    .trial-summon-experience { min-height: min(420px, 50dvh); border-radius: 17px; }
+    .trial-summon-controls { display: grid; grid-template-columns: 1fr 1fr; }
+    .trial-draw-button, .trial-next-button { grid-column: 1 / -1; }
+    .trial-rates, .trial-gacha-note, #trial-gacha-status { grid-column: 1 / -1; }
+    .trial-current-card { width: min(420px, 88%); }
+    .trial-ur-quote blockquote { font-size: clamp(22px, 8vw, 36px); }
     .trial-gacha-results { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
     .trial-gacha-book { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
     .trial-card-meta strong { font-size: 10px; }
@@ -197,26 +297,41 @@
 @media (max-width: 380px) {
     .trial-gacha-book { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .trial-free-badge { display: none; }
+    .trial-summon-experience { min-height: 340px; }
+    .trial-current-card { width: 94%; }
 }
 
-@media (max-height: 500px) {
-    #trial-gacha.modal-section {
-        padding: max(8px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
-    }
-    .trial-gacha-panel { height: calc(100dvh - 16px); max-height: none; }
-    .trial-gacha-head { padding: 9px 56px 7px 16px; }
-    .trial-gacha-head h2 { margin: 2px 0; font-size: 23px; }
-    .trial-gacha-tabs { padding: 7px 16px; }
-    .trial-gacha-body { padding: 9px 16px 14px; }
-    .trial-summon-stage { min-height: 180px; }
+@media (max-height: 500px) and (orientation: landscape) {
+    #trial-gacha.modal-section { padding: max(7px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(7px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)); }
+    .trial-gacha-panel { height: calc(100dvh - 14px); max-height: none; }
+    .trial-gacha-head { padding: 7px 52px 5px 14px; }
+    .trial-gacha-head h2 { margin: 1px 0; font-size: 20px; }
+    .trial-gacha-head small { display: none; }
+    .trial-gacha-tabs { padding: 5px 14px; }
+    .trial-gacha-tabs button { min-height: 34px; padding-block: 5px; }
+    .trial-gacha-body { padding: 7px 14px 10px; }
+    .trial-summon-layout { grid-template-columns: minmax(0, 1fr) 230px; gap: 9px; }
+    .trial-summon-experience { min-height: 238px; }
+    .trial-summon-controls { display: flex; }
+    .trial-idle-copy p, .trial-gacha-note { display: none; }
+    .trial-current-card { width: min(350px, 64%); }
+    .trial-card.is-featured .trial-card-art { aspect-ratio: 1.8 / 1; }
+    .trial-ur-quote blockquote { margin-top: 8px; font-size: 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .gacha-core-app::before,
-    .gacha-core-app::after,
-    .trial-summon-stage::before,
-    .trial-summon-stage.is-summoning .trial-summon-star,
+    .trial-summon-experience::after,
+    .trial-summon-experience[data-phase="coin"] .trial-summon-coin,
+    .trial-summon-experience[data-phase="vortex"] .trial-galaxy-ring,
+    .trial-summon-experience[data-phase="vortex"] .trial-galaxy-core,
+    .trial-summon-experience[data-phase="whiteout"] .trial-whiteout,
+    .trial-summon-experience[data-phase="omen"] .trial-shooting-star,
+    .trial-summon-experience[data-phase="quote"]::after,
+    .trial-summon-experience[data-phase="card"][data-rarity="ur"],
+    .trial-ur-quote,
+    .trial-card.is-featured,
+    .trial-card.is-featured::after,
+    .trial-card.is-featured.rarity-ur,
     .trial-gacha-results.is-revealing .trial-card,
     .trial-gacha-results.is-revealing .trial-card::after { animation: none !important; }
-    .trial-summon-stage.is-summoning .trial-summon-ring { scale: 1.15; rotate: 45deg; }
 }

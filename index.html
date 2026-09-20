@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="aniani.css?v=20260920a1">
     <link rel="stylesheet" href="galaxy.css?v=20260920a1">
     <link rel="stylesheet" href="arcade.css?v=20260915a1">
-    <link rel="stylesheet" href="trial-gacha.css?v=20260920a3">
+    <link rel="stylesheet" href="trial-gacha.css?v=20260920b1">
+    <link rel="stylesheet" href="common/portal.css?v=20260912a1">
 </head>
 <body>
     <div class="bg-glow bg-glow-a"></div>
@@ -36,6 +37,7 @@
                 <h1>あにあにの遊び場</h1>
             </a>
             <nav class="header-nav">
+                <button type="button" data-modal-target="common-account">マイページ</button>
                 <button type="button" data-modal-target="games">ゲーム一覧</button>
                 <button type="button" data-modal-target="roadmap">制作予定</button>
                 <button type="button" data-modal-target="articles">更新記事</button>
@@ -56,11 +58,6 @@
             </div>
             <div class="orbit-stage" id="orbit-stage" role="region" aria-label="円軌道を巡るゲームソフト">
                 <div class="orbit-ring" aria-hidden="true"></div>
-                <div class="orbit-core">
-                    <button class="gacha-core-app" type="button" data-modal-target="trial-gacha" aria-label="無料お試し10連ガチャを開く">
-                        <span>GACHA</span><small>FREE TRIAL</small>
-                    </button>
-                </div>
                 <button class="game-case" type="button" data-orbit="0" data-modal-target="battle-detail" data-title="Battle a la carte" data-status="公開中＆追加要素可能性あり" data-description="料理とバトルが交差する、あなただけの一皿。" style="--case-accent:#ffc979">
                     <span class="case-spine" aria-hidden="true">ANIANI ORIGINAL</span>
                     <span class="case-face"><span class="case-brand">ANIANI ORIGINAL / 01</span><img src="assets/images/events/monomono-kokan.png" alt=""><span class="case-caption"><small>COOKING × BATTLE</small><strong>Battle<br>a la carte</strong><em>公開中＆追加要素可能性あり</em></span></span>
@@ -95,8 +92,10 @@
                 <p class="orbit-hint">← → で選択 / Enter でひらく / スワイプ対応</p>
             </div>
             <nav class="console-dock" aria-label="ポータルメニュー">
+                <button type="button" data-modal-target="common-account"><span aria-hidden="true">✦</span>コイン・図鑑</button>
                 <button type="button" data-modal-target="games"><span aria-hidden="true">▣</span>ゲーム一覧</button>
                 <button type="button" data-modal-target="mini-game"><span aria-hidden="true">✣</span>ミニゲーム</button>
+                <button type="button" data-modal-target="trial-gacha"><span aria-hidden="true">✦</span>ガチャ</button>
                 <button type="button" data-modal-target="roadmap"><span aria-hidden="true">◇</span>制作予定</button>
                 <button type="button" data-modal-target="articles"><span aria-hidden="true">≡</span>更新記事</button>
                 <button type="button" data-modal-target="comments"><span aria-hidden="true">○</span>コメント</button>
@@ -451,6 +450,10 @@
                     <h4>Battle a la carte</h4>
                     <p>公式ホームページ</p>
                 </a>
+                <a class="social-card" href="https://donadonaa24-cyber.github.io/tumikomi/index.html?view=home" target="_blank" rel="noopener noreferrer">
+                    <h4>架空運輸</h4>
+                    <p>ゲームホームページ</p>
+                </a>
             </div>
             </div>
         </section>
@@ -566,17 +569,39 @@
                 <div class="trial-gacha-body">
                     <section data-trial-pane="summon">
                         <div class="trial-summon-layout">
-                            <div class="trial-summon-console">
-                                <div class="trial-summon-stage" id="trial-summon-stage" aria-hidden="true">
-                                    <span class="trial-summon-ring"></span><span class="trial-summon-star">✦</span><strong>MEMORY GATE</strong>
+                            <div class="trial-summon-experience" id="trial-summon-stage" data-phase="idle">
+                                <div class="trial-cosmos" aria-hidden="true">
+                                    <span class="trial-galaxy-ring ring-one"></span>
+                                    <span class="trial-galaxy-ring ring-two"></span>
+                                    <span class="trial-galaxy-core">✦</span>
+                                    <span class="trial-summon-coin">A</span>
+                                    <span class="trial-shooting-star"></span>
+                                    <span class="trial-whiteout"></span>
                                 </div>
+                                <div class="trial-idle-copy">
+                                    <small>GALACTIC SUMMON SYSTEM</small>
+                                    <strong>星の記憶へ、コインを。</strong>
+                                    <p>無料お試しコインを銀河へ投げ、10枚の作品カードを1枚ずつ呼び出します。</p>
+                                </div>
+                                <div class="trial-single-reveal" id="trial-single-reveal" hidden>
+                                    <p class="trial-reveal-count" id="trial-reveal-count">1 / 10</p>
+                                    <div class="trial-ur-quote" id="trial-ur-quote" hidden>
+                                        <span>UR / CHARACTER SIGNAL</span>
+                                        <blockquote id="trial-ur-quote-text"></blockquote>
+                                    </div>
+                                    <div class="trial-current-card" id="trial-current-card"></div>
+                                </div>
+                            </div>
+                            <div class="trial-summon-controls">
                                 <button class="trial-draw-button" id="trial-draw-ten" type="button">無料で10連を呼び出す<small>コイン消費なし</small></button>
+                                <button class="trial-next-button" id="trial-reveal-next" type="button" hidden>次のカードへ</button>
+                                <button class="trial-skip-button" id="trial-reveal-skip" type="button" hidden>演出をスキップ</button>
                                 <p class="trial-rates">排出率: C 60% / SR 25% / SSR 10% / UR 5%</p>
                                 <p class="trial-gacha-note">確定枠・天井はありません。結果と所持枚数はこのブラウザ内だけに保存されます。</p>
-                                <p id="trial-gacha-status" role="status" aria-live="polite">銀河中央のゲートから、作品カードを呼び出せます。</p>
+                                <p id="trial-gacha-status" role="status" aria-live="polite">ガチャタブから、作品カードを呼び出せます。</p>
                             </div>
-                            <div class="trial-results-wrap">
-                                <h3>SUMMON RESULT / 10</h3>
+                            <div class="trial-results-wrap" id="trial-results-wrap" hidden>
+                                <div class="trial-results-head"><h3>SUMMON RESULT / 10</h3><button type="button" id="trial-results-again">もう一度10連</button></div>
                                 <div class="trial-gacha-results" id="trial-gacha-results" aria-label="10連ガチャ結果"></div>
                             </div>
                         </div>
@@ -601,10 +626,57 @@
         <p>© ANIANI PLAYGROUND PORTAL</p>
         <p class="copyright-notice">本サイトおよび掲載作品の画像・文章・ゲームデータの無断転載・無断配布を禁止します。</p>
         <a href="https://donadonaa24-cyber.github.io/battle-a-la-carte--/" target="_blank" rel="noopener noreferrer">Battle a la carte ホームページへ</a>
+        <a href="https://donadonaa24-cyber.github.io/tumikomi/index.html?view=home" target="_blank" rel="noopener noreferrer">架空運輸 ホームページへ</a>
     </footer>
 
-    <script src="trial-gacha-data.js?v=20260920a2"></script>
-    <script src="trial-gacha.js?v=20260920a2"></script>
+    <section id="common-account" class="section modal-section" aria-hidden="true">
+      <div class="modal-panel common-panel" role="dialog" aria-modal="true" aria-labelledby="common-title">
+        <button class="modal-close" type="button" data-modal-close aria-label="マイページを閉じる">×</button>
+        <header class="common-heading"><p class="section-label">ANIANI / STAR ARCHIVE</p><h2 id="common-title">あなたの星のコレクション</h2><p>遊んだ記憶を、一枚ずつ。</p></header>
+        <p id="common-message" role="status" aria-live="polite">マイページを開くと接続します。</p>
+        <nav class="common-tabs" aria-label="マイページメニュー">
+          <button type="button" data-common-view="home" aria-pressed="true">アカウント・デイリー</button>
+          <button type="button" data-common-view="gacha" aria-pressed="false">星のガチャ</button>
+          <button type="button" data-common-view="book" aria-pressed="false">コレクション図鑑</button>
+        </nav>
+        <section data-common-pane="home">
+          <div id="common-auth">
+            <h3>あにあにアカウント</h3><p>プレイヤー用のアカウントです。Supabase管理画面のログインとは別です。</p>
+            <form id="common-login" class="common-form">
+              <label>メールアドレス<input name="email" type="email" autocomplete="email" required maxlength="254"></label>
+              <label>パスワード<input name="password" type="password" autocomplete="current-password" required minlength="8" maxlength="128"></label>
+              <div class="common-actions"><button type="submit" data-auth-action="login">ログイン</button><button type="submit" data-auth-action="signup">新規登録</button><button type="button" id="common-reset">パスワードを忘れた方</button></div>
+            </form>
+            <p class="common-note">新規登録後は確認メールを開いてください。パスワードは8文字以上。共用の端末では、遊び終わったらログアウトしてください。</p>
+          </div>
+          <form id="common-recovery" class="common-form" hidden><h3>パスワードの再設定</h3><label>新しいパスワード<input name="password" type="password" autocomplete="new-password" minlength="8" maxlength="128" required></label><button type="submit">パスワードを更新</button></form>
+          <div id="common-member" hidden>
+            <p id="common-email"></p><div class="common-wallet"><span>ANIANI COIN</span><strong id="common-balance">—</strong><small>あにあにコイン</small></div>
+            <div class="common-actions"><button type="button" id="common-refresh">最新の状態に更新</button><button type="button" id="common-logout">ログアウト</button></div>
+            <h3>今日のデイリー</h3><p class="common-note">日本時間の午前0時に切り替わります。報酬はそれぞれ1日1回。</p>
+            <div class="common-missions"><button type="button" data-claim="login" disabled>ログイン報酬</button><button type="button" data-claim="draw_once" disabled>ガチャを1回引く</button></div>
+            <h3>コイン履歴</h3><ul id="common-ledger" class="common-ledger"></ul>
+          </div>
+          <p class="common-note">他作品との共通ログイン・コイン利用は順次連携予定です。ゲームクリア報酬・ゲーム解放はまだ準備中。実際のお金を使う購入機能はありません。</p>
+        </section>
+        <section data-common-pane="gacha" hidden>
+          <div class="common-summon" id="common-summon"><div class="summon-orbit" aria-hidden="true"></div><span class="summon-star" aria-hidden="true">✦</span><h3>星の記憶を呼びよせる</h3><p>この宇宙に生まれた、小さな出会い。</p></div>
+          <p id="common-rates">排出率を読み込み中…</p><p class="common-note">確定枠・天井はありません。同じカードは所持枚数に加算されます。ゲームクリア限定カードはガチャに含まれません。</p>
+          <div class="common-actions"><button type="button" data-draw="1" disabled>1回引く</button><button type="button" data-draw="10" disabled>10回引く</button><button type="button" id="common-retry" hidden>未確認の抽選結果を確認</button></div>
+          <p id="common-draw-note">ガチャにはログインが必要です。</p>
+          <div id="common-results" class="common-results" aria-label="ガチャ結果" aria-live="polite"></div>
+        </section>
+        <section data-common-pane="book" hidden>
+          <div class="common-book-heading"><h3>星のコレクション図鑑</h3><span id="common-book-count">0 / 16</span></div>
+          <p class="common-note">未入手の番号を押すと、入手条件が分かります。</p>
+          <div id="common-card-detail" class="common-card-detail" tabindex="-1" hidden></div>
+          <div id="common-book" class="common-book"></div>
+        </section>
+      </div>
+    </section>
+    <script src="trial-gacha-data.js?v=20260920b1"></script>
+    <script src="trial-gacha.js?v=20260920b1"></script>
+    <script type="module" src="common/portal.js?v=20260912a1"></script>
     <script src="aniani.js?v=20260911a4"></script>
     <script src="galaxy.js?v=20260915a1"></script>
 <script src="arcade-layout.js?v=20260915a1"></script></body>

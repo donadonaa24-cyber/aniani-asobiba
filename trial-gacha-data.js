@@ -50,19 +50,30 @@
     events.forEach(([title, file]) => add("Battle a la carte", "SSR", "イベント", title, `assets/images/events/${file}`));
 
     [
-        ["暁", "akatsuki"], ["千鶴", "chizuru"], ["舞", "mai"], ["匠", "takumi"]
-    ].forEach(([title, file]) => add("Battle a la carte", "UR", "キャラクター", title, `assets/images/battle-mode-icons/${file}-battle-mode-icon.png`));
+        ["暁", "akatsuki", "先に流れを取るのは俺だ。"],
+        ["千鶴", "chizuru", "最後に勝つのは私だから。"],
+        ["舞依", "mai", "この一皿で、勝負を決めるよ！"],
+        ["拓海", "takumi", "最高の一皿、完成だ！"]
+    ].forEach(([title, file, quote]) => add(
+        "Battle a la carte",
+        "UR",
+        "キャラクター",
+        title,
+        `assets/images/battle-mode-cutins/${file}-battle-mode-cutin.png`,
+        { quote, character: file }
+    ));
 
     const vehicleSheet = "images/gacha/transport-vehicles.png";
     [
         ["フォークリフト", "SR", 0], ["2トントラック", "C", 1], ["4トントラック", "SR", 2],
         ["10トントラック", "SSR", 3], ["20トントレーラー", "UR", 4]
     ].forEach(([title, rarity, column]) => add("架空運輸", rarity, "車両", title, vehicleSheet, {
-        sprite: { columns: 5, rows: 1, column, row: 0 }
+        sprite: { columns: 5, rows: 1, column, row: 0 },
+        ...(rarity === "UR" ? { quote: "最大級の積載で、道をつなぐ。" } : {})
     }));
 
     const transportAssets = "images/gacha";
-    add("架空運輸", "UR", "社員", "社長", `${transportAssets}/company-president.png`, { role: "代表取締役" });
+    add("架空運輸", "UR", "社員", "社長", `${transportAssets}/company-president.png`, { role: "代表取締役", quote: "安全を積み重ね、未来まで届けます。" });
     add("架空運輸", "SSR", "社員", "東営業所長", `${transportAssets}/company-manager-east.png`, { role: "営業所長" });
     add("架空運輸", "SSR", "社員", "中央営業所長", `${transportAssets}/company-manager-central.png`, { role: "営業所長" });
     add("架空運輸", "SSR", "社員", "西営業所長", `${transportAssets}/company-manager-west.png`, { role: "営業所長" });
@@ -84,11 +95,12 @@
         ["池田 翼", "配送担当", "C"], ["橋本 千尋", "現場主任", "SR"],
         ["山口 恵", "経理担当", "C"], ["前田 大輔", "整備班長", "SR"],
         ["近藤 ひなた", "配送担当", "C"], ["遠藤 茂", "ベテランドライバー", "SR"],
-        ["坂本 沙耶", "採用担当", "C"], ["村上 直哉", "統括部長", "UR"],
+        ["坂本 沙耶", "採用担当", "C"], ["村上 直哉", "統括部長", "UR", "全拠点、予定どおり動かします。"],
         ["石川 亮", "現場責任者", "SSR"], ["福田 真紀", "総務部長", "SSR"]
     ];
-    employees.forEach(([title, role, rarity], index) => add("架空運輸", rarity, "社員", title, employeeSheet, {
+    employees.forEach(([title, role, rarity, quote], index) => add("架空運輸", rarity, "社員", title, employeeSheet, {
         role,
+        ...(quote ? { quote } : {}),
         sprite: { columns: 5, rows: 6, column: index % 5, row: Math.floor(index / 5) }
     }));
 

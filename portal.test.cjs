@@ -24,14 +24,20 @@ for(const m of html.matchAll(/data-status="([^"]+)"/g)) {
   if(m[1].startsWith('公開中')) assert.equal(m[1], '公開中＆追加要素可能性あり');
 }
 assert(html.includes('近日公開予定'));
-assert(html.includes('class="gacha-core-app"'));
+assert(!html.includes('class="gacha-core-app"'), 'gacha must not occupy the center of the game orbit');
+assert(!html.includes('class="orbit-core"'), 'the orbit center must stay completely empty');
 assert(html.includes('data-modal-target="trial-gacha"'));
+assert(/console-dock[\s\S]*data-modal-target="trial-gacha"[\s\S]*>ガチャ<\/button>/.test(html));
 assert(html.includes('id="trial-gacha"'));
 assert(html.includes('無料お試し版'));
 assert(html.includes('ログイン・コイン・実際のお金は必要ありません'));
-assert(html.includes('trial-gacha-data.js?v=20260920a2'));
-assert(html.includes('trial-gacha.js?v=20260920a2'));
-assert(html.includes('trial-gacha.css?v=20260920a3'));
+assert(html.includes('id="trial-reveal-skip"'));
+assert(html.includes('id="trial-reveal-next"'));
+assert(html.includes('trial-gacha-data.js?v=20260920b1'));
+assert(html.includes('trial-gacha.js?v=20260920b1'));
+assert(html.includes('trial-gacha.css?v=20260920b1'));
+assert(html.includes('架空運輸 ホームページへ'));
+assert(/social-card[^>]+tumikomi\/index\.html\?view=home[\s\S]*?<h4>架空運輸<\/h4>/.test(html));
 assert(fs.existsSync('images/gacha/transport-vehicles.png'));
 assert(fs.existsSync('images/gacha/transport-employees.png'));
 assert((html.match(/無断転載・無断配布を禁止します。/g) || []).length >= 8);

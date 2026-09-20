@@ -31,9 +31,9 @@ Browser
 | `aniani.css` | ポータル従来UI、モーダル、記事、コメント、ミニゲーム基礎スタイル |
 | `galaxy.css` | 宇宙ライブラリ、回転ゲームケース、コンソールドック、流れ星 |
 | `arcade.css` | ミニゲーム全画面、固定レイアウト、仮想パッド、レスポンシブ調整 |
-| `trial-gacha.css` | 無料試験ガチャの中央アプリ、召喚演出、カード、図鑑、レスポンシブ表示 |
+| `trial-gacha.css` | 無料試験ガチャのコイン投入・銀河回転・白転・UR予兆・カード公開、図鑑、レスポンシブ表示 |
 | `trial-gacha-data.js` | 81枚の公開用カードカタログ、排出率、生成スプライト位置 |
-| `trial-gacha.js` | 無料10連抽選、演出、端末内所持数、図鑑表示 |
+| `trial-gacha.js` | 無料10連抽選、1枚ずつの状態遷移、スキップ、Web Audio効果音、端末内所持数、図鑑表示 |
 | `common/portal.css` | 共通アカウント、ウォレット、ガチャ、カード図鑑 |
 | `aniani.js` | モーダル、localStorage、記事/コメント、8ミニゲームのロジック |
 | `galaxy.js` | 登録作品数に応じた円軌道と総件数表示、選択、スワイプ、キーボード、モーション軽減 |
@@ -88,6 +88,9 @@ Browser
 
 - `trial-gacha-data.js` の配列がカード追加の単一入口。Battle a la carteと架空運輸のカードを作品・カテゴリ・レアリティで管理する。
 - 抽選はクライアント完結。先にレアリティをC 60% / SR 25% / SSR 10% / UR 5%で選び、同レアリティのカードから1枚を選ぶ。
+- 下部コンソールドックの `[data-modal-target="trial-gacha"]` だけを入口にし、ゲームケースが回る軌道中央にはDOM要素を置かない。
+- コイン投入、銀河回転、ホワイトアウト、通常カード公開、UR流れ星、UR台詞、UR公開、結果一覧を `data-phase` で切り替える。途中スキップは未公開分を含む10枚を一度だけ端末内所持へ加算する。
+- URキャラクター画像は `assets/images/battle-mode-cutins/` の4画像を使用する。URカードはすべて決め台詞データを持つ。
 - 共通アカウント、Supabase、あにあにコインを使用しない。公開前の演出・コレクション試験として独立させる。
 
 ## データ保存方式
@@ -132,7 +135,7 @@ Browser
 - Google Fonts: `M PLUS Rounded 1c`、`Shippori Mincho`。
 - esm.sh: Supabase JSのES Module配信。
 - Google Search Console: meta検証と公開リポジトリ内の確認HTML。
-- X、note、Battle a la carte、tumikomi: 外部リンク。
+- X、note、Battle a la carte、tumikomi: 外部リンク。Battle公式ホームとtumikomi企業ホームからも本ポータルへ戻れる。
 - Firebase: 使用なし。
 - SMTP: 未設定。
 
