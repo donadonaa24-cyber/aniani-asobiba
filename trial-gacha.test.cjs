@@ -1,10 +1,12 @@
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
 
 const catalog = require('./trial-gacha-data.js');
 const gacha = require('./trial-gacha.js');
 
 assert.equal(catalog.cards.length, 81, 'catalog should contain 81 cards');
 assert.deepEqual(catalog.rates, { C: 60, SR: 25, SSR: 10, UR: 5 });
+assert(catalog.cards.every((card) => fs.existsSync(card.image)), 'every card image must be published');
 
 const battle = catalog.cards.filter((card) => card.work === 'Battle a la carte');
 assert.equal(battle.length, 40);

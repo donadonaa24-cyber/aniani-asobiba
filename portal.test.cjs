@@ -29,7 +29,7 @@ assert(html.includes('data-modal-target="trial-gacha"'));
 assert(html.includes('id="trial-gacha"'));
 assert(html.includes('無料お試し版'));
 assert(html.includes('ログイン・コイン・実際のお金は必要ありません'));
-assert(html.includes('trial-gacha-data.js?v=20260920a1'));
+assert(html.includes('trial-gacha-data.js?v=20260920a2'));
 assert(html.includes('trial-gacha.js?v=20260920a2'));
 assert(html.includes('trial-gacha.css?v=20260920a3'));
 assert(fs.existsSync('images/gacha/transport-vehicles.png'));

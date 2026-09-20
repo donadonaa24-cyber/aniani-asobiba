@@ -61,7 +61,7 @@
         sprite: { columns: 5, rows: 1, column, row: 0 }
     }));
 
-    const transportAssets = "assets/images/積み込みゲーム/assets/images";
+    const transportAssets = "images/gacha";
     add("架空運輸", "UR", "社員", "社長", `${transportAssets}/company-president.png`, { role: "代表取締役" });
     add("架空運輸", "SSR", "社員", "東営業所長", `${transportAssets}/company-manager-east.png`, { role: "営業所長" });
     add("架空運輸", "SSR", "社員", "中央営業所長", `${transportAssets}/company-manager-central.png`, { role: "営業所長" });
