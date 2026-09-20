@@ -7,7 +7,7 @@ body::before { content: ''; position: fixed; inset: 0; background: linear-gradie
 .brand-tag { font-size: 9px; letter-spacing: .32em; color: #a9bdcf; }
 .brand h1 { font-size: 20px; }
 .header-nav { display: none; }
-.site-footer { background: transparent; border: 0; backdrop-filter: none; font-size: 9px; padding: 4px; opacity: .6; }
+.site-footer { background: transparent; border: 0; backdrop-filter: none; font-size: 9px; padding: 4px; opacity: .78; }
 .site-footer a { display: none; }
 .galaxy-home { height: 100dvh; min-height: 0; padding: 0; position: relative; display: block; }
 .galaxy-intro { position: absolute; left: 5vw; top: 14%; z-index: 5; pointer-events: none; }
@@ -44,7 +44,7 @@ body::before { content: ''; position: fixed; inset: 0; background: linear-gradie
 .orbit-controls #orbit-open { background: #d9edf2; color: #0a2533; }
 .orbit-controls button:hover, .console-dock button:hover { background: #30536b; color: #fff; }
 .orbit-hint { font-size: 9px; color: #8b9aab; }
-.console-dock { position: absolute; bottom: 4%; left: 5vw; right: 5vw; display: flex; justify-content: center; gap: clamp(8px, 4vw, 70px); border-top: 1px solid #beddf325; padding: 15px 0 0; z-index: 7; }
+.console-dock { position: absolute; bottom: max(44px, 4%); left: 5vw; right: 5vw; display: flex; justify-content: center; gap: clamp(8px, 4vw, 70px); border-top: 1px solid #beddf325; padding: 15px 0 0; z-index: 7; }
 .console-dock button { display: flex; align-items: center; gap: 8px; padding: 7px; border: 0; background: none; color: #b7c9d9; font: inherit; font-size: 11px; cursor: pointer; border-radius: 4px; }
 .console-dock button span { font-size: 22px; color: #e2f5ff; filter: drop-shadow(0 0 8px #9ddeff66); }
 .work-detail { width: min(640px,100%); }
@@ -72,7 +72,7 @@ body::before { content: ''; position: fixed; inset: 0; background: linear-gradie
     .selection-status { margin: 0; font-size: 8px; }
     .orbit-controls button { padding: 8px 11px; min-height: 36px; }
     .orbit-hint { margin: 5px 0 0; font-size: 8px; }
-    .console-dock { bottom: 4%; gap: 0; justify-content: space-between; }
+    .console-dock { bottom: max(58px, 4%); gap: 0; justify-content: space-between; }
     .console-dock button { flex-direction: column; gap: 3px; font-size: 8px; padding: 3px; }
     .console-dock button span { font-size: 20px; }
 }

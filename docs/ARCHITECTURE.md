@@ -31,6 +31,9 @@ Browser
 | `aniani.css` | ポータル従来UI、モーダル、記事、コメント、ミニゲーム基礎スタイル |
 | `galaxy.css` | 宇宙ライブラリ、回転ゲームケース、コンソールドック、流れ星 |
 | `arcade.css` | ミニゲーム全画面、固定レイアウト、仮想パッド、レスポンシブ調整 |
+| `trial-gacha.css` | 無料試験ガチャの中央アプリ、召喚演出、カード、図鑑、レスポンシブ表示 |
+| `trial-gacha-data.js` | 81枚の公開用カードカタログ、排出率、生成スプライト位置 |
+| `trial-gacha.js` | 無料10連抽選、演出、端末内所持数、図鑑表示 |
 | `common/portal.css` | 共通アカウント、ウォレット、ガチャ、カード図鑑 |
 | `aniani.js` | モーダル、localStorage、記事/コメント、8ミニゲームのロジック |
 | `galaxy.js` | 登録作品数に応じた円軌道と総件数表示、選択、スワイプ、キーボード、モーション軽減 |
@@ -45,6 +48,7 @@ Browser
 
 - `assets/images/`: Battle a la carte由来のカード、料理、イベント、キャラクター等の画像。
 - `images/`: 銀河背景、架空運輸紹介画像、推し駒battle画像、ミニゲーム生成画像。
+- `images/gacha/`: 画像生成した架空運輸の車両5種スプライトと新規社員30名スプライト。
 - `common/`: 共通アカウント・コイン・ガチャ・図鑑のフロントエンド。
 - `supabase/`: DB migration、検証SQL、運用記録。
 - `docs/`: Codex向け正式仕様、現在状態、変更履歴、技術構成。
@@ -80,6 +84,12 @@ Browser
 - ガチャ前に `crypto.randomUUID()` でリクエストIDを生成し、localStorageへ保存する。
 - `navigator.locks` で同一ユーザーの同時抽選を抑止し、サーバー側の一意制約とRPCで最終的な二重消費を防ぐ。
 
+### 無料試験ガチャ
+
+- `trial-gacha-data.js` の配列がカード追加の単一入口。Battle a la carteと架空運輸のカードを作品・カテゴリ・レアリティで管理する。
+- 抽選はクライアント完結。先にレアリティをC 60% / SR 25% / SSR 10% / UR 5%で選び、同レアリティのカードから1枚を選ぶ。
+- 共通アカウント、Supabase、あにあにコインを使用しない。公開前の演出・コレクション試験として独立させる。
+
 ## データ保存方式
 
 ### localStorage
@@ -90,6 +100,7 @@ Browser
 - 簡易管理者状態: `aniani_admin_session_v1`
 - 神経衰弱ランキング: `aniani_memory_rankings_v1`
 - 反射神経ベスト: `aniani_reaction_best_v1`
+- 無料試験ガチャ所持数: `aniani.trial-gacha.v1.inventory`
 - 未確認ガチャ: `aniani.pending-draw.<Supabase user id>`
 
 ### Supabase PostgreSQL

@@ -1579,6 +1579,24 @@ main {
     margin: 0 0 2px 0;
 }
 
+.rights-notice,
+.game-card .rights-notice {
+    margin: 12px 0 0;
+    padding: 9px 11px;
+    color: #ffe1a3;
+    border: 1px solid rgba(255, 225, 163, 0.28);
+    border-radius: 8px;
+    background: rgba(33, 20, 5, 0.34);
+    font-size: 11px;
+    line-height: 1.65;
+}
+
+.site-footer .copyright-notice {
+    margin: 1px 0 0;
+    font-size: 9px;
+    letter-spacing: 0.03em;
+}
+
 .site-footer a {
     color: #ffe1a3;
     font-weight: 700;

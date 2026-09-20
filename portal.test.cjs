@@ -24,5 +24,16 @@ for(const m of html.matchAll(/data-status="([^"]+)"/g)) {
   if(m[1].startsWith('公開中')) assert.equal(m[1], '公開中＆追加要素可能性あり');
 }
 assert(html.includes('近日公開予定'));
+assert(html.includes('class="gacha-core-app"'));
+assert(html.includes('data-modal-target="trial-gacha"'));
+assert(html.includes('id="trial-gacha"'));
+assert(html.includes('無料お試し版'));
+assert(html.includes('ログイン・コイン・実際のお金は必要ありません'));
+assert(html.includes('trial-gacha-data.js?v=20260920a1'));
+assert(html.includes('trial-gacha.js?v=20260920a2'));
+assert(html.includes('trial-gacha.css?v=20260920a3'));
+assert(fs.existsSync('images/gacha/transport-vehicles.png'));
+assert(fs.existsSync('images/gacha/transport-employees.png'));
+assert((html.match(/無断転載・無断配布を禁止します。/g) || []).length >= 8);
 assert(html.includes('EODaZVnp9Jx0SkJDQR-oyGH1baUfiHRkVlnkgVq0A0k'));
-console.log('PASS: names, four consistent link groups, explicit home mode, release labels, verification preserved.');
+console.log('PASS: portal links, rights notices, trial gacha entry, assets, release labels, and verification preserved.');
