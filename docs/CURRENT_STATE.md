@@ -1,21 +1,21 @@
 # CURRENT_STATE
 
-更新日: 2026-09-20
+更新日: 2026-09-27
 
 ## 現在のバージョン
 
 - 正式なSemVer: 未設定。
 - ポータルUI更新: Unity版紹介・共通操作デッキ・無料試験ガチャ追加。ガチャUI識別子は `trial-gacha.css?v=20260920b1` / `trial-gacha.js?v=20260920b1`。
 - プロジェクト文書のGit管理開始: `44c102f`（2026-09-14）。
-- ローカル作業版: 公開版に共通アカウントUIを追加した未公開版。キャッシュ識別子は `common/portal.*?v=20260912a1`。
+- ローカル作業版: 公開版に共通アカウントUIとUnity版v0.4.0の紹介更新を追加した未公開版。キャッシュ識別子は `common/portal.*?v=20260912a1`。
 - 公開用リポジトリ: `.publish-aniani/`、`main`。共通アカウントUIは今回の公開対象外。
 - 2026-09-16: Unity版紹介と共通操作デッキをコミット `4385ee4` として既存リポジトリの `main` へpush済み。
-- Unity版配布リポジトリ: `.publish-battle-3d/` → `battle-a-la-carte-3d`、紹介ページコミット `343f078`。Release `v0.1.0` 公開済み。
+- Unity版配布先: `battle-a-la-carte-3d` のGitHub Releases、v0.4.0（2026-09-27、所有者提供情報）。今回のポータル更新はローカルのみ。公開用フォルダーは未参照・未変更。
 - プロジェクト文書5ファイルはソースコードと同じGitHubリポジトリで管理する。`docs/ACTIVE_TASKS.md` はローカル専用としてGit管理対象外。
 
 ## 技術バージョン
 
-- ポータル本体はUnity不使用。紹介するUnity版は6000.6.0f1、Windows 64-bit/v0.1.0。WebGL/Android/iOS版は未提供。
+- ポータル本体はUnity不使用。紹介するUnity版はv0.4.0、Windows 64-bit / Android ARM64（Android 8.0以上、Google Play外の試験版）。ブラウザ/WebGL/iPhone版は未提供。v0.4.0のUnityエディターバージョンは未確認。
 - JavaScript: ブラウザ標準ES Modules + Vanilla JavaScript。
 - Supabase JS: `2.57.4`（esm.shから動的読込）。
 - ローカル確認時Node.js: `v24.19.0`。
@@ -27,7 +27,7 @@
 - トップ、作品一覧・詳細、ミニゲーム一覧に無断転載・無断配布禁止の注意書きを表示。
 - Battle a la carte、架空運輸のホーム・Web・スマホ版導線。
 - Unity版（3D版）を新作・別作品として追加。選択順は既存Web版、Unity版、架空運輸、推し駒battle、混ぜるな危険。
-- Unity版専用PagesとWindows ZIP配布。既存ビルド195ファイル一式（269,210,425 bytes）、デバッグ資料・ログを除外。再ビルドは未実施。
+- Unity版ケース・作品一覧・詳細をv0.4.0に更新。Windows ZIP / Android APKと専用ホームページへ案内。通信対戦（試験提供）の参加手順、参加のみ・降参可能、変更可能性・切断復帰未対応・Android通信対戦未確認を掲載。タイトル画面、デイリーログインボーナス、あにあにアカウントログインも紹介。
 - 推し駒battle紹介、混ぜるな危険とミニゲームの制作予定表示。
 - 記事、記事コメント、来訪者コメント、簡易管理者モード（端末内保存）。
 - 8ミニゲーム: 〇×、神経衰弱、もぐらたたき、カウボーイ決闘、ブロック崩し、スネーク、簡単テトリス、8パズル。
@@ -56,7 +56,7 @@
 - SupabaseカスタムSMTP: 未設定。一般ユーザー向けメール登録を公開するには、無料で利用できる配信サービスの登録・設定、またはOAuth方式の選定が必要。
 - GitHub Pages: 公開中。ただし共通アカウントUIは未公開。
 - 2026-09-20更新: ポータル、Battle Web版、Battle Unity版配布ページ、架空運輸の各ページへ無断転載・無断配布禁止表示を追加。
-- Unity版: `https://donadonaa24-cyber.github.io/battle-a-la-carte-3d/` とGitHub Release `v0.1.0` が公開済み。Windows専用でWeb版保存とは未連携。
+- Unity版: `https://donadonaa24-cyber.github.io/battle-a-la-carte-3d/` とGitHub Releases v0.4.0のWindows ZIP・Android APKを案内（所有者提供情報）。Web版作成の部屋に6桁の合言葉または公開部屋一覧から参加可能。配布物・通信対戦の実動作は今回未検証。
 - Google Search Console: `index.html` にmeta検証値あり。公開用リポジトリには検証HTMLファイルあり、ルート作業フォルダには同ファイルなし。
 - X / note: 外部リンクあり。アカウント内容・運用状態は未確認。
 
@@ -70,6 +70,10 @@
 - スマホ実機の最終回帰は未確認。
 
 ## 現在通過しているテスト
+
+2026-09-27: Unity版v0.4.0紹介更新後、指定Node.js（v24.14.0）で `common.test.cjs`、`arcade.test.cjs`、`arcade-layout.test.cjs`、`portal.test.cjs` がすべて通過。旧配布リンク・文言の検証のみ修正した `portal.test.cjs` は `node --check` も通過。両Unity掲載箇所のWindows/Androidリンク、参加手順、注意事項を追加の一時検証で確認。実行用JS・CSSの変更なし。
+
+今回のPC・スマホ幅の目視確認は、HTTPローカルプレビューへのアクセスがブラウザーの承認で拒否されたため未実施。既存CSSのボタン折り返しとモーダル内スクロールをコード上で確認。スマホ実機、配布物の起動、通信対戦は未検証。
 
 2026-09-20にポータルのリリース前5テストが再通過。以下の認証E2Eは未実施で、過去のSupabase検証を今回の再検証とは扱わない。
 
