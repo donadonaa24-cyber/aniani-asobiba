@@ -15,7 +15,7 @@ const groups = [...html.matchAll(/<div class="game-actions">([\s\S]*?)<\/div>/g)
   .filter(links => links.some(a => /github.io\/(tumikomi|battle-a-la-carte--)/.test(a.url)));
 assert.equal(groups.length, 4);
 for (const links of groups) {
-  assert.deepEqual(links.map(a=>a.label), ['ホームページへ','ウェブ版で遊ぶ','スマホ版で遊ぶ']);
+  assert.deepEqual(links.map(a=>a.label), ['ホームページへ','ウェブ版で遊ぶ','モバイル版で遊ぶ']);
   if (links[0].url.includes('/tumikomi/')) {
     assert.deepEqual(links.map(a=>new URL(a.url).searchParams.get('view')), ['home','web','mobile']);
   }
@@ -42,4 +42,12 @@ assert(fs.existsSync('images/gacha/transport-vehicles.png'));
 assert(fs.existsSync('images/gacha/transport-employees.png'));
 assert((html.match(/無断転載・無断配布を禁止します。/g) || []).length >= 8);
 assert(html.includes('EODaZVnp9Jx0SkJDQR-oyGH1baUfiHRkVlnkgVq0A0k'));
+assert(!html.includes('スマホ'), 'portal wording uses モバイル版, not スマホ版');
+assert(html.includes('v0.4.0（v0.5.0 準備中）'));
+assert.equal((html.match(/class="update-note"/g) || []).length, 2);
+const js = fs.readFileSync('aniani.js', 'utf8');
+assert(!/ADMIN|admin-login|adminSession|article-form/.test(js + html.replace(/id="guestbook-form" class="article-form"/, '')), 'article admin mode and its passcode are removed');
+assert(js.includes('const officialArticles') && js.includes('2026-09-29-battle-update'));
+assert(/data-common-coming-soon[\s\S]*?準備中/.test(html), 'account modal shows a coming-soon notice');
+assert(/class="common-app" data-common-app hidden/.test(html), 'account UI stays hidden unless common/portal.js loads');
 console.log('PASS: portal links, rights notices, trial gacha entry, assets, release labels, and verification preserved.');

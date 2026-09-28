@@ -97,10 +97,10 @@ Browser
 
 ### localStorage
 
-- 記事: `aniani_articles_v2`
+- 記事: 2026-09-29以降は使用しない（旧データは削除せず放置）。公式記事は `aniani.js` の `officialArticles`
 - 記事コメント: `aniani_article_comments_v1`
 - 来訪者コメント: `aniani_guestbook_comments_v1`
-- 簡易管理者状態: `aniani_admin_session_v1`
+- 簡易管理者状態: 2026-09-29に廃止（`aniani_admin_session_v1` は読み書きしない）
 - 神経衰弱ランキング: `aniani_memory_rankings_v1`
 - 反射神経ベスト: `aniani_reaction_best_v1`
 - 無料試験ガチャ所持数: `aniani.trial-gacha.v1.inventory`

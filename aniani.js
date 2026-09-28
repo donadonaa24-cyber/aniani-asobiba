@@ -1,17 +1,35 @@
 (() => {
     const STORAGE = {
-        articles: "aniani_articles_v2",
         articleComments: "aniani_article_comments_v1",
         guestbook: "aniani_guestbook_comments_v1",
-        adminSession: "aniani_admin_session_v1",
         memoryRanking: "aniani_memory_rankings_v1",
         reactionBest: "aniani_reaction_best_v1"
     };
 
-    // 静的サイトでの簡易管理者認証です。必要なら任意の文字列へ変更してください。
-    const ADMIN_PASSCODE = "ANIANI-ONLY-2026";
-
-    const defaultArticles = [
+    // 公式記事: ここに書いた記事が全員に同じ内容で表示されます（端末内保存ではありません）。
+    // 新しい記事は先頭に追加してください。id は記事コメントの保存キーなので、公開後は変えないでください。
+    const officialArticles = [
+        {
+            id: "2026-09-29-battle-update",
+            title: "Battle à la carte Web版 大型アップデート＆公式サイトリニューアル",
+            category: "アップデート",
+            body: [
+                "9/28・9/29にWeb版 Battle à la carte を更新しました。",
+                "・先攻は1ターン目にイベントカードを使えなくなりました",
+                "・スキル「ロマン仕込み」で10点料理を狙いやすく",
+                "・まな板に逆転効果：負けているとき、対戦中1回だけ手札のイベント1枚を捨てて1枚引けます",
+                "・モバイル版の画面を見やすく再配置し、スキル選択におすすめ度（★）を表示",
+                "あわせて公式サイトをメニュー表風にリニューアルし、お知らせ欄「シェフ通信」と遊び方デモを追加しました。"
+            ].join("\n"),
+            createdAt: "2026-09-29T12:00:00+09:00"
+        },
+        {
+            id: "2026-09-27-battle-3d-v040",
+            title: "Battle à la carte Unity版（3D版）v0.4.0 公開",
+            category: "お知らせ",
+            body: "Windows / Android（試験版）向けのUnity版 v0.4.0 を公開しました。Web版で作った通信対戦の部屋に参加できます。v0.5.0 は準備中です。",
+            createdAt: "2026-09-27T12:00:00+09:00"
+        },
         {
             id: "seed-1",
             title: "ポータル公開",
@@ -27,19 +45,8 @@
             createdAt: "2026-04-20T00:01:00+09:00"
         }
     ];
-    const PAUSED_PROJECT_NAME = "\u5929\u6daf\u6bd4\u96a3";
 
-    const form = document.getElementById("article-form");
     const list = document.getElementById("article-list");
-    const clearButton = document.getElementById("article-clear");
-    const submitButton = document.getElementById("article-submit");
-    const titleInput = document.getElementById("article-title");
-    const categoryInput = document.getElementById("article-category");
-    const bodyInput = document.getElementById("article-body");
-
-    const adminState = document.getElementById("admin-state");
-    const adminLoginButton = document.getElementById("admin-login");
-    const adminLogoutButton = document.getElementById("admin-logout");
 
     const guestbookList = document.getElementById("guestbook-list");
     const guestbookForm = document.getElementById("guestbook-form");
@@ -287,38 +294,10 @@
         }
     }
 
-    let articles = loadArray(STORAGE.articles, defaultArticles);
     let articleComments = loadObject(STORAGE.articleComments, {});
     let guestbookComments = loadArray(STORAGE.guestbook, []);
     let memoryRankings = loadArray(STORAGE.memoryRanking, []);
     let reactionBestMs = loadNumber(STORAGE.reactionBest, 0);
-    let isAdmin = localStorage.getItem(STORAGE.adminSession) === "1";
-
-    if (articles.some((item) => String(item.body || "").includes(PAUSED_PROJECT_NAME) || String(item.title || "").includes(PAUSED_PROJECT_NAME))) {
-        articles = articles.map((item) => {
-            const title = String(item.title || "");
-            const body = String(item.body || "");
-            if (!title.includes(PAUSED_PROJECT_NAME) && !body.includes(PAUSED_PROJECT_NAME)) {
-                return item;
-            }
-            if (item.id === "seed-2") {
-                return {
-                    ...item,
-                    body: "ミニゲームやポータル内機能の調整を予定しています。"
-                };
-            }
-            return {
-                ...item,
-                title: title.replaceAll(PAUSED_PROJECT_NAME, "制作中プロジェクト"),
-                body: body.replaceAll(PAUSED_PROJECT_NAME, "制作中プロジェクト")
-            };
-        });
-        save(STORAGE.articles, articles);
-    }
-
-    function saveArticles() {
-        save(STORAGE.articles, articles);
-    }
 
     function saveArticleComments() {
         save(STORAGE.articleComments, articleComments);
@@ -330,46 +309,6 @@
 
     function saveMemoryRankings() {
         save(STORAGE.memoryRanking, memoryRankings);
-    }
-
-    function setFormDisabled(disabled) {
-        if (!form) {
-            return;
-        }
-
-        const controls = [titleInput, categoryInput, bodyInput, submitButton, clearButton];
-        controls.forEach((control) => {
-            if (control) {
-                control.disabled = disabled;
-            }
-        });
-
-        form.classList.toggle("is-locked", disabled);
-    }
-
-    function updateAdminUI() {
-        if (adminState) {
-            adminState.textContent = isAdmin
-                ? "現在: 管理者モード（記事投稿・削除可）"
-                : "現在: 閲覧モード（記事投稿不可）";
-        }
-
-        if (adminLoginButton) {
-            adminLoginButton.style.display = isAdmin ? "none" : "inline-flex";
-        }
-
-        if (adminLogoutButton) {
-            adminLogoutButton.style.display = isAdmin ? "inline-flex" : "none";
-        }
-
-        setFormDisabled(!isAdmin);
-    }
-
-    function setAdmin(next) {
-        isAdmin = next;
-        localStorage.setItem(STORAGE.adminSession, next ? "1" : "0");
-        updateAdminUI();
-        renderArticles();
     }
 
     function addReaction(articleId, name, message) {
@@ -396,12 +335,7 @@
             return;
         }
 
-        if (!articles.length) {
-            list.innerHTML = "<p class=\"article-empty\">記事はまだありません。管理者ログイン後に追加できます。</p>";
-            return;
-        }
-
-        const sorted = [...articles].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const sorted = [...officialArticles].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
         list.innerHTML = sorted.map((item) => {
             const id = escapeHtml(item.id);
@@ -425,15 +359,10 @@
                 }).join("")
                 : "<p class=\"comment-empty\">まだコメントはありません。</p>";
 
-            const deleteButton = isAdmin
-                ? `<button class="article-delete" type="button" data-delete-id="${id}">削除</button>`
-                : "";
-
             return `
                 <article class="article-item" data-id="${id}">
                     <div class="article-item-head">
                         <h5>${title}</h5>
-                        ${deleteButton}
                     </div>
                     <div class="article-meta">
                         <span class="tag">${category}</span>
@@ -479,98 +408,7 @@
         }).join("");
     }
 
-    if (form) {
-        form.addEventListener("submit", (event) => {
-            event.preventDefault();
-
-            if (!isAdmin) {
-                window.alert("記事投稿は管理者ログイン後に利用できます。");
-                return;
-            }
-
-            const title = String(titleInput?.value || "").trim();
-            const category = String(categoryInput?.value || "").trim() || "お知らせ";
-            const body = String(bodyInput?.value || "").trim();
-
-            if (!title || !body) {
-                return;
-            }
-
-            articles = [
-                {
-                    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-                    title: title.slice(0, 80),
-                    category: category.slice(0, 40),
-                    body: body.slice(0, 2000),
-                    createdAt: new Date().toISOString()
-                },
-                ...articles
-            ];
-
-            saveArticles();
-            renderArticles();
-            form.reset();
-            if (titleInput) {
-                titleInput.focus();
-            }
-        });
-    }
-
-    if (clearButton) {
-        clearButton.addEventListener("click", () => {
-            form?.reset();
-            if (titleInput) {
-                titleInput.focus();
-            }
-        });
-    }
-
-    if (adminLoginButton) {
-        adminLoginButton.addEventListener("click", () => {
-            const input = window.prompt("管理者パスコードを入力してください");
-            if (input === null) {
-                return;
-            }
-
-            if (input.trim() === ADMIN_PASSCODE) {
-                setAdmin(true);
-                window.alert("管理者モードを有効化しました。");
-            } else {
-                window.alert("パスコードが違います。");
-            }
-        });
-    }
-
-    if (adminLogoutButton) {
-        adminLogoutButton.addEventListener("click", () => {
-            setAdmin(false);
-        });
-    }
-
     if (list) {
-        list.addEventListener("click", (event) => {
-            const target = event.target;
-            if (!(target instanceof HTMLElement)) {
-                return;
-            }
-
-            const deleteId = target.dataset.deleteId;
-            if (!deleteId) {
-                return;
-            }
-
-            if (!isAdmin) {
-                window.alert("削除は管理者モードでのみ可能です。");
-                return;
-            }
-
-            articles = articles.filter((item) => item.id !== deleteId);
-            delete articleComments[deleteId];
-            saveArticles();
-            saveArticleComments();
-            renderArticles();
-        });
-
         list.addEventListener("submit", (event) => {
             const target = event.target;
             if (!(target instanceof HTMLFormElement)) {
@@ -2426,7 +2264,6 @@
             try { reset(); } catch (error) { console.error("Arcade cleanup failed", error); }
         }
     });
-    updateAdminUI();
     renderArticles();
     renderGuestbook();
     resetTtt();

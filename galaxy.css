@@ -89,3 +89,15 @@ body::before { content: ''; position: fixed; inset: 0; background: linear-gradie
     .meteor-field { display: none; }
     *, *::before, *::after { scroll-behavior: auto !important; }
 }
+/* 2026-09-29: keep dock labels on one line, latest-update notes, account "coming soon" notice. */
+.console-dock button { white-space: nowrap; }
+@media (min-width: 701px) and (max-width: 1100px) {
+    .console-dock { gap: 0; justify-content: space-between; }
+    .console-dock button { flex-direction: column; gap: 3px; font-size: 10px; }
+}
+.update-note { margin: 10px 0 0; padding: 10px 12px; border-left: 3px solid #ffd36b; border-radius: 8px; background: #ffd36b14; color: #e9f2fb; font-size: 13px; line-height: 1.7; }
+.update-note strong { color: #ffd36b; }
+.common-coming-soon { padding: 24px 8px 8px; text-align: center; }
+.common-coming-soon-badge { display: inline-block; margin: 0 0 12px; padding: 3px 16px; border: 1px solid #ffd36b88; border-radius: 999px; color: #ffd36b; font-size: 12px; letter-spacing: .2em; }
+.common-coming-soon h3 { margin: 0 0 14px; font-size: 18px; }
+.common-coming-soon p { margin: 0 auto 10px; max-width: 34em; color: #c9d8e6; font-size: 14px; line-height: 1.8; }
