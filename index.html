@@ -70,9 +70,9 @@
                     <span class="case-spine" aria-hidden="true">SUIRO LOGISTICS</span>
                     <span class="case-face"><span class="case-brand">ANIANI ORIGINAL / 03</span><img src="images/tumikomi-loading.png" alt=""><span class="case-caption"><small>LOGISTICS SIMULATION</small><strong>架空運輸</strong><em>公開中＆追加要素可能性あり</em></span></span>
                 </button>
-                <button class="game-case" type="button" data-orbit="3" data-modal-target="oshi-detail" data-title="推し駒battle" data-status="近日公開予定" data-description="あなたの推しが、次の一手になる。新しい星を制作中。" style="--case-accent:#bdb9ff">
+                <button class="game-case" type="button" data-orbit="3" data-modal-target="oshi-detail" data-title="推し駒battle" data-status="無料試験版 公開中" data-description="推しと進む、死んだら終わりの十階勝負。Windows向け試験版を無料配布中。" style="--case-accent:#bdb9ff">
                     <span class="case-spine" aria-hidden="true">OSHI KOMA BATTLE</span>
-                    <span class="case-face"><span class="case-brand">ANIANI ORIGINAL / 04</span><img src="images/yui-cat-bishop.png" alt=""><span class="case-caption"><small>COMING SOON</small><strong>推し駒<br>battle</strong><em>近日公開予定</em></span></span>
+                    <span class="case-face"><span class="case-brand">ANIANI ORIGINAL / 04</span><img src="images/yui-cat-bishop.png" alt=""><span class="case-caption"><small>FREE TRIAL / WINDOWS</small><strong>推し駒<br>battle</strong><em>無料試験版 公開中</em></span></span>
                 </button>
                 <button class="game-case" type="button" data-orbit="4" data-modal-target="roadmap" data-title="混ぜるな危険" data-status="制作予定" data-description="まだ見ぬ遊びが、この宇宙のどこかで生まれる。" style="--case-accent:#c9e66b">
                     <span class="case-spine" aria-hidden="true">NEXT PROJECT</span>
@@ -159,6 +159,7 @@
                     </a>
                     <h4>架空運輸</h4>
                     <p>フォークリフトで荷物を運び、重さやバランスを考えてトラックに積み込もう。荷物を安全に届けるための判断を楽しむブラウザゲームです。</p>
+                    <p class="update-note"><strong>2026.10.01 更新</strong>：研修生から営業所長まで昇進する役職制度、12件の依頼から受注を選ぶ「配車便」、ビジュアルノベル形式の会話パートと昇格セレモニーを追加。夜間配送は毎回コースが変わるアーケード風に一新しました。</p>
                     <div class="game-actions">
                         <a class="btn btn-mini btn-primary" href="https://donadonaa24-cyber.github.io/tumikomi/index.html?view=home" target="_blank" rel="noopener noreferrer">ホームページへ</a>
                         <a class="btn btn-mini btn-ghost" href="https://donadonaa24-cyber.github.io/tumikomi/index.html?view=web" target="_blank" rel="noopener noreferrer">ウェブ版で遊ぶ</a>
@@ -166,18 +167,19 @@
                     </div>
                 </article>
 
-                <article class="game-card coming-soon">
-                    <div class="game-status">近日公開予定</div>
+                <article class="game-card active">
+                    <div class="game-status">無料試験版 公開中</div>
                     <div class="oshi-gallery" aria-label="推し駒battle イメージ">
                         <img src="images/yui-cat-bishop.png" alt="推し駒battle キャラクター1" loading="lazy">
                         <img src="images/ren-dog-rook.png" alt="推し駒battle キャラクター2" loading="lazy">
                         <img src="images/enemy-bishop-deer.png" alt="推し駒battle キャラクター3" loading="lazy">
                         <img src="images/enemy-silver-wolf.png" alt="推し駒battle キャラクター4" loading="lazy">
                     </div>
-                    <h4>推し駒battle</h4>
-                    <p>現在進行形で制作中の新作ゲームです。公開準備が整いしだいゲームページを追加します。</p>
+                    <h4>推し駒battle</h4><p class="edition-label">Unity / Windows 10・11（64bit）· 試験版 v1.0-trial.1</p>
+                    <p>動物コスプレの「推し駒」1人を主人公に、ランダム生成の全10階を攻略する盤上ローグライク戦略ゲーム。将棋風の動きで番人を倒し、仲間を救い、十階の黒獅子王を目指そう。主人公が倒れたらそこで終わりの一発勝負です。</p>
                     <div class="game-actions">
-                        <button class="btn btn-mini btn-disabled" type="button" disabled>近日公開予定</button>
+                        <a class="btn btn-mini btn-primary" href="https://donadonaa24-cyber.github.io/oshikoma/" target="_blank" rel="noopener noreferrer">ホームページへ</a>
+                        <a class="btn btn-mini btn-ghost" href="https://github.com/donadonaa24-cyber/oshikoma/releases/download/v1.0-trial.1/OshigomaBattle-trial1-win64.zip" target="_blank" rel="noopener noreferrer">Windows版 zip（約101MB）</a>
                     </div>
                 </article>
             </div>
@@ -192,8 +194,9 @@
                     <h3 id="tumikomi-title">架空運輸</h3><p>積む、守る、届ける。</p>
                 </div>
                 <img class="tumikomi-detail-image" src="images/tumikomi-loading.png" alt="緑のトラックへパレットを積み込む場面" loading="lazy">
-                <p>積む。守る。届け切れ！ 架空の運送会社を舞台にした安全アカデミーを舞台にしたブラウザゲームです。</p>
-                <p>フォークリフトでパレットを運び、トラックに積み付け。荷物の重さや重心を考えて配置し、コンパネ・発泡材・ベルトで固定して、発車前点検に挑戦しよう。</p>
+                <p>積む。守る。届け切れ！ 架空の運送会社の安全アカデミーを舞台にしたブラウザゲームです。</p>
+                <p>フォークリフトでパレットを運び、トラックに積み付け。荷物の重さや重心を考えて配置し、コンパネ・発泡材・ベルトで固定して、発車前点検に挑戦しよう。最後は夜の高速道路をトラックで走り、荷物を届けます。</p>
+                <p class="update-note"><strong>2026.10.01 更新</strong>：研修生から営業所長まで昇進する役職制度、12件の依頼から受注を選ぶ「配車便」、ビジュアルノベル形式の会話パートと昇格セレモニーを追加。夜間配送は毎回コースが変わるアーケード風に一新しました。</p>
                 <p>公開中です。今後、新しい要素を追加する可能性があります。</p>
                 <p class="rights-notice">本作品の画像・文章・ゲームデータの無断転載・無断配布を禁止します。</p>
                 <div class="game-actions">
@@ -459,6 +462,10 @@
                     <h4>架空運輸</h4>
                     <p>ゲームホームページ</p>
                 </a>
+                <a class="social-card" href="https://donadonaa24-cyber.github.io/oshikoma/" target="_blank" rel="noopener noreferrer">
+                    <h4>推し駒battle</h4>
+                    <p>ゲームホームページ</p>
+                </a>
             </div>
             </div>
         </section>
@@ -513,19 +520,24 @@
                         <a class="btn btn-mini btn-ghost" href="https://donadonaa24-cyber.github.io/battle-a-la-carte--/mobile/mobile.html" target="_blank" rel="noopener noreferrer">モバイル版で遊ぶ</a>
                     </div>
                 </article></div></section>
-<section id="oshi-detail" class="section modal-section" aria-hidden="true"><div class="modal-panel work-detail" role="dialog" aria-modal="true" aria-label="推し駒battle"><button class="modal-close" type="button" data-modal-close aria-label="閉じる">×</button><article class="game-card coming-soon">
-                    <div class="game-status">近日公開予定</div>
+<section id="oshi-detail" class="section modal-section" aria-hidden="true"><div class="modal-panel work-detail" role="dialog" aria-modal="true" aria-label="推し駒battle"><button class="modal-close" type="button" data-modal-close aria-label="閉じる">×</button><article class="game-card active">
+                    <div class="game-status">無料試験版 公開中</div>
+                    <img class="game-visual" src="images/oshikoma-board.jpg" alt="推し駒battleの対戦画面。6×6の盤上で推し駒を動かし、番人を倒して出口を目指す" width="1280" height="720" loading="lazy">
                     <div class="oshi-gallery" aria-label="推し駒battle イメージ">
                         <img src="images/yui-cat-bishop.png" alt="推し駒battle キャラクター1" loading="lazy">
                         <img src="images/ren-dog-rook.png" alt="推し駒battle キャラクター2" loading="lazy">
                         <img src="images/enemy-bishop-deer.png" alt="推し駒battle キャラクター3" loading="lazy">
                         <img src="images/enemy-silver-wolf.png" alt="推し駒battle キャラクター4" loading="lazy">
                     </div>
-                    <h4>推し駒battle</h4>
-                    <p>現在進行形で制作中の新作ゲームです。公開準備が整いしだいゲームページを追加します。</p>
+                    <h4>推し駒battle</h4><p class="edition-label">Unity / Windows 10・11（64bit）· 試験版 v1.0-trial.1</p>
+                    <p>動物コスプレの「推し駒」1人を主人公に、ランダム生成の全10階を攻略する盤上ローグライク戦略ゲーム。将棋風の動きで番人を倒し、仲間を救い、十階の黒獅子王を目指そう。主人公が倒れたらそこで終わりの一発勝負です。</p>
+                    <p>1回の冒険は約30分が目安（調整中）。マウスで遊べて、途中で「中断」して再開できます。</p>
+                    <p><strong>遊び方</strong>：zipを好きな場所に展開し、フォルダ内の OshigomaBattle.exe を起動。個人制作で署名をしていないため、「WindowsによってPCが保護されました」と出たら「詳細情報」→「実行」を選んでください。</p>
+                    <p>感想・不具合報告は <a href="https://github.com/donadonaa24-cyber/oshikoma/issues" target="_blank" rel="noopener noreferrer">GitHubのIssues</a> へ。</p>
                     <p class="rights-notice">本作品の画像・文章・ゲームデータの無断転載・無断配布を禁止します。</p>
                     <div class="game-actions">
-                        <button class="btn btn-mini btn-disabled" type="button" disabled>近日公開予定</button>
+                        <a class="btn btn-mini btn-primary" href="https://donadonaa24-cyber.github.io/oshikoma/" target="_blank" rel="noopener noreferrer">ホームページへ</a>
+                        <a class="btn btn-mini btn-ghost" href="https://github.com/donadonaa24-cyber/oshikoma/releases/download/v1.0-trial.1/OshigomaBattle-trial1-win64.zip" target="_blank" rel="noopener noreferrer">Windows版 zip（約101MB）</a>
                     </div>
                 </article></div></section>
     </main>
@@ -604,6 +616,7 @@
         <p class="copyright-notice">本サイトおよび掲載作品の画像・文章・ゲームデータの無断転載・無断配布を禁止します。</p>
         <a href="https://donadonaa24-cyber.github.io/battle-a-la-carte--/" target="_blank" rel="noopener noreferrer">Battle a la carte ホームページへ</a>
         <a href="https://donadonaa24-cyber.github.io/tumikomi/index.html?view=home" target="_blank" rel="noopener noreferrer">架空運輸 ホームページへ</a>
+        <a href="https://donadonaa24-cyber.github.io/oshikoma/" target="_blank" rel="noopener noreferrer">推し駒battle ホームページへ</a>
     </footer>
 
     <section id="common-account" class="section modal-section" aria-hidden="true">
@@ -662,7 +675,7 @@
     <script src="trial-gacha-data.js?v=20260920b1"></script>
     <script src="trial-gacha.js?v=20260920b1"></script>
     <script type="module" src="common/portal.js?v=20260912a1"></script>
-    <script src="aniani.js?v=20260930a1"></script>
+    <script src="aniani.js?v=20261001a1"></script>
     <script src="galaxy.js?v=20260915a1"></script>
 <script src="arcade-layout.js?v=20260915a1"></script></body>
 </html>

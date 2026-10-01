@@ -23,7 +23,13 @@ for (const links of groups) {
 for(const m of html.matchAll(/data-status="([^"]+)"/g)) {
   if(m[1].startsWith('公開中')) assert.equal(m[1], '公開中＆追加要素可能性あり');
 }
-assert(html.includes('近日公開予定'));
+assert(!html.includes('近日公開予定'), '推し駒battle is released as a free trial');
+assert(/data-title="推し駒battle" data-status="無料試験版 公開中"/.test(html));
+assert(html.split('oshikoma/releases/download/v1.0-trial.1/OshigomaBattle-trial1-win64.zip').length - 1 >= 2);
+assert(html.split('https://donadonaa24-cyber.github.io/oshikoma/').length - 1 >= 4);
+assert(fs.existsSync('images/oshikoma-board.jpg'));
+assert(!html.includes('を舞台にした安全アカデミーを舞台にした'));
+assert.equal(html.split('2026.10.01 更新').length - 1, 2);
 assert(!html.includes('class="gacha-core-app"'), 'gacha must not occupy the center of the game orbit');
 assert(!html.includes('class="orbit-core"'), 'the orbit center must stay completely empty');
 assert(html.includes('data-modal-target="trial-gacha"'));
@@ -44,7 +50,7 @@ assert((html.match(/無断転載・無断配布を禁止します。/g) || []).l
 assert(html.includes('EODaZVnp9Jx0SkJDQR-oyGH1baUfiHRkVlnkgVq0A0k'));
 assert(!html.includes('スマホ'), 'portal wording uses モバイル版, not スマホ版');
 assert(html.includes('Unity / Windows / Android · v0.5.0'));
-assert.equal((html.match(/class="update-note"/g) || []).length, 2);
+assert.equal((html.match(/class="update-note"/g) || []).length, 4); // Battle Web card+modal, 架空運輸 card+modal
 const js = fs.readFileSync('aniani.js', 'utf8');
 assert(!/ADMIN|admin-login|adminSession|article-form/.test(js + html.replace(/id="guestbook-form" class="article-form"/, '')), 'article admin mode and its passcode are removed');
 assert(js.includes('const officialArticles') && js.includes('2026-09-29-battle-update'));
