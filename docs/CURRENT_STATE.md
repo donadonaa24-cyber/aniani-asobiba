@@ -1,6 +1,17 @@
 # CURRENT_STATE
 
-更新日: 2026-10-01
+更新日: 2026-10-02
+
+## 2026-10-02 Unity版の紹介画像更新
+
+- Claudeのホームページ作業ログを確認し、最後に中断していたUnity版の紹介画像差し替えを再開。
+- Unity版のケース・作品一覧・詳細の3画像を `images/battle-3d-20261001.webp` に変更。元画像は保持。
+- 画像は2026-10-01のUnity検証用Windows Playerから取得した現在の対戦画面（イラスト入り調理台、食材・加工アイテム、料理履歴・ログ・メニュー）。1600×900のロスレスWebP。
+- `.publish-battle-3d/` の紹介ページにも同じ対戦画面を掲載し、メニュー・ミッション・スリーブの3画像と原寸表示リンクを追加。
+- 新しい紹介画像はローカルおよび公開用作業ツリーに反映し、2026-10-02 にUnity紹介サイトとポータルをそれぞれcommit・pushしてGitHub Pagesで公開。
+- 確認: 320×568、390×844、430×932、844×390、1366×768のブラウザで、全4画像、PC3列/モバイル1列、横はみ出しなし、原寸表示、ポータルの3掲載箇所・詳細からの復帰を確認。元PNGとWebPは全画素一致。Android版は実機で起動確認済み（オーナー確認）。
+- Unity版の作品一覧・詳細に「Mac版・iPhone版は今後実装予定」を追加（オーナー指示）。
+- Claudeへのローカル引き継ぎ書と再開プロンプト: `release-artifacts/unity-site-20261002/HANDOFF-CLAUDE.md` / `CLAUDE-RESUME-PROMPT.txt`。公開候補・画像の出典・確認結果・未コミット/未公開の状態を記載。引き継ぎ資料と検証コードはGitへ追加しない。
 
 ## 2026-10-01 推し駒battle公開・架空運輸更新の反映
 
@@ -38,7 +49,7 @@
 
 ## 技術バージョン
 
-- ポータル本体はUnity不使用。紹介するUnity版はv0.4.0、Windows 64-bit / Android ARM64（Android 8.0以上、Google Play外の試験版）。ブラウザ/WebGL/iPhone版は未提供。v0.4.0のUnityエディターバージョンは未確認。
+- ポータル本体はUnity不使用。紹介するUnity版はv0.5.0、Windows 64-bit / Android ARM64（Android 8.0以上、Google Play外の試験版、実機起動はオーナー確認済み）。ブラウザ/WebGL/iPhone版は未提供。Mac版・iPhone版は今後実装予定（時期未定）。
 - JavaScript: ブラウザ標準ES Modules + Vanilla JavaScript。
 - Supabase JS: `2.57.4`（esm.shから動的読込）。
 - ローカル確認時Node.js: `v24.19.0`。

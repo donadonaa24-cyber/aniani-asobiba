@@ -55,7 +55,8 @@ Browser
 - `.publish-aniani/`: GitHub Pagesへpushする独立Git作業ツリー。ローカル開発ルートとは別管理。
 - `.publish-battle-3d/`: Unity版専用の紹介・配布リポジトリ作業ツリー。Unityソース一式は含まない。
 - `release-artifacts/`: ローカル配布ZIP。ポータルのGit管理対象外。
-- `images/battle-3d.png`: Unity版の実際の対戦画面を紹介する画像。
+- `images/battle-3d-20261001.webp`: Unity版の現在の対戦画面（1600×900、ロスレスWebP）。旧 `images/battle-3d.png` は保持。
+- `.publish-battle-3d/images/`: Unity紹介ページ用の対戦・メニュー・ミッション・スリーブ画像。Unityの検証PNGから作成した静的画像で、ゲームランタイムは含まない。
 - `assets/images/積み込みゲーム/`: 別作品「翠路ロジスティクス」の同梱ソース。独自のHTML/CSS/JS/Nodeサーバー/テスト/データを持つが、ポータルはこのコピーを起動せず、公開済み `tumikomi` へ外部リンクする。
 
 ## システム間の役割

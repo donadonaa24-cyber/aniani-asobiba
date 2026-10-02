@@ -29,7 +29,7 @@
 | 作品 | ポータル上の状態 | 実装済み導線 |
 |---|---|---|
 | Battle a la carte | 公開中＆追加要素可能性あり | ホームページ、ウェブ版、モバイル版 |
-| Battle à la carte Unity版（3D版） | 公開中＆追加要素可能性あり | 専用ホームページ（導入・対戦手順）、Windows ZIP・Android APK v0.4.0ダウンロード |
+| Battle à la carte Unity版（3D版） | 公開中＆追加要素可能性あり | 専用ホームページ（導入・対戦手順）、Windows ZIP・Android APK v0.5.0ダウンロード |
 | 架空運輸 | 公開中＆追加要素可能性あり | ホームページ、ウェブ版、モバイル版 |
 | 推し駒battle | 無料試験版 公開中 | ホームページ、Windows版zip（GitHub Releases v1.0-trial.1） |
 | 混ぜるな危険 | 制作予定 | 制作予定モーダルの説明のみ |
@@ -38,7 +38,8 @@
 - 天涯比隣は現時点でポータルへ掲載しない。
 - 選択順はWeb版Battle a la carte、Unity版（3D版）、架空運輸、推し駒battle、混ぜるな危険。
 - Unity版は新作・別作品として紹介する。既存Web版のホーム/Web/スマホ導線は維持する。
-- Unity版v0.4.0はWindows 64-bit ZIPとAndroid ARM64 APK（Android 8.0以上、Google Play外の試験版）を配布。専用リポジトリ `battle-a-la-carte-3d` のPagesとGitHub Releasesへ案内する。
+- Unity版v0.5.0はWindows 64-bit ZIPとAndroid ARM64 APK（Android 8.0以上、Google Play外の試験版）を配布。専用リポジトリ `battle-a-la-carte-3d` のPagesとGitHub Releasesへ案内する。
+- Unity版の紹介画像は現在のWindows対戦画面。ケース・作品一覧・詳細は同じ画像を使用し、専用ホームにはメニュー・ミッション・スリーブの実画面も掲載する。
 - Unity版には3D調理台、CPU戦、ストーリー、ギャラリーに加え、タイトル画面、デイリーログインボーナス、あにあにアカウントログインがある。ブラウザ/WebGL/iPhone版は未提供。
 - ケースはWindows / Androidと通信対戦の試験提供・参加専用を案内する。作品一覧と詳細には、Web版「オンライン対戦」で部屋を作成し、Unity版メニュー「オンライン対戦」から6桁の合言葉または公開部屋一覧で参加する手順を掲載する。Unity版では部屋作成不可、降参可能。今後変更の可能性、切断後の復帰未対応、Android版での通信対戦未確認を明記する。
 - Windows ZIPはexe、Dataフォルダ、DLL等の一式を展開して実行する。ポータルはexeを直接起動しない。
