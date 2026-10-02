@@ -694,6 +694,13 @@ main {
     transform: scale(1.03);
 }
 
+#oshi-detail .game-visual {
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    transform: none;
+}
+
 .oshi-gallery {
     margin-top: 10px;
     display: grid;
@@ -795,6 +802,83 @@ main {
     margin-top: 12px;
     padding-top: 10px;
     border-top: 1px solid rgba(168, 210, 255, 0.2);
+}
+
+.article-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 18px 0;
+}
+
+.article-screenshot {
+    margin: 0;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid rgba(168, 210, 255, 0.28);
+    border-radius: 12px;
+    background: rgba(4, 13, 29, 0.7);
+}
+
+.article-screenshot:first-child {
+    grid-column: 1 / -1;
+}
+
+.article-screenshot-link {
+    position: relative;
+    display: block;
+}
+
+.article-screenshot-link img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.article-screenshot-link:focus-visible {
+    outline: 3px solid #ffe19c;
+    outline-offset: -3px;
+}
+
+.article-image-hint {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: rgba(4, 13, 29, 0.9);
+    color: #fff0bc;
+    font-size: 11px;
+}
+
+.article-screenshot figcaption {
+    padding: 12px;
+    color: #fff0bc;
+    font-size: 13px;
+}
+
+.article-screenshot figcaption p {
+    margin: 6px 0 0;
+    color: #c5ddf7;
+    line-height: 1.6;
+}
+
+.article-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.article-actions .btn {
+    min-height: 44px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+    .article-gallery {
+        grid-template-columns: minmax(0, 1fr);
+    }
 }
 
 .article-reactions h6 {

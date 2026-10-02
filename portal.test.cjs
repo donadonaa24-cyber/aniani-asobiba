@@ -25,9 +25,12 @@ for(const m of html.matchAll(/data-status="([^"]+)"/g)) {
 }
 assert(!html.includes('近日公開予定'), '推し駒battle is released as a free trial');
 assert(/data-title="推し駒battle" data-status="無料試験版 公開中"/.test(html));
-assert(html.split('oshikoma/releases/download/v1.0-trial.1/OshigomaBattle-trial1-win64.zip').length - 1 >= 2);
+assert(html.split('oshikoma/releases/download/v1.0-trial.2/OshigomaBattle-trial2-win64.zip').length - 1 >= 2);
 assert(html.split('https://donadonaa24-cyber.github.io/oshikoma/').length - 1 >= 4);
 assert(fs.existsSync('images/oshikoma-board.jpg'));
+for (const screen of ['board', 'select', 'inspect', 'blessing']) {
+  assert(fs.existsSync(`images/oshikoma/${screen}-20261002.jpg`), `Latest ${screen} screenshot must exist`);
+}
 assert(!html.includes('を舞台にした安全アカデミーを舞台にした'));
 assert.equal(html.split('2026.10.01 更新').length - 1, 2);
 assert(!html.includes('class="gacha-core-app"'), 'gacha must not occupy the center of the game orbit');

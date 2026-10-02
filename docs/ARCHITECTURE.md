@@ -67,6 +67,13 @@ Browser
 - 開いているモーダルは `.is-open` と `aria-hidden` で管理する。
 - `galaxy.js` は作品ケースの `data-orbit`、`data-title`、`data-status`、`data-description` を表示へ反映する。
 
+### 公式記事の画像とリンク（2026-10-02追加）
+
+- `aniani.js` の `officialArticles` は既存の `id` / `title` / `category` / `body` / `createdAt` に、任意の `screenshots` / `links` を持てる。`screenshots` は `src` / `alt` / `title` / `caption`、`links` は `href` / `label`。
+- `renderArticles()` が各値をHTMLエスケープしてfigure/リンクを生成し、`aniani.css` の `.article-gallery` がレスポンシブ表示を担当する。記事IDと `aniani_article_comments_v1` はそのまま。追加のパッケージ、DB、通信APIは不要。
+- 試験版2の画像は `images/oshikoma/*-20261002.jpg`。コピー元は `../推し駒battle/Site/assets/screen-*.jpg`。公開用 `.publish-aniani/images/oshikoma/` も同じ画像を持つ。画像生成ではなく実画面をそのまま使用する。
+- `#oshi-detail .game-visual` は高さ自動・16:9・`object-fit: contain`。他作品の画像やミニゲームへ影響しないよう、対象を限定している。
+
 ### ミニゲーム
 
 - `aniani.js` がゲーム状態、入力、Canvas描画、得点、タイマーを所有する。

@@ -10,6 +10,51 @@
     // 新しい記事は先頭に追加してください。id は記事コメントの保存キーなので、公開後は変えないでください。
     const officialArticles = [
         {
+            id: "2026-10-02-oshikoma-trial2",
+            title: "推し駒battle 試験版2：画面刷新＆スコア・コンボ追加",
+            category: "アップデート",
+            body: [
+                "無料試験版 v1.0-trial.2（Windows 10・11 / 64bit）を公開しました。推しと進む全10階の盤上ローグライクが、新しい画面と演出でさらににぎやかに！",
+                "6×6の盤面で「鍵」の番人を倒し、主人公を出口へ。主人公が倒れたら冒険終了、という一発勝負の基本ルールはそのままです。",
+                "・画面を一新：上部にスコアとコンボ、右側に手番キャラと実況ログ、下部に制限時間バーを配置。カットインや撃破・突破の演出も強化しました。",
+                "・自分の手番は標準15秒。設定で「なし / 30秒 / 15秒 / 8秒」を選べます。時間切れになると、その駒は待機します。",
+                "・スコアとコンボ：連続攻撃で得点倍率が上がり、最大×3.0に。即断ボーナス、階層ランク、ハイスコアの記録も追加しました。",
+                "・タイトル、戦闘、ボス戦のBGMと効果音を追加・拡充。設定からそれぞれON / OFFを切り替えられます。",
+                "マウスで操作し、途中で「中断」して続きから再開できます。下の画像は試験版2の実画面です。画像を押すと、別タブで原寸表示できます。"
+            ].join("\n\n"),
+            screenshots: [
+                {
+                    src: "images/oshikoma/board-20261002.jpg",
+                    alt: "推し駒battle試験版2の対戦画面。上部にスコアとコンボ、右側に手番キャラ、下部に制限時間バー",
+                    title: "戦う：推しと挑む6×6の盤面",
+                    caption: "青いマスへ移動、赤い敵はクリックで攻撃。「鍵」の番人を倒して出口を開こう。"
+                },
+                {
+                    src: "images/oshikoma/select-20261002.jpg",
+                    alt: "推し駒battle試験版2の主人公選択画面。推し駒の立ち絵と能力・固有スキルを表示",
+                    title: "選ぶ：主人公になる推し駒",
+                    caption: "能力・移動・攻撃範囲・固有スキルを確認して、冒険の主人公を選択。"
+                },
+                {
+                    src: "images/oshikoma/inspect-20261002.jpg",
+                    alt: "推し駒battle試験版2の敵情報画面。駒の横に能力説明、盤面に次の手番の攻撃範囲を表示",
+                    title: "読む：敵の情報と危険範囲",
+                    caption: "駒にマウスを乗せると能力と攻撃範囲が見える。敵の次の一手を読んで動こう。"
+                },
+                {
+                    src: "images/oshikoma/blessing-20261002.jpg",
+                    alt: "推し駒battle試験版2の祝福選択画面。次の階へ持ち越す祝福を3つの候補から選ぶ",
+                    title: "強化する：次の階へ持ち越す祝福",
+                    caption: "階を突破したら、3つの候補から祝福を1つ選択。仲間の回復や能力強化を次の攻略に。"
+                }
+            ],
+            links: [
+                { href: "https://donadonaa24-cyber.github.io/oshikoma/", label: "ホームページ・遊び方へ" },
+                { href: "https://github.com/donadonaa24-cyber/oshikoma/releases/download/v1.0-trial.2/OshigomaBattle-trial2-win64.zip", label: "Windows試験版2をダウンロード（約103MB）" }
+            ],
+            createdAt: "2026-10-02T09:27:25+09:00"
+        },
+        {
             id: "2026-10-01-oshikoma-trial",
             title: "推し駒battle 無料試験版を公開",
             category: "お知らせ",
@@ -394,6 +439,20 @@
             const body = escapeHtml(item.body || "");
             const createdAt = escapeHtml(formatDate(item.createdAt));
             const comments = Array.isArray(articleComments[item.id]) ? articleComments[item.id] : [];
+            const screenshotsHtml = Array.isArray(item.screenshots) && item.screenshots.length
+                ? `<div class="article-gallery" aria-label="${title}のスクリーンショット">${item.screenshots.map((shot) => `
+                    <figure class="article-screenshot">
+                        <a class="article-screenshot-link" href="${escapeHtml(shot.src)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(shot.title)}の画像を原寸表示（別タブ）">
+                            <img src="${escapeHtml(shot.src)}" alt="${escapeHtml(shot.alt)}" width="1280" height="720" loading="lazy">
+                            <span class="article-image-hint" aria-hidden="true">原寸で見る</span>
+                        </a>
+                        <figcaption><strong>${escapeHtml(shot.title)}</strong><p>${escapeHtml(shot.caption)}</p></figcaption>
+                    </figure>
+                `).join("")}</div>`
+                : "";
+            const linksHtml = Array.isArray(item.links) && item.links.length
+                ? `<div class="article-actions">${item.links.map((link) => `<a class="btn btn-ghost btn-mini" href="${escapeHtml(link.href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)}</a>`).join("")}</div>`
+                : "";
 
             const commentsHtml = comments.length
                 ? comments.slice().reverse().map((comment) => {
@@ -419,6 +478,8 @@
                         <span>${createdAt}</span>
                     </div>
                     <p class="article-body">${body}</p>
+                    ${screenshotsHtml}
+                    ${linksHtml}
 
                     <div class="article-reactions">
                         <h6>この記事へのコメント</h6>
