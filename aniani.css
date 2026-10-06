@@ -1887,3 +1887,23 @@ main {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 }
+
+/* あにあに文庫（2026-10-06追加）：本棚画像は16:9で全体を見せる */
+#bunko-detail .game-visual {
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    transform: none;
+}
+
+.bunko-list {
+    margin: 8px 0 12px;
+    padding-left: 1.2em;
+    color: #d1e6ff;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.bunko-list li + li {
+    margin-top: 4px;
+}

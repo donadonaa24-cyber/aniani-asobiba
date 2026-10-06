@@ -5,11 +5,11 @@
     <meta name="google-site-verification" content="EODaZVnp9Jx0SkJDQR-oyGH1baUfiHRkVlnkgVq0A0k" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>あにあにの遊び場</title>
-    <meta name="description" content="あにあに制作ゲームのポータル。Battle a la carte / 架空運輸 / 推し駒battle / ミニゲーム / 更新記事をモーダルで確認できます。">
+    <meta name="description" content="あにあに制作ゲームのポータル。Battle a la carte / 架空運輸 / 推し駒battle / あにあに文庫 / ミニゲーム / 更新記事をモーダルで確認できます。">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="aniani.css?v=20261002a1">
+    <link rel="stylesheet" href="aniani.css?v=20261006a1">
     <link rel="stylesheet" href="galaxy.css?v=20260929a1">
     <link rel="stylesheet" href="arcade.css?v=20260915a1">
     <link rel="stylesheet" href="trial-gacha.css?v=20260920b1">
@@ -78,9 +78,13 @@
                     <span class="case-spine" aria-hidden="true">NEXT PROJECT</span>
                     <span class="case-face mystery-cover"><span class="case-brand">ANIANI ORIGINAL / 05</span><span class="mystery-symbol" aria-hidden="true">×</span><span class="case-caption"><small>UNKNOWN REACTION</small><strong>混ぜるな<br>危険</strong><em>制作予定</em></span></span>
                 </button>
+                <button class="game-case" type="button" data-orbit="5" data-modal-target="bunko-detail" data-title="あにあに文庫" data-status="公開中＆追加要素可能性あり" data-description="ページをめくって読む、あにあにの小説。挿絵とBGMつきの本棚に3作品・全6冊。" style="--case-accent:#f3c7a0">
+                    <span class="case-spine" aria-hidden="true">ANIANI BUNKO</span>
+                    <span class="case-face"><span class="case-brand">ANIANI ORIGINAL / 06</span><img src="images/bunko/case-20261006.webp" alt="あにあに文庫の本棚"><span class="case-caption"><small>NOVEL / BOOKSHELF</small><strong>あにあに<br>文庫</strong><em>公開中＆追加要素可能性あり</em></span></span>
+                </button>
             </div>
             <div class="selection-panel">
-                <p class="selection-status" id="orbit-status">01 / 05 · 公開中＆追加要素可能性あり</p>
+                <p class="selection-status" id="orbit-status">01 / 06 · 公開中＆追加要素可能性あり</p>
                 <h3 id="orbit-title">Battle a la carte</h3>
                 <p id="orbit-description">料理とバトルが交差する、あなただけの一皿。</p>
                 <div class="orbit-controls">
@@ -181,6 +185,21 @@
                     <div class="game-actions">
                         <a class="btn btn-mini btn-primary" href="https://donadonaa24-cyber.github.io/oshikoma/" target="_blank" rel="noopener noreferrer">ホームページへ</a>
                         <a class="btn btn-mini btn-ghost" href="https://github.com/donadonaa24-cyber/oshikoma/releases/download/v1.0-trial.2/OshigomaBattle-trial2-win64.zip" target="_blank" rel="noopener noreferrer">Windows版 zip（約103MB）</a>
+                    </div>
+                </article>
+                <article class="game-card active">
+                    <div class="game-status">公開中＆追加要素可能性あり</div>
+                    <a class="game-visual-link" href="images/bunko/shelf-20261006.webp" target="_blank" rel="noopener noreferrer" aria-label="あにあに文庫の本棚を原寸表示（別タブ）"><img class="game-visual" src="images/bunko/shelf-20261006.webp" alt="あにあに文庫の本棚。6冊の小説が並ぶ" width="1280" height="720" loading="lazy"></a>
+                    <h4>あにあに文庫</h4><p class="edition-label">Web（ブラウザで読む）· 小説3作品・全6冊</p>
+                    <p>あにあにの小説を、本物の本のようにページをめくって読めるデジタル本棚。縦書き・挿絵入りで、場面に合わせたBGM（オン／オフ・音量調整可）が流れます。読んだ位置は自動で保存され、モバイルにもPCにも対応しています。</p>
+                    <ul class="bunko-list">
+                        <li><strong>EchoShion</strong>：記憶と声をめぐる近未来の物語。</li>
+                        <li><strong>花散るさきの、幸せのかたち</strong>（上巻・下巻・別巻）：姉妹と家族の物語。下巻と別巻で、ふたつの結末を読めます。</li>
+                        <li><strong>星の終わりに君は生きる</strong>（本編・特別編）：管理AIの時代を生きる兄弟と、火星へ渡った少女の物語。</li>
+                    </ul>
+                    <p class="rights-notice">本作品の画像・文章の無断転載・無断配布を禁止します。</p>
+                    <div class="game-actions">
+                        <a class="btn btn-mini btn-primary" href="https://donadonaa24-cyber.github.io/book/" target="_blank" rel="noopener noreferrer">本棚で読む</a>
                     </div>
                 </article>
             </div>
@@ -467,6 +486,10 @@
                     <h4>推し駒battle</h4>
                     <p>ゲームホームページ</p>
                 </a>
+                <a class="social-card" href="https://donadonaa24-cyber.github.io/book/" target="_blank" rel="noopener noreferrer">
+                    <h4>あにあに文庫</h4>
+                    <p>小説の本棚</p>
+                </a>
             </div>
             </div>
         </section>
@@ -540,6 +563,22 @@
                     <div class="game-actions">
                         <a class="btn btn-mini btn-primary" href="https://donadonaa24-cyber.github.io/oshikoma/" target="_blank" rel="noopener noreferrer">ホームページへ</a>
                         <a class="btn btn-mini btn-ghost" href="https://github.com/donadonaa24-cyber/oshikoma/releases/download/v1.0-trial.2/OshigomaBattle-trial2-win64.zip" target="_blank" rel="noopener noreferrer">Windows版 zip（約103MB）</a>
+                    </div>
+                </article></div></section>
+<section id="bunko-detail" class="section modal-section" aria-hidden="true"><div class="modal-panel work-detail" role="dialog" aria-modal="true" aria-label="あにあに文庫"><button class="modal-close" type="button" data-modal-close aria-label="閉じる">×</button><article class="game-card active">
+                    <div class="game-status">公開中＆追加要素可能性あり</div>
+                    <a class="game-visual-link" href="images/bunko/shelf-20261006.webp" target="_blank" rel="noopener noreferrer" aria-label="あにあに文庫の本棚を原寸表示（別タブ）"><img class="game-visual" src="images/bunko/shelf-20261006.webp" alt="あにあに文庫の本棚。6冊の小説が並ぶ" width="1280" height="720" loading="lazy"></a>
+                    <h4>あにあに文庫</h4><p class="edition-label">Web（ブラウザで読む）· 小説3作品・全6冊</p>
+                    <p>あにあにの小説を、本物の本のようにページをめくって読めるデジタル本棚。縦書き・挿絵入りで、場面に合わせたBGM（オン／オフ・音量調整可）が流れます。読んだ位置は自動で保存され、モバイルにもPCにも対応しています。</p>
+                    <ul class="bunko-list">
+                        <li><strong>EchoShion</strong>：記憶と声をめぐる近未来の物語。</li>
+                        <li><strong>花散るさきの、幸せのかたち</strong>（上巻・下巻・別巻）：姉妹と家族の物語。下巻と別巻で、ふたつの結末を読めます。</li>
+                        <li><strong>星の終わりに君は生きる</strong>（本編・特別編）：管理AIの時代を生きる兄弟と、火星へ渡った少女の物語。</li>
+                    </ul>
+                    <p><strong>読み方</strong>：本棚から本を選び、表紙をタップして開きます。画面の左右をタップ（またはスワイプ）でページをめくれます。目次から章へ移動でき、上の「♪ BGM」でBGMのオン／オフと音量を変えられます。</p>
+                    <p class="rights-notice">本作品の画像・文章の無断転載・無断配布を禁止します。</p>
+                    <div class="game-actions">
+                        <a class="btn btn-mini btn-primary" href="https://donadonaa24-cyber.github.io/book/" target="_blank" rel="noopener noreferrer">本棚で読む</a>
                     </div>
                 </article></div></section>
     </main>
@@ -619,6 +658,7 @@
         <a href="https://donadonaa24-cyber.github.io/battle-a-la-carte--/" target="_blank" rel="noopener noreferrer">Battle a la carte ホームページへ</a>
         <a href="https://donadonaa24-cyber.github.io/tumikomi/index.html?view=home" target="_blank" rel="noopener noreferrer">架空運輸 ホームページへ</a>
         <a href="https://donadonaa24-cyber.github.io/oshikoma/" target="_blank" rel="noopener noreferrer">推し駒battle ホームページへ</a>
+        <a href="https://donadonaa24-cyber.github.io/book/" target="_blank" rel="noopener noreferrer">あにあに文庫 本棚へ</a>
     </footer>
 
     <section id="common-account" class="section modal-section" aria-hidden="true">
@@ -677,7 +717,7 @@
     <script src="trial-gacha-data.js?v=20260920b1"></script>
     <script src="trial-gacha.js?v=20260920b1"></script>
     <script type="module" src="common/portal.js?v=20260912a1"></script>
-    <script src="aniani.js?v=20261002a1"></script>
+    <script src="aniani.js?v=20261006a1"></script>
     <script src="galaxy.js?v=20260915a1"></script>
 <script src="arcade-layout.js?v=20260915a1"></script></body>
 </html>
