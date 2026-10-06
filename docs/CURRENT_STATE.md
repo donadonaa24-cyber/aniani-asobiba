@@ -1,6 +1,14 @@
 # CURRENT_STATE
 
-更新日: 2026-10-02
+更新日: 2026-10-06
+
+## 2026-10-06 あにあに文庫の追加（Claude Code担当）
+
+- 所有者の依頼で、小説の本棚「あにあに文庫」（別リポジトリ `book`、`https://donadonaa24-cyber.github.io/book/`）を6番目の作品ケースとして追加。作品一覧・詳細モーダル `#bunko-detail`・リンク・フッターに「本棚で読む」導線を追加。
+- 公式記事 `2026-10-06-aniani-bunko`（あにあに文庫オープン）を追加。本棚・表紙・挿絵の実画面3枚と本棚へのリンクを掲載。
+- 画像 `images/bunko/{case,shelf,cover,illust}-20261006.webp` は本棚アプリの実画面（1280×720）から作成。キャッシュ識別子 `aniani.css` / `aniani.js` は `20261006a1`。
+- 確認: `node --check aniani.js`、`portal.test.cjs`（6作品ケースと文庫導線の検査を追加）、`arcade-layout.test.cjs`、`trial-gacha.test.cjs` が通過。`arcade.test.cjs` は `common/portal.css` 不在による既知の失敗（変更前と同じ）。1366×768 / 390×844で6作品の周回、文庫の選択・詳細表示、横はみ出しなし、新記事と画像3枚・リンク、JS実行例外0件を確認。実機は未確認。
+- このリポジトリ（GitHub）を直接更新した。ローカルの `.publish-aniani/` 作業ツリーとは同期していないため、ローカル側で作業する場合は先にGitHubの `main` を取り込むこと。
 
 ## 2026-10-02 推し駒battle試験版2の記事・紹介更新（公開済み）
 
