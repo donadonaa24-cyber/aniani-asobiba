@@ -2,6 +2,18 @@
 
 確認できたGit履歴、既存文書、今回の作業記録のみを記載する。Git履歴以前の変更は推測しない。
 
+## 2026-10-08
+
+### ホームページ改善：軽量化・SNS共有・直接リンク（Claude Code担当、所有者承認済み）
+
+- 改善: 初回表示の転送量を約36.8MBから約2.0MBへ削減。ブロック崩しの料理画像8枚はブロック崩しを開いた時に読み込み、もぐらたたき・カウボーイ決闘の画像は `loading="lazy"` に変更。
+- 追加: 作品ケース用の軽量WebP `images/thumbs/*-case-20261008.webp`（4件）と背景 `images/galaxy-library-20261008.webp`。元画像は保持し、作品一覧・詳細の画像は変更しない。
+- 追加: OGP / Xカード用meta、canonical、theme-color、ファビコン `images/favicon.svg`、`images/apple-touch-icon.png`、共有画像 `images/ogp-20261008.jpg`（トップ画面の撮影）。
+- 変更: meta descriptionにUnity版を追記。
+- 追加: 作品詳細モーダルをURLハッシュ（例: `#battle-detail`）で直接開ける機能。開閉に合わせてハッシュを更新する。
+- 変更: `galaxy.css` / `arcade.css` / `aniani.js` のキャッシュ識別子を `20261008a1` に更新。`portal.test.cjs` にOGP・アイコン・作品ケース画像・直接リンク先・ブロック崩し遅延読込の検査を追加。
+- テスト: JS構文、portal / arcade-layout / trial-gacha 検査が通過。arcade検査は既知の `common/portal.css` 不在で失敗（変更前と同じ）。1366×768 / 390×844で表示、横はみ出しなし、直接リンク5件・不正ハッシュ無視、ミニゲーム画像の表示、×とEscapeによる復帰、JS実行例外0件を確認。実機未確認。
+
 ## 2026-10-06
 
 ### あにあに文庫の追加（Claude Code担当）

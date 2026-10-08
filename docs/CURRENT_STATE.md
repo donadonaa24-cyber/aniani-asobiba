@@ -1,6 +1,13 @@
 # CURRENT_STATE
 
-更新日: 2026-10-06
+更新日: 2026-10-08
+
+## 2026-10-08 ホームページ改善（Claude Code担当）
+
+- 所有者の承認を得て、初回読込の軽量化（約36.8MB→約2.0MB）、OGP / Xカード・ファビコン追加、meta descriptionへのUnity版追記、作品詳細のURLハッシュ直接リンク（`#battle-detail` 等5件）を実装。詳細は `docs/CHANGELOG.md`。
+- キャッシュ識別子: `galaxy.css` / `arcade.css` / `aniani.js` は `20261008a1`（`aniani.css` は `20261006a1` のまま）。
+- OGP画像は公開URL（`https://donadonaa24-cyber.github.io/aniani-asobiba/images/ogp-20261008.jpg`）を参照するため、公開反映後にX等での表示確認が必要（未確認）。
+- このリポジトリ（GitHub）のブランチ `claude/aniani-homepage-improvements-qr4494` で作業。`main` への反映・公開は所有者の判断待ち。ローカルの `.publish-aniani/` とは未同期。
 
 ## 2026-10-06 あにあに文庫の追加（Claude Code担当）
 

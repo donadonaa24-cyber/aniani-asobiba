@@ -63,4 +63,13 @@ assert(!/ADMIN|admin-login|adminSession|article-form/.test(js + html.replace(/id
 assert(js.includes('const officialArticles') && js.includes('2026-09-29-battle-update'));
 assert(/data-common-coming-soon[\s\S]*?準備中/.test(html), 'account modal shows a coming-soon notice');
 assert(/class="common-app" data-common-app hidden/.test(html), 'account UI stays hidden unless common/portal.js loads');
+for (const m of html.matchAll(/<meta property="og:image" content="https:\/\/donadonaa24-cyber\.github\.io\/aniani-asobiba\/([^"]+)"/g)) assert(fs.existsSync(m[1]), 'OGP image exists');
+assert(html.includes('name="twitter:card" content="summary_large_image"'));
+for (const m of html.matchAll(/<link rel="(?:icon|apple-touch-icon)" href="([^"]+)"/g)) assert(fs.existsSync(m[1]), 'icon exists');
+const caseImages = [...html.matchAll(/<span class="case-face">(?:(?!<\/button>)[\s\S])*?<img src="([^"]+)"/g)].map(m => m[1]);
+assert.equal(caseImages.length, 5);
+for (const src of caseImages) assert(src.endsWith('.webp') && fs.existsSync(src), `orbit case image is a light WebP: ${src}`);
+const deepLinkIds = JSON.parse(js.match(/DEEP_LINK_MODAL_IDS = (\[[^\]]+\])/)[1]);
+for (const id of deepLinkIds) assert(html.includes(`id="${id}"`), `deep-link target exists: ${id}`);
+assert(js.includes('function ensureBreakoutImages') && js.includes('BREAKOUT_BRICK_PATHS.map(() =>'), 'breakout images load when the game opens, not on portal load');
 console.log('PASS: portal links, rights notices, trial gacha entry, assets, release labels, and verification preserved.');

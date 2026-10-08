@@ -359,6 +359,7 @@
         });
 
         if (tabKey === "breakout") {
+            ensureBreakoutImages();
             window.setTimeout(() => {
                 drawBreakout();
             }, 0);
@@ -382,6 +383,27 @@
         return String(active?.dataset.miniTab || "");
     }
 
+    // 作品詳細だけはURL末尾（例: #battle-detail）で直接開けるようにし、共有できるURLにする。
+    const DEEP_LINK_MODAL_IDS = ["battle-detail", "battle-3d-detail", "tumikomi", "oshi-detail", "bunko-detail"];
+
+    function getDeepLinkModalId() {
+        const id = window.location.hash.slice(1);
+        return DEEP_LINK_MODAL_IDS.includes(id) ? id : "";
+    }
+
+    function syncDeepLinkHash(id) {
+        const nextId = DEEP_LINK_MODAL_IDS.includes(id) ? id : "";
+        if (getDeepLinkModalId() === nextId) {
+            return;
+        }
+        const base = `${window.location.pathname}${window.location.search}`;
+        try {
+            history.replaceState(history.state, "", nextId ? `${base}#${nextId}` : base);
+        } catch {
+            // 履歴APIが使えない環境ではURLを変えずにモーダルだけ動かす。
+        }
+    }
+
     function closeOpenModal() {
         if (window.arcadeExitPlay?.()) return;
         const openModal = modalSections.find((section) => section.classList.contains("is-open"));
@@ -392,6 +414,7 @@
         openModal.classList.remove("is-open");
         openModal.setAttribute("aria-hidden", "true");
         document.body.classList.remove("modal-open");
+        syncDeepLinkHash("");
 
         if (lastModalTrigger) {
             lastModalTrigger.focus();
@@ -412,6 +435,7 @@
 
         lastModalTrigger = trigger;
         document.body.classList.add("modal-open");
+        syncDeepLinkHash(id);
 
         const closeButton = target.querySelector("[data-modal-close]");
         if (closeButton instanceof HTMLElement) {
@@ -1054,7 +1078,7 @@
             const safePath = escapeHtml(imagePath);
             return `
                 <button class="mole-hole${activeClass}" type="button" data-mole-index="${index}" ${disabled} aria-label="もぐら穴${index + 1}">
-                    <img src="${safePath}" alt="もぐら・うさぎ・犬" loading="eager">
+                    <img src="${safePath}" alt="もぐら・うさぎ・犬" loading="lazy">
                 </button>
             `;
         }).join("");
@@ -1347,7 +1371,7 @@
     const BREAKOUT_PADDLE_WIDTH = 86;
     const BREAKOUT_PADDLE_HEIGHT = 12;
     const BREAKOUT_BALL_RADIUS = 7;
-    const BREAKOUT_BRICK_IMAGES = [
+    const BREAKOUT_BRICK_PATHS = [
         "assets/images/recipes/chahan.png",
         "assets/images/recipes/curry-rice.png",
         "assets/images/recipes/omurice.png",
@@ -1356,16 +1380,25 @@
         "assets/images/recipes/hamburg-steak.png",
         "assets/images/recipes/cream-stew.png",
         "assets/images/recipes/onigiri.png"
-    ].map((path) => {
+    ];
+    const BREAKOUT_BRICK_IMAGES = BREAKOUT_BRICK_PATHS.map(() => {
         const image = new Image();
         image.addEventListener("load", () => drawBreakout());
         image.addEventListener("error", () => {
             setBreakoutStatus("一部の料理画像を読み込めません。色付きブロックでプレイできます。");
             drawBreakout();
         });
-        image.src = path;
         return image;
     });
+
+    // 料理画像は大きいため、ポータル表示時ではなくブロック崩しを開いた時に読み込む。
+    function ensureBreakoutImages() {
+        BREAKOUT_BRICK_IMAGES.forEach((image, index) => {
+            if (!image.getAttribute("src")) {
+                image.src = BREAKOUT_BRICK_PATHS[index];
+            }
+        });
+    }
 
     const breakoutState = {
         running: false,
@@ -1594,6 +1627,7 @@
         if (breakoutState.running) {
             return;
         }
+        ensureBreakoutImages();
         if (!breakoutState.bricks.length || !breakoutState.bricks.some((brick) => brick.alive)) {
             breakoutState.bricks = createBreakoutBricks();
             breakoutState.score = 0;
@@ -2431,4 +2465,14 @@
             setActiveMiniGame(initialKey);
         }
     }
+
+    function openDeepLinkedModal() {
+        const id = getDeepLinkModalId();
+        if (id && !document.getElementById(id)?.classList.contains("is-open")) {
+            openModalById(id);
+        }
+    }
+
+    window.addEventListener("hashchange", openDeepLinkedModal);
+    openDeepLinkedModal();
 })();
