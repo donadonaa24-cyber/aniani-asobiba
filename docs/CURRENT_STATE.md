@@ -1,6 +1,17 @@
 # CURRENT_STATE
 
-更新日: 2026-10-06
+更新日: 2026-10-09
+
+## 2026-10-09 クラウド継続開発の整備（Codex担当）
+
+- 公開版に存在しない `common/portal.css` / `common/portal.js` の読込を `index.html` から削除。マイページは従来どおり「準備中」。共通アカウントの実装・認証情報は追加していない。
+- `.nvmrc` でNode.js 24.19.0を指定。外部依存なしの `package.json` / `package-lock.json`、`npm run dev` / `npm test`、Node標準機能による開発用HTTPサーバー、PR/mainのGitHub Actions検査を追加。
+- `docs/DEVELOPMENT.md` にローカル・クラウドのセットアップ、ポート公開、公開版/未公開ローカル版の差、Supabase接続の残作業を記載。AGENTSと技術構成のGit作業ツリー説明をclone運用に対応させた。
+- 確認: `npm ci --ignore-scripts --no-audit --no-fund` / `npm test` が成功。既存4テストは変更せず全通過し、8パズル1000回の解可能性検査も完走。実行用JSと開発サーバーの構文、開発サーバー5検査、HTMLのローカル参照20 URLのHTTP 200を確認。
+- ブラウザ: Chromiumで1366×768 / 390×844の6作品、横はみ出しなし、8ミニゲームの開始・一覧復帰・ホーム復帰、無料10連と所持枚数10、マイページ「準備中」を確認。JS実行例外0件、サイト素材のHTTPエラー0件。スマホ実機・Windowsローカル環境は未確認。
+- Supabase: 環境の制限ポリシーが適用中で `esm.sh` / `bjrewemniqfchggrrkdd.supabase.co` は未許可。プロキシが認証前に403を返す。共通ソース、接続設定、Authリダイレクト、認証E2Eは未検証。キーの作成・DB変更は行っていない。
+- Google Fonts: PythonではTLS検証付きでHTTP 200、Chromiumでは `ERR_CERT_AUTHORITY_INVALID` が継続。環境のCAファイルとNSS登録は確認済み。ブラウザ側の環境設定は残作業で、TLS検証を無効にしていない。
+- 修正は `codex/cloud-development-setup` ブランチでレビューする。本番公開・mainへのマージは未実施。
 
 ## 2026-10-06 あにあに文庫の追加（Claude Code担当）
 
@@ -62,7 +73,7 @@
 - ポータルUI更新: Unity版紹介・共通操作デッキ・無料試験ガチャ追加。ガチャUI識別子は `trial-gacha.css?v=20260920b1` / `trial-gacha.js?v=20260920b1`。
 - プロジェクト文書のGit管理開始: `44c102f`（2026-09-14）。
 - ローカル作業版: 公開版に共通アカウントUIとUnity版v0.4.0の紹介更新を追加した未公開版。キャッシュ識別子は `common/portal.*?v=20260912a1`。
-- 公開用リポジトリ: `.publish-aniani/`、`main`。共通アカウントUIは今回の公開対象外。
+- 公開用リポジトリ: cloneした場合はルートがGit作業ツリー、公開ブランチは `main`。従来のPC作業フォルダでは `.publish-aniani/` がこれに相当する。共通アカウントUIは公開対象外。
 - 2026-09-16: Unity版紹介と共通操作デッキをコミット `4385ee4` として既存リポジトリの `main` へpush済み。
 - Unity版配布先: `battle-a-la-carte-3d` のGitHub Releases、v0.4.0（2026-09-27、所有者提供情報）。今回のポータル更新はローカルのみ。公開用フォルダーは未参照・未変更。
 - プロジェクト文書5ファイルはソースコードと同じGitHubリポジトリで管理する。`docs/ACTIVE_TASKS.md` はローカル専用としてGit管理対象外。
@@ -117,13 +128,16 @@
 ## 既知の問題・注意
 
 - 記事コメント・来訪者コメント・ランキングはlocalStorageのみで、サイト全体共有ではない。
-- 公開版の `index.html` は共通アカウント用の `common/portal.js` / `common/portal.css` を参照するが、公開用リポジトリには `common/` がないため404になる（表示は「準備中」のまま動作に影響なし）。
+- 共通アカウントの `common/` / `common.test.cjs` / `supabase/` は公開用リポジトリに未配置。2026-10-09に欠落参照を削除し、素材の404とarcadeテスト失敗を解消。元の未公開ソースなしでは共通機能を検証できない。
+- クラウドのSupabase関連2ホストが未許可でプロキシ403。Google FontsはクラウドChromiumで証明書エラー。詳細・残作業は `docs/DEVELOPMENT.md`。
 - Supabase SDKをCDNから読むため、CDNまたはネットワーク停止時は共通機能を利用できない。
 - `file://` では共通ES Module/Auth機能が正常動作しない。HTTP経由で確認する必要がある。
 - Fullscreen/画面向き固定はブラウザ対応状況に依存する。
 - スマホ実機の最終回帰は未確認。
 
 ## 現在通過しているテスト
+
+2026-10-09（公開用リポジトリ）: `npm test` が全通過。既存arcade / arcade-layout / portal / trial-gacha、実行用JS・開発サーバーの構文、サーバー5検査を確認。`common.test.cjs` は未配置のため今回の検査対象外。以下は過去のローカル版を含む検証記録。
 
 2026-09-27: Unity版v0.4.0紹介更新後、指定Node.js（v24.14.0）で `common.test.cjs`、`arcade.test.cjs`、`arcade-layout.test.cjs`、`portal.test.cjs` がすべて通過。旧配布リンク・文言の検証のみ修正した `portal.test.cjs` は `node --check` も通過。両Unity掲載箇所のWindows/Androidリンク、参加手順、注意事項を追加の一時検証で確認。実行用JS・CSSの変更なし。
 
