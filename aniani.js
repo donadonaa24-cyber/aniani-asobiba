@@ -10,6 +10,22 @@
     // 新しい記事は先頭に追加してください。id は記事コメントの保存キーなので、公開後は変えないでください。
     const officialArticles = [
         {
+            id: "2026-10-03-oshikoma-android",
+            title: "推し駒battle Android版（APK）を追加",
+            category: "お知らせ",
+            body: [
+                "推し駒battleの試験版2（v1.0-trial.2）に、Android版を追加しました。Android 8.0以上の64bit端末で、横画面で遊べます。",
+                "Android端末のブラウザでAPKをダウンロードし、「提供元不明のアプリ」を聞かれたら、そのブラウザ（またはファイルアプリ）を許可してインストールしてください。",
+                "Google Play外の試験配布で、実機での動作は確認中です。感想・不具合はGitHubのIssuesへお寄せください。"
+            ].join("\n\n"),
+            links: [
+                { href: "https://donadonaa24-cyber.github.io/oshikoma/", label: "ホームページ・遊び方へ" },
+                { href: "https://github.com/donadonaa24-cyber/oshikoma/releases/download/v1.0-trial.2/OshigomaBattle-trial2-android.apk", label: "Android版をダウンロード（APK・約87MB）" },
+                { href: "https://github.com/donadonaa24-cyber/oshikoma/releases/download/v1.0-trial.2/OshigomaBattle-trial2-win64.zip", label: "Windows版をダウンロード（zip・約103MB）" }
+            ],
+            createdAt: "2026-10-03T02:35:00+09:00"
+        },
+        {
             id: "2026-10-06-aniani-bunko",
             title: "あにあに文庫オープン：小説3作品・全6冊を公開",
             category: "新作",
