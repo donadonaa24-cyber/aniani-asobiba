@@ -214,6 +214,21 @@
 .trial-results-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 9px; }
 .trial-results-head h3 { margin: 0; font-size: 13px; letter-spacing: .12em; color: #a6d8ec; }
 .trial-gacha-results { display: grid; grid-template-columns: repeat(5, minmax(108px, 1fr)); gap: 9px; align-content: start; }
+.is-results-view .trial-gacha-body { overflow: hidden; }
+.is-results-view [data-trial-pane="summon"], .is-results-view .trial-summon-layout { height: 100%; min-height: 0; }
+.is-results-view .trial-summon-layout { display: block; }
+.is-results-view .trial-summon-experience, .is-results-view .trial-summon-controls { display: none; }
+.is-results-view .trial-results-wrap { height: 100%; padding: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 8px; }
+.is-results-view .trial-results-head { margin: 0; }
+.is-results-view .trial-gacha-results { --result-columns: 5; --result-rows: 2; --result-gap: 8px; container-type: size; min-height: 0; grid-template-columns: repeat(var(--result-columns), minmax(0, 1fr)); grid-template-rows: repeat(var(--result-rows), minmax(0, 1fr)); gap: var(--result-gap); place-items: center; align-content: stretch; }
+.is-results-view .trial-gacha-results .trial-card { width: min(calc((100cqw - (var(--result-columns) - 1) * var(--result-gap)) / var(--result-columns)), calc((100cqh - (var(--result-rows) - 1) * var(--result-gap)) / var(--result-rows) * 2 / 3)); min-height: 0; padding: 4px; font: inherit; cursor: zoom-in; }
+.trial-gacha-results .trial-card-meta { box-sizing: border-box; flex-basis: 32px; padding: 3px 2px 0; gap: 1px; }
+.trial-gacha-results .trial-card-number { font-size: 7px; }
+.trial-gacha-results .trial-card-meta strong { padding-right: 0; font-size: 9px; }
+.trial-gacha-results .trial-card-meta small { display: none; }
+.trial-gacha-results .trial-card-meta b { top: 2px; right: 2px; font-size: 9px; }
+.trial-card.is-result:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+#trial-results-status { margin: 0; font-size: 11px; line-height: 1.5; color: #b9d7e6; }
 .trial-card { position: relative; display: flex; flex-direction: column; aspect-ratio: 2 / 3; box-sizing: border-box; min-width: 0; padding: 5px; border: 1px solid var(--rarity-color); border-radius: 12px; color: #eef8ff; background: linear-gradient(155deg, color-mix(in srgb, var(--rarity-color) 18%, #071222), #030714 72%); box-shadow: 0 6px 18px #0007, inset 0 0 18px color-mix(in srgb, var(--rarity-color) 11%, transparent); text-align: left; overflow: hidden; }
 .trial-card::after, .trial-art-image::after { content: ""; position: absolute; z-index: 2; inset: 0; opacity: 0; translate: -140% 0; pointer-events: none; }
 .trial-card:not(.is-locked).rarity-ssr::after, .trial-art-image[data-rarity="ssr"]::after { opacity: .45; background: linear-gradient(110deg, transparent 30%, #fff5 43%, #fffbd7bb 48%, #fff5 53%, transparent 66%); animation: trial-ssr-foil 6s ease-in-out infinite; }
@@ -321,6 +336,19 @@
     .trial-free-badge { display: none; }
     .trial-summon-experience { min-height: 340px; }
     .trial-current-card { width: min(210px, 64%, 30dvh); }
+}
+
+@media (max-width: 700px) {
+    .is-results-view .trial-gacha-results { --result-columns: 4; --result-rows: 3; }
+    #trial-results-status { font-size: 10px; }
+}
+
+@media (max-width: 700px) and (max-height: 650px) {
+    .is-results-view .trial-gacha-results { --result-columns: 5; --result-rows: 2; --result-gap: 5px; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .is-results-view .trial-gacha-results { --result-columns: 10; --result-rows: 1; --result-gap: 5px; }
 }
 
 @media (max-height: 500px) and (orientation: landscape) {

@@ -23,7 +23,18 @@ assert(css.includes('env(safe-area-inset-bottom'), 'mobile layout must account f
 assert(css.includes('[data-phase="omen"]'), 'UR-only omen styling must exist');
 assert(css.includes('@media (prefers-reduced-motion: reduce)'), 'reduced-motion mode must be supported');
 
-// 依頼された車両画像とAI表記だけを除き、既存カードの全データを固定する。
+// 依頼された画像・AI表記・ストーリーに合わせたUR台詞以外を固定する。
+const originalBattleQuotes = {
+    'BAL-037': '先に流れを取るのは俺だ。',
+    'BAL-038': '最後に勝つのは私だから。',
+    'BAL-039': 'この一皿で、勝負を決めるよ！',
+    'BAL-040': '最高の一皿、完成だ！'
+};
+function previousBattleDialogue(card) {
+    if (!originalBattleQuotes[card.id]) return card;
+    const { quoteLabel, ...data } = card;
+    return { ...data, quote: originalBattleQuotes[card.id] };
+}
 function previousVehicle(card) {
     if (card.work !== '架空運輸' || card.category !== '車両') return card;
     const { generatedWithAI, quote, ...data } = card;
@@ -32,18 +43,22 @@ function previousVehicle(card) {
         ...(quote ? { quote } : {}) };
 }
 assert.equal(catalog.cards.length, 135, 'catalog should include 4 additional characters and 7 costume cards');
-assert.equal(createHash('sha256').update(JSON.stringify(catalog.cards.slice(0, 81).map(previousVehicle))).digest('hex'),
+assert.equal(createHash('sha256').update(JSON.stringify(catalog.cards.slice(0, 81).map(previousVehicle).map(previousBattleDialogue))).digest('hex'),
     '8684b50adfa797b5064744091f073b03c255dd22374f2809bd468acf12a38002',
-    'the original 81 cards must remain unchanged apart from requested vehicle artwork');
+    'the original 81 cards must retain metadata apart from requested vehicle artwork and Battle UR dialogue');
 // 咲の質素な室内版への画像差し替えとAI表記だけを除き、公開済み94枚を固定する。
-const previouslyPublishedCards = catalog.cards.slice(0, 94).map(previousVehicle).map(({ generatedWithAI, ...card }) =>
+const previouslyPublishedCards = catalog.cards.slice(0, 94).map(previousVehicle).map(previousBattleDialogue).map(({ generatedWithAI, ...card }) =>
     card.id === 'HAN-087' ? { ...card, image: 'images/gacha/bunko/saki.png' } : card);
 assert.equal(createHash('sha256').update(JSON.stringify(previouslyPublishedCards)).digest('hex'),
     'd9e151b1928fa78955e1bb8285ad476d682446e772be080d06305ba16b1edc88',
     'all previously published 94 cards must retain metadata apart from the requested Saki illustration and AI credit');
-const published124 = catalog.cards.slice(0, 124).map(previousVehicle).map((card) =>
-    card.image === 'images/gacha/bunko/shion-sister-corrected.png'
-        ? { ...card, image: 'images/gacha/bunko/shion-sister.png' } : card);
+const revisedNovelImages = {
+    'images/gacha/bunko/shion-sister-corrected.png': 'images/gacha/bunko/shion-sister.png',
+    'images/gacha/bunko/shion-father-bike.png': 'images/gacha/bunko/shion-father.png',
+    'images/gacha/bunko/mio-father-glasses.png': 'images/gacha/bunko/mio-father.png'
+};
+const published124 = catalog.cards.slice(0, 124).map(previousVehicle).map(previousBattleDialogue).map((card) =>
+    revisedNovelImages[card.image] ? { ...card, image: revisedNovelImages[card.image] } : card);
 assert.equal(createHash('sha256').update(JSON.stringify(published124)).digest('hex'),
     'ffd62bc9083f0cf4c8c11b97c9a2bb6d83ac59e695956f56ded5eb020ed3780c',
     'all 124 published cards must retain IDs, metadata and inventory compatibility');
@@ -60,6 +75,7 @@ assert(battle.filter((card) => card.category === 'イベント').every((card) =>
 assert(battle.filter((card) => card.category === 'キャラクター').every((card) => card.rarity === 'UR'));
 assert(battle.filter((card) => card.category === 'キャラクター').every((card) => card.image.includes('battle-mode-cutin')));
 assert(battle.filter((card) => card.category === 'キャラクター').every((card) => card.quote));
+assert(battle.filter((card) => card.category === 'キャラクター').every((card) => card.quoteLabel === 'キャラクター台詞'));
 assert.deepEqual(battle.filter((card) => card.category === 'キャラクター').map((card) => card.title), ['暁', '千鶴', '舞依', '拓海', '剛', '栞那', '結月', '龍太']);
 const costumes = battle.filter((card) => card.category === '着せ替え');
 assert.equal(costumes.length, 7);

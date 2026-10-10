@@ -51,17 +51,17 @@
     events.forEach(([title, file]) => add("Battle a la carte", "SSR", "イベント", title, `assets/images/events/${file}`));
 
     [
-        ["暁", "akatsuki", "先に流れを取るのは俺だ。"],
-        ["千鶴", "chizuru", "最後に勝つのは私だから。"],
-        ["舞依", "mai", "この一皿で、勝負を決めるよ！"],
-        ["拓海", "takumi", "最高の一皿、完成だ！"]
+        ["暁", "akatsuki", "しゃあないな。ほな、相手したるわ。"],
+        ["千鶴", "chizuru", "もう一回勝負！ 今度は私が勝つから！"],
+        ["舞依", "mai", "先輩、よく見ててください。ここは私が決めます。"],
+        ["拓海", "takumi", "僕も参加していい？ せっかくだし、みんなで楽しもう。"]
     ].forEach(([title, file, quote]) => add(
         "Battle a la carte",
         "UR",
         "キャラクター",
         title,
         `assets/images/battle-mode-cutins/${file}-battle-mode-cutin.png`,
-        { quote, character: file }
+        { quote, character: file, quoteLabel: "キャラクター台詞" }
     ));
 
     [
@@ -140,11 +140,11 @@
     add("花散るさきの、幸せのかたち", "C", "登場人物", "徹", "images/gacha/bunko/toru.png", {"portrait": true, "generatedWithAI": true, "role": "咲と花の叔父", "description": "大きな手で姉妹に接する叔父。幸子とともに家を訪ね、家族を気にかける。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=hanachiru"});
     add("花散るさきの、幸せのかたち", "C", "登場人物", "幸子", "images/gacha/bunko/sachiko.png", {"portrait": true, "generatedWithAI": true, "role": "咲と花の叔母", "description": "徹の妻。食事を用意するなど、姉妹の暮らしをそっと支える。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=hanachiru"});
     add("花散るさきの、幸せのかたち", "SR", "登場人物", "克也", "images/gacha/bunko/katsuya.png", {"portrait": true, "generatedWithAI": true, "role": "咲と出会う男性", "description": "整った身なりと柔らかな物腰が印象的な、咲と出会う男性。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=hanachiru"});
-    add("EchoShion", "C", "登場人物", "志遠の父", "images/gacha/bunko/shion-father.png", {"portrait": true, "generatedWithAI": true, "role": "志遠の家族", "description": "家族のそばに立ち、静かに澪を気遣う父。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
+    add("EchoShion", "C", "登場人物", "志遠の父", "images/gacha/bunko/shion-father-bike.png", {"portrait": true, "generatedWithAI": true, "role": "志遠の家族", "description": "家族のそばに立ち、静かに澪を気遣う父。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
     add("EchoShion", "C", "登場人物", "志遠の母", "images/gacha/bunko/shion-mother.png", {"portrait": true, "generatedWithAI": true, "role": "志遠の家族", "description": "家族を思い、澪にも心を寄せる母。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
     add("EchoShion", "C", "登場人物", "志遠の姉", "images/gacha/bunko/shion-sister-corrected.png", {"portrait": true, "generatedWithAI": true, "role": "志遠の家族", "description": "連絡や段取りを引き受け、家族と澪を支える姉。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
     add("EchoShion", "C", "登場人物", "志遠の弟", "images/gacha/bunko/shion-brother.png", {"portrait": true, "generatedWithAI": true, "role": "志遠の家族", "description": "スマートフォンを手に、家族のそばで澪を気にかける弟。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
-    add("EchoShion", "C", "登場人物", "澪の父", "images/gacha/bunko/mio-father.png", {"portrait": true, "generatedWithAI": true, "role": "澪の家族", "description": "澪のもとへ届ける果物を選び、言葉と気遣いで支える父。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
+    add("EchoShion", "C", "登場人物", "澪の父", "images/gacha/bunko/mio-father-glasses.png", {"portrait": true, "generatedWithAI": true, "role": "澪の家族", "description": "澪のもとへ届ける果物を選び、言葉と気遣いで支える父。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
     add("EchoShion", "C", "登場人物", "澪の母", "images/gacha/bunko/mio-mother.png", {"portrait": true, "generatedWithAI": true, "role": "澪の家族", "description": "食事を届け、澪を温かく迎える母。日々の気遣いで娘の暮らしを支える。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
     add("EchoShion", "C", "登場人物", "澪の弟", "images/gacha/bunko/mio-brother.png", {"portrait": true, "generatedWithAI": true, "role": "澪の家族", "description": "コンビニのプリンを買ってくる弟。身近な贈り物で、姉を気遣う。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
     add("EchoShion", "SR", "登場人物", "日和", "images/gacha/bunko/hiyori.png", {"portrait": true, "generatedWithAI": true, "role": "澪の学生時代の後輩・友人", "description": "澪の一つ下の後輩。連絡や差し入れを通して、無理に励まさずそばにいる。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
@@ -153,13 +153,15 @@
 
     // 追加キャラクターと公開済みの着せ替え。既存124枚の番号は変えない。
     [
-        ["剛", "tsuyoshi", "夏休み"], ["栞那", "kanna", "ハロウィン"],
-        ["結月", "yuzuki", "弓道"], ["龍太", "ryuta", "幼馴染"]
-    ].forEach(([title, character, story]) => {
+        ["剛", "tsuyoshi", "夏休み", "よっしゃ、勝負しようや！ 俺のええとこ見せたるで！"],
+        ["栞那", "kanna", "ハロウィン", "勝ったらね。……そんな顔しても、手加減しないよ。"],
+        ["結月", "yuzuki", "弓道", "拓海くん、見ててね。今度は私が勝つから！"],
+        ["龍太", "ryuta", "幼馴染", "上等だ。やるからには、負けるつもりはねぇよ。"]
+    ].forEach(([title, character, story, quote]) => {
         const description = `${story}の特別編をクリアすると使えるキャラクター。`;
         add("Battle a la carte", "UR", "キャラクター", title,
             `images/gacha/battle/${character}-battle-mode-cutin.webp`,
-            { character, description, quote: description, quoteLabel: "登場人物紹介" });
+            { character, description, quote, quoteLabel: "キャラクター台詞" });
     });
     [
         ["暁", "akatsuki", "summer", "サマービーチ"],
