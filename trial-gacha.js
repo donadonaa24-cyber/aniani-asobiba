@@ -79,13 +79,23 @@
         if (card.sprite) {
             const { columns, rows, column, row } = card.sprite;
             art.classList.add("is-sprite");
-            art.style.backgroundImage = `url("${card.image}")`;
-            art.style.backgroundSize = `${columns * 100}% ${rows * 100}%`;
-            art.style.backgroundPosition = `${columns === 1 ? 50 : (column / (columns - 1)) * 100}% ${rows === 1 ? 50 : (row / (rows - 1)) * 100}%`;
+            // 社員スプライトの正方形を、カード枠に合わせて引き伸ばさず表示する。
+            const svgNamespace = "http://www.w3.org/2000/svg";
+            const frame = document.createElementNS(svgNamespace, "svg");
+            frame.setAttribute("viewBox", "0 0 100 100");
+            frame.setAttribute("aria-hidden", "true");
+            const sheet = document.createElementNS(svgNamespace, "image");
+            sheet.setAttribute("href", card.image);
+            sheet.setAttribute("x", String(-column * 100));
+            sheet.setAttribute("y", String(-row * 100));
+            sheet.setAttribute("width", String(columns * 100));
+            sheet.setAttribute("height", String(rows * 100));
+            frame.append(sheet);
+            art.append(frame);
         } else {
             const image = document.createElement("img");
             image.src = card.image;
-            image.alt = "";
+            image.alt = card.title;
             image.loading = featured ? "eager" : "lazy";
             art.append(image);
         }
@@ -93,10 +103,10 @@
     }
 
     function cardElement(card, options = {}) {
-        const { compact = false, featured = false, unlocked = true, count = 0, index = 0 } = options;
-        const item = document.createElement(compact ? "button" : "article");
-        if (compact) item.type = "button";
-        item.className = `trial-card rarity-${card.rarity.toLowerCase()}${compact ? " is-compact" : ""}${featured ? " is-featured" : ""}${unlocked ? "" : " is-locked"}`;
+        const { compact = false, featured = false, result = false, unlocked = true, count = 0, index = 0, onZoom } = options;
+        const item = document.createElement(compact || result ? "button" : "article");
+        if (compact || result) item.type = "button";
+        item.className = `trial-card rarity-${card.rarity.toLowerCase()}${compact ? " is-compact" : ""}${result ? " is-result" : ""}${featured ? " is-featured" : ""}${card.portrait ? " is-portrait" : ""}${unlocked ? "" : " is-locked"}`;
         item.style.setProperty("--reveal-index", index);
         item.dataset.cardId = card.id;
         item.setAttribute("aria-label", unlocked ? `No.${String(card.no).padStart(3, "0")} ${card.title} ${card.rarity}` : `No.${String(card.no).padStart(3, "0")} 未入手`);
@@ -106,6 +116,20 @@
         meta.className = "trial-card-meta";
         meta.innerHTML = `<span class="trial-card-number">No.${String(card.no).padStart(3, "0")}</span><strong>${unlocked ? card.title : "UNKNOWN"}</strong><small>${unlocked ? `${card.work} / ${card.role || card.category}` : "未入手"}</small><b>${card.rarity}</b>${count > 1 ? `<em>×${count}</em>` : ""}`;
         item.append(meta);
+        if (result && unlocked && onZoom) {
+            item.addEventListener("click", () => onZoom(card));
+        } else if (!compact && unlocked && onZoom) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "trial-art-open";
+            button.textContent = "画像を大きく見る";
+            button.setAttribute("aria-label", `${card.title}の画像を大きく見る`);
+            button.addEventListener("click", (event) => {
+                event.stopPropagation();
+                onZoom(card);
+            });
+            item.append(button);
+        }
         return item;
     }
 
@@ -164,12 +188,20 @@
         const currentCard = rootElement.querySelector("#trial-current-card");
         const quoteElement = rootElement.querySelector("#trial-ur-quote");
         const quoteText = rootElement.querySelector("#trial-ur-quote-text");
+        const quoteLabel = rootElement.querySelector("#trial-ur-quote-label");
         const resultsWrap = rootElement.querySelector("#trial-results-wrap");
         const resultsElement = rootElement.querySelector("#trial-gacha-results");
+        const resultsStatus = rootElement.querySelector("#trial-results-status");
         const statusElement = rootElement.querySelector("#trial-gacha-status");
         const bookElement = rootElement.querySelector("#trial-gacha-book");
         const countElement = rootElement.querySelector("#trial-book-count");
         const detailElement = rootElement.querySelector("#trial-card-detail");
+        const artDialog = rootElement.querySelector("#trial-art-dialog");
+        const artTitle = rootElement.querySelector("#trial-art-title");
+        const artImage = rootElement.querySelector("#trial-art-image");
+        const artDescription = rootElement.querySelector("#trial-art-description");
+        const artCredit = rootElement.querySelector("#trial-art-credit");
+        const artBookLink = rootElement.querySelector("#trial-art-book-link");
         const filterButtons = Array.from(rootElement.querySelectorAll("[data-trial-filter]"));
         const viewButtons = Array.from(rootElement.querySelectorAll("[data-trial-view]"));
         const panes = Array.from(rootElement.querySelectorAll("[data-trial-pane]"));
@@ -185,6 +217,23 @@
         const timers = new Set();
         const reduceMotion = runtime.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
         const audio = createAudioDirector();
+
+        function showArtwork(card) {
+            if (!artDialog) return;
+            artTitle.textContent = `${card.title} / ${card.rarity}`;
+            artImage.replaceChildren(artElement(card, true, true));
+            artImage.classList.toggle("is-portrait", !!card.portrait);
+            artImage.dataset.rarity = card.rarity.toLowerCase();
+            artDescription.textContent = card.description || `${card.work} / ${card.role || card.category}`;
+            artCredit.hidden = !card.generatedWithAI;
+            artBookLink.hidden = !card.bookUrl;
+            if (card.bookUrl) artBookLink.href = card.bookUrl;
+            if (!artDialog.open) artDialog.showModal();
+        }
+
+        rootElement.querySelector("#trial-art-close")?.addEventListener("click", () => artDialog.close());
+        // Escape は画像だけを閉じ、背後のガチャ画面へ伝えない。
+        artDialog?.addEventListener("keydown", (event) => { event.stopPropagation(); });
 
         function delay(normal) {
             return reduceMotion ? 20 : normal;
@@ -208,6 +257,7 @@
             if (!stage) return;
             stage.dataset.phase = phase;
             stage.dataset.rarity = rarity.toLowerCase();
+            rootElement.classList.toggle("is-results-view", phase === "results" && rootElement.dataset.trialView !== "book");
         }
 
         function setTabsDisabled(disabled) {
@@ -221,6 +271,27 @@
             detailElement.innerHTML = unlocked
                 ? `<strong>No.${String(card.no).padStart(3, "0")} ${card.title}</strong><span>${card.rarity} / ${card.work} / ${card.role || card.category}</span><small>所持 ${count}枚</small>`
                 : `<strong>No.${String(card.no).padStart(3, "0")} 未入手</strong><span>入手条件: 無料お試し10連ガチャから入手</span><small>レアリティ ${card.rarity}</small>`;
+            if (unlocked) {
+                if (card.description) {
+                    const description = document.createElement("p");
+                    description.textContent = card.description;
+                    detailElement.append(description);
+                }
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = "trial-art-open";
+                button.textContent = "画像を大きく見る";
+                button.addEventListener("click", () => showArtwork(card));
+                detailElement.append(button);
+                if (card.bookUrl) {
+                    const link = document.createElement("a");
+                    link.href = card.bookUrl;
+                    link.textContent = "小説のキャラ紹介を見る ↗";
+                    link.target = "_blank";
+                    link.rel = "noopener noreferrer";
+                    detailElement.append(link);
+                }
+            }
         }
 
         function renderBook() {
@@ -230,7 +301,10 @@
             filtered.forEach((card) => {
                 const count = inventory[card.id] || 0;
                 const element = cardElement(card, { compact: true, unlocked: count > 0, count });
-                element.addEventListener("click", () => showDetail(card, count > 0));
+                element.addEventListener("click", () => {
+                    showDetail(card, count > 0);
+                    if (count > 0) showArtwork(card);
+                });
                 bookElement.append(element);
             });
             const unlocked = catalog.cards.filter((card) => inventory[card.id]).length;
@@ -239,6 +313,8 @@
 
         function setView(view) {
             if (drawing) return;
+            rootElement.dataset.trialView = view;
+            rootElement.classList.toggle("is-results-view", view === "summon" && stage?.dataset.phase === "results");
             viewButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.trialView === view)));
             panes.forEach((pane) => { pane.hidden = pane.dataset.trialPane !== view; });
             if (view === "book") renderBook();
@@ -282,15 +358,18 @@
             if (skipButton) skipButton.hidden = true;
             if (drawButton) { drawButton.hidden = true; drawButton.disabled = false; }
             if (resultsElement) {
-                resultsElement.replaceChildren(...activeResults.map((card, index) => cardElement(card, { index })));
+                resultsElement.replaceChildren(...activeResults.map((card, index) => cardElement(card, { result: true, index, onZoom: showArtwork })));
                 resultsElement.classList.remove("is-revealing");
                 void resultsElement.offsetWidth;
                 resultsElement.classList.add("is-revealing");
             }
             if (resultsWrap) resultsWrap.hidden = false;
-            if (statusElement) statusElement.textContent = saved
+            const message = saved
                 ? "10枚の星を発見しました。図鑑に保存しました。"
                 : "10枚の星を発見しました。ブラウザの保存機能が無効なため、図鑑には保存できませんでした。";
+            if (statusElement) statusElement.textContent = message;
+            if (resultsStatus) resultsStatus.textContent = `${message} カードを押すと拡大できます。`;
+            rootElement.querySelector(".trial-gacha-body")?.scrollTo(0, 0);
             renderBook();
         }
 
@@ -304,7 +383,7 @@
             if (revealCount) revealCount.textContent = `${index + 1} / ${activeResults.length}`;
             if (currentCard) {
                 currentCard.hidden = false;
-                currentCard.replaceChildren(cardElement(card, { featured: true, index }));
+                currentCard.replaceChildren(cardElement(card, { featured: true, index, onZoom: showArtwork }));
             }
             if (nextButton) {
                 nextButton.hidden = false;
@@ -338,6 +417,7 @@
                 if (singleReveal) singleReveal.hidden = false;
                 if (quoteElement) quoteElement.hidden = false;
                 if (quoteText) quoteText.textContent = card.quote || "星の記憶が、いま目を覚ます。";
+                if (quoteLabel) quoteLabel.textContent = card.quoteLabel ? `UR / ${card.quoteLabel}` : "UR / CHARACTER SIGNAL";
                 if (currentCard) currentCard.hidden = true;
                 if (statusElement) statusElement.textContent = "UR SIGNAL DETECTED";
                 schedule(() => showCard(index), 1900);
@@ -394,8 +474,9 @@
         }));
 
         new MutationObserver(() => {
-            if (rootElement.getAttribute("aria-hidden") === "true" && drawing) {
-                resetPresentation("召喚を中断しました。もう一度10連を開始できます。");
+            if (rootElement.getAttribute("aria-hidden") === "true") {
+                if (artDialog?.open) artDialog.close();
+                if (drawing) resetPresentation("召喚を中断しました。もう一度10連を開始できます。");
             }
         }).observe(rootElement, { attributes: true, attributeFilter: ["aria-hidden"] });
 
@@ -407,5 +488,5 @@
         else initialize();
     }
 
-    return Object.freeze({ chooseRarity, drawCards, buildRevealPlan, loadInventory, addToInventory });
+    return Object.freeze({ chooseRarity, drawCards, buildRevealPlan, loadInventory, addToInventory, saveInventory });
 });

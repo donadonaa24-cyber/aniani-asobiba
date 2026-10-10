@@ -1,0 +1,61 @@
+{
+  "repo": "battle-a-la-carte--",
+  "sha": "ab596ad719596ab2feda6c88b83ca29cbf570cff",
+  "paths": [
+    {
+      "path": "assets/battle-images/battle-mode-cutins/tsuyoshi-battle-mode-cutin.webp",
+      "blob": "97c5f1e948af686225044a2ca6c7f0d6cee194a4",
+      "size": 254098
+    },
+    {
+      "path": "assets/battle-images/battle-mode-cutins/kanna-battle-mode-cutin.webp",
+      "blob": "b398d4be206fd5a57110f0bced7e709d20381a94",
+      "size": 194042
+    },
+    {
+      "path": "assets/battle-images/battle-mode-cutins/yuzuki-battle-mode-cutin.webp",
+      "blob": "75addac7f55b852ed93764c6090a33c5d46e3b8c",
+      "size": 256110
+    },
+    {
+      "path": "assets/battle-images/battle-mode-cutins/ryuta-battle-mode-cutin.webp",
+      "blob": "6ead082bf936571e8fddbcf33a70b049508d052e",
+      "size": 233166
+    },
+    {
+      "path": "assets/battle-images/characters/standing/akatsuki-summer-standing-alpha.webp",
+      "blob": "bb97204ee1ad74ad0a262b20981e66665ef57124",
+      "size": 383030
+    },
+    {
+      "path": "assets/battle-images/characters/standing/tsuyoshi-summer-standing-alpha.webp",
+      "blob": "ac29d6536c7dc9128f89f114a6b0e562f539b42f",
+      "size": 626642
+    },
+    {
+      "path": "assets/battle-images/characters/standing/chizuru-halloween-standing-alpha.webp",
+      "blob": "47c6d63bffca8de4bb2a274de570c815fa0e45d7",
+      "size": 296812
+    },
+    {
+      "path": "assets/battle-images/characters/standing/kanna-halloween-standing-alpha.webp",
+      "blob": "0e6e6e186eaecd4f8696541d2bfffe4a8327b58f",
+      "size": 447594
+    },
+    {
+      "path": "assets/battle-images/characters/standing/mai-kyudo-standing-alpha.webp",
+      "blob": "c76fb82369933573c11602a15e123f61fe929315",
+      "size": 409026
+    },
+    {
+      "path": "assets/battle-images/characters/standing/takumi-kyudo-standing-alpha.webp",
+      "blob": "8d70da682490343d316ca156f0e2e4e13e822bb1",
+      "size": 387880
+    },
+    {
+      "path": "assets/battle-images/characters/standing/yuzuki-kyudo-standing-alpha.webp",
+      "blob": "977ed65e62ad9282dee1076cbda9cdb2158f8518",
+      "size": 378794
+    }
+  ]
+}

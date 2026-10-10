@@ -6,7 +6,8 @@
 - あにあに制作ゲームの紹介、外部ゲームへの導線、8種類のミニゲーム、無料試験ガチャ、更新記事、コメント、共通アカウント・コイン・カード図鑑をまとめるWebポータル。
 - ポータル本体はUnityゲームではない。HTML/CSS/JavaScriptによる静的サイトで、Scene、Prefab、C#、Unity Packageは存在しない。
 - 公開先: `https://donadonaa24-cyber.github.io/aniani-asobiba/`（GitHub Pages）。
-- 公開用Git作業ツリーは `.publish-aniani/`。プロジェクトルート自体はGitリポジトリではない。
+- このGitHubリポジトリをcloneした場合、プロジェクトルートがGit作業ツリー。クラウドでは作業ブランチへコミットしPRでレビューする。
+- 従来のPC作業フォルダでは `.publish-aniani/` が公開用の独立Git作業ツリー。cloneしたリポジトリ内にこれを新たに作る必要はない。
 
 ## 作業開始時に読むもの
 
@@ -25,25 +26,27 @@
 - 現在状態: `docs/CURRENT_STATE.md`
 - 変更履歴: `docs/CHANGELOG.md`
 - 技術構成: `docs/ARCHITECTURE.md`
-- 共通アカウントDB: `supabase/README.md`
+- ローカル・クラウド共通の開発手順: `docs/DEVELOPMENT.md`
+- 共通アカウントDB: 未公開ローカル版の `supabase/README.md`（この公開用リポジトリには未配置）
 - ポータル運用メモ: `README.txt`
 
 ## ドキュメントのGit管理
 
-- `AGENTS.md`、`docs/PROJECT_SPEC.md`、`docs/CURRENT_STATE.md`、`docs/CHANGELOG.md`、`docs/ARCHITECTURE.md` はソースコードと同じGitHubリポジトリで管理する。
+- `AGENTS.md`、`docs/PROJECT_SPEC.md`、`docs/CURRENT_STATE.md`、`docs/CHANGELOG.md`、`docs/ARCHITECTURE.md`、`docs/DEVELOPMENT.md` はソースコードと同じGitHubリポジトリで管理する。
 - `docs/ACTIVE_TASKS.md` は複数Codexチャットの並行作業用の一時ファイルであり、原則ローカル専用としてGitへ追加しない。
 - ドキュメント内のファイルパスは、原則としてプロジェクトルートからの相対パスを使う。
-- 公開用Git作業ツリーへ反映する際は、上記5文書も同期対象に含める。
+- 公開用Git作業ツリーへ反映する際は、上記文書も同期対象に含める。
 
 ## 主要技術
 
 - HTML5 / CSS3 / Vanilla JavaScript（ビルド工程なし）
 - Canvas 2D、Fullscreen API、Screen Orientation API、Web Audio API（一部の同梱作品）
 - ブラウザ `localStorage`
-- Supabase Auth / PostgreSQL / PostgREST RPC / RLS
-- `@supabase/supabase-js@2.57.4` を `esm.sh` から動的読込
+- 未公開ローカル版の共通機能: Supabase Auth / PostgreSQL / PostgREST RPC / RLS
+- 未公開ローカル版では `@supabase/supabase-js@2.57.4` を `esm.sh` から動的読込
 - GitHub Pages
 - Node.js標準機能による `.cjs` テスト
+- Node.js 24.19.0（`.nvmrc`）、外部npm依存なし。`npm run dev` でHTTP配信、`npm test` で全検査。
 
 ## 重要な禁止事項
 
@@ -68,13 +71,12 @@
 
 - 小規模修正では変更箇所に関連するテストだけを実行する。
 - 大規模更新またはリリース前だけ、次のフル回帰テストを実行する。
-  `node common.test.cjs`
-  `node arcade.test.cjs`
-  `node arcade-layout.test.cjs`
-  `node portal.test.cjs`
+  `npm test`（構文、arcade / arcade-layout / portal / trial-gacha、開発サーバー）
+- 個別実行は `node arcade.test.cjs` / `node arcade-layout.test.cjs` / `node portal.test.cjs` / `node trial-gacha.test.cjs`。
+- `common.test.cjs` と `supabase/verify.sql` は未公開ローカル版にのみ存在する。このリポジトリのテスト対象には含めない。
 - JS変更時は対象ファイルへ `node --check <file>` も実行する。
 - UI変更はPC幅とスマホ幅を確認する。実機未確認なら「実機確認済み」と書かない。
-- Supabase検証は `supabase/verify.sql` を参照する。これはロールバック前提であり、本番データを作らない。
+- 共通機能の元ソースがある環境でのSupabase検証は `supabase/verify.sql` を参照する。これはロールバック前提であり、本番データを作らない。
 
 ## 実装上の注意
 
@@ -85,7 +87,7 @@
 - `file://` ではES Modulesと認証が正常動作しないため、共通機能の確認はHTTPサーバー経由で行う。
 - 更新記事は `aniani.js` の `officialArticles` で管理する公式記事（全員に同じ内容）。記事コメント・ゲストブック・ミニゲーム記録はブラウザ端末内保存であり、他ユーザーと共有されない。
 - ポータル内の作品導線は「スマホ版」ではなく「モバイル版」と表記する。
-- 公開版には `common/` を含めない。マイページは `common/portal.js` が読み込まれた場合だけアカウントUIを表示し、それ以外は「準備中」表示になる。
+- 公開版には `common/` を含めず、`index.html` からも参照しない。マイページは「準備中」で、アカウントDOMは非表示のまま保持する。共通機能の統合は元ソース・設定を確認した別作業として扱う。
 - `assets/images/積み込みゲーム/` は別作品の同梱ソース。ポータルの主要ランタイムと混同しない。
 - 公開中の無料試験ガチャは `trial-gacha-*` とlocalStorageだけで動作し、Supabase、あにあにコイン、ログインを使用しない。共通コインガチャと混同・統合しない。
 
@@ -98,4 +100,4 @@
 5. 技術構成変更時だけ `docs/ARCHITECTURE.md` を更新する。
 6. 参照先・禁止事項・作業規則の変更時だけ `AGENTS.md` を更新する。
 7. 変更していない内容を、文書更新のためだけに書き直さない。
-8. 公開を依頼された場合だけ、必要なテスト後に `.publish-aniani/` へ反映しGitHubへpushする。
+8. コミット・PRを依頼された場合はcloneしたリポジトリの作業ブランチを使う。mainへのマージ・公開は依頼された場合だけ行う。従来のPC作業フォルダから公開する場合に限り、必要なテスト後に `.publish-aniani/` へ同期する。
