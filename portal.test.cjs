@@ -58,7 +58,7 @@ assert((html.match(/無断転載・無断配布を禁止します。/g) || []).l
 assert(html.includes('EODaZVnp9Jx0SkJDQR-oyGH1baUfiHRkVlnkgVq0A0k'));
 assert(!html.includes('スマホ'), 'portal wording uses モバイル版, not スマホ版');
 assert(html.includes('Unity / Windows / Android · v0.6.0'));
-assert.equal((html.match(/class="update-note"/g) || []).length, 4); // Battle Web card+modal, 架空運輸 card+modal
+assert.equal((html.match(/class="update-note"/g) || []).length, 6); // Battle Web, Battle Unity, 架空運輸 (card + modal each)
 const js = fs.readFileSync('aniani.js', 'utf8');
 assert(!/ADMIN|admin-login|adminSession|article-form/.test(js + html.replace(/id="guestbook-form" class="article-form"/, '')), 'article admin mode and its passcode are removed');
 assert(js.includes('const officialArticles') && js.includes('2026-09-29-battle-update'));
