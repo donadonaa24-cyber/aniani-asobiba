@@ -3,7 +3,17 @@
 このフォルダは、`Battle a la carte` リポジトリと分離して
 単独リポジトリで公開できるように調整済みです。
 
-## 使い方
+## ローカル・クラウドでの開発
+- このリポジトリをcloneしたフォルダがGit作業ツリーです。
+- Node.js 24.19.0（`.nvmrc`）を使用します。外部npm依存とビルド工程はありません。
+- セットアップ: `npm ci --ignore-scripts --no-audit --no-fund`
+- テスト: `npm test`（JavaScript構文、既存4テスト、開発サーバーのテスト）
+- 起動: `npm run dev` → `http://127.0.0.1:3000/`
+- クラウドのポート公開: `npm run dev -- --host 0.0.0.0 --port 3000`
+- 詳細は `docs/DEVELOPMENT.md` を参照してください。
+- 公開版に共通アカウントの実装は含まれません。マイページは「準備中」で、基本機能の開発・テストにSupabaseの認証情報は不要です。
+
+## 新規公開先を作る場合の使い方
 1. 新しいGitHubリポジトリを作成
 2. この `aniani-standalone` フォルダの中身を、そのリポジトリ直下へ配置
 3. GitHub Pages を有効化して公開

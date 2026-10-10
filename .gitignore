@@ -8,5 +8,9 @@ supabase.txt
 !.env.example
 
 # Separate distribution repository and local release artifacts
+/.publish-aniani/
 /.publish-battle-3d/
 /release-artifacts/
+
+# Development dependencies
+/node_modules/

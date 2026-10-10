@@ -254,6 +254,28 @@
 .trial-card.is-compact:hover { translate: 0 -3px; }
 .trial-card.is-locked { --rarity-color: #526879; filter: saturate(.3); }
 
+/* 小説の縦長イラストは全体を見せる。既存カードの切り出しは維持する。 */
+.trial-card.is-portrait .trial-card-art { aspect-ratio: 2 / 3; display: block; }
+.trial-card.is-portrait.is-locked .trial-card-art { display: grid; }
+.trial-card.is-portrait .trial-card-art img { object-fit: contain; }
+.trial-card.is-featured.is-portrait { width: min(100%, 300px); margin-inline: auto; }
+.trial-card.is-featured.is-portrait .trial-card-art { height: clamp(140px, 28dvh, 310px); aspect-ratio: auto; }
+.trial-gacha-book { align-items: start; }
+.trial-art-open { display: block; margin: 5px auto; padding: 6px 9px; border: 1px solid #8cdfff66; border-radius: 7px; color: #c9f3ff; background: #10243c; font: inherit; font-size: 11px; cursor: zoom-in; }
+.trial-card-detail p { flex-basis: 100%; margin: 0; line-height: 1.7; }
+.trial-card-detail .trial-art-open { margin: 0; }
+.trial-card-detail a, .trial-art-dialog a { color: #9be8ff; }
+.trial-art-dialog { width: min(96vw, 900px); max-height: 94dvh; padding: 14px; border: 1px solid #8cdfff66; border-radius: 12px; color: #eef8ff; background: #050e20; }
+.trial-art-dialog::backdrop { background: #020715ed; }
+.trial-art-dialog header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
+.trial-art-dialog h3 { margin: 0; font-size: 16px; }
+.trial-art-dialog header button { flex-shrink: 0; padding: 8px 12px; border: 1px solid #8cdfff66; border-radius: 8px; color: inherit; background: #10243c; cursor: pointer; }
+.trial-art-image .trial-card-art { display: block; height: 68dvh; aspect-ratio: auto; background: #030714; }
+.trial-art-image .trial-card-art img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.trial-art-image .trial-card-art.is-sprite { height: auto; aspect-ratio: 1.15 / 1; }
+.trial-art-dialog p { margin: 12px 0; font-size: 13px; line-height: 1.7; }
+.trial-art-dialog button:focus-visible, .trial-art-open:focus-visible { outline: 2px solid #9be8ff; outline-offset: 3px; }
+
 @keyframes trial-space-drift { to { rotate: 360deg; scale: 1.08; } }
 @keyframes trial-vortex { to { rotate: 360deg; } }
 @keyframes trial-core-charge { from { scale: .78; filter: brightness(1); } to { scale: 1.35; filter: brightness(2.8); } }
@@ -316,6 +338,11 @@
     .trial-idle-copy p, .trial-gacha-note { display: none; }
     .trial-current-card { width: min(350px, 64%); }
     .trial-card.is-featured .trial-card-art { aspect-ratio: 1.8 / 1; }
+    .trial-card.is-featured.is-portrait .trial-card-art { height: 80px; }
+    .trial-card.is-featured.is-portrait .trial-card-meta { padding: 5px 4px 3px; }
+    .trial-card.is-featured.is-portrait .trial-card-meta strong { font-size: 16px; }
+    .trial-card.is-featured.is-portrait .trial-card-meta small { font-size: 9px; }
+    .trial-card.is-featured.is-portrait .trial-card-meta b { top: 4px; font-size: 16px; }
     .trial-ur-quote blockquote { margin-top: 8px; font-size: 24px; }
 }
 

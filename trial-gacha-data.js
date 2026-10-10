@@ -5,13 +5,14 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function () {
     "use strict";
 
+    const prefixes = { "Battle a la carte": "BAL", "架空運輸": "KUU", "星の終わりに君は生きる": "HOS", "花散るさきの、幸せのかたち": "HAN", "EchoShion": "ECH" };
     let number = 0;
     const cards = [];
 
     function add(work, rarity, category, title, image, extra = {}) {
         number += 1;
         cards.push({
-            id: `${work === "Battle a la carte" ? "BAL" : "KUU"}-${String(number).padStart(3, "0")}`,
+            id: `${prefixes[work]}-${String(number).padStart(3, "0")}`,
             no: number,
             work,
             rarity,
@@ -103,6 +104,21 @@
         ...(quote ? { quote } : {}),
         sprite: { columns: 5, rows: 6, column: index % 5, row: Math.floor(index / 5) }
     }));
+
+    // 既存81枚のIDとデータは維持し、新しい作品は末尾へ追加する。
+    add("星の終わりに君は生きる", "UR", "登場人物", "透真", "images/gacha/bunko/touma.png", {"portrait": true, "role": "湊の兄", "description": "弟を思う気持ちを抱えながら、管理AIに守られた世界で自分の道を歩む。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=hoshi", "quote": "弟を思う気持ちを抱えながら、管理AIに守られた世界で自分の道を歩む。", "quoteLabel": "登場人物紹介"});
+    add("星の終わりに君は生きる", "UR", "登場人物", "湊", "images/gacha/bunko/minato.png", {"portrait": true, "role": "透真の弟", "description": "左目と左腕に機械を備え、仲間とともに生きる。工房で道具を手にする姿が、彼の人柄を伝える。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=hoshi", "quote": "左目と左腕に機械を備え、仲間とともに生きる。工房で道具を手にする姿が、彼の人柄を伝える。", "quoteLabel": "登場人物紹介"});
+    add("星の終わりに君は生きる", "SSR", "登場人物", "ハル", "images/gacha/bunko/haru.png", {"portrait": true, "role": "兄弟の家族", "description": "透真と湊と日々をともに過ごす犬。茶色と白の毛並みと赤い首輪が目印。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=hoshi"});
+    add("星の終わりに君は生きる", "SSR", "登場人物", "シロ", "images/gacha/bunko/shiro.png", {"portrait": true, "role": "犬型AI", "description": "白い体と青い瞳をもつ犬型AI。人とAIの関係を映す存在。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=hoshi"});
+    add("星の終わりに君は生きる", "SSR", "登場人物", "紗良", "images/gacha/bunko/sara.png", {"portrait": true, "role": "革命軍の仲間", "description": "仲間を支える、強さと優しさをあわせもつ女性。人の名前を記した手帳を大切にする。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=hoshi"});
+    add("花散るさきの、幸せのかたち", "UR", "登場人物", "咲", "images/gacha/bunko/saki.png", {"portrait": true, "role": "林家の姉", "description": "家族への思いと日々の暮らしが、姉妹の物語をつないでいく。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=hanachiru", "quote": "家族への思いと日々の暮らしが、姉妹の物語をつないでいく。", "quoteLabel": "登場人物紹介"});
+    add("花散るさきの、幸せのかたち", "UR", "登場人物", "花", "images/gacha/bunko/hana.png", {"portrait": true, "role": "咲の妹", "description": "丸い眼鏡と、結い上げた髪が印象的。姉とのつながりを抱え、自分の幸せを探していく。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=hanachiru", "quote": "丸い眼鏡と、結い上げた髪が印象的。姉とのつながりを抱え、自分の幸せを探していく。", "quoteLabel": "登場人物紹介"});
+    add("花散るさきの、幸せのかたち", "SSR", "登場人物", "エドワード", "images/gacha/bunko/edward.png", {"portrait": true, "role": "調査員", "description": "咲と花に関わる調査の仕事をする人物。姉妹に向き合い、物語を語る。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=hanachiru"});
+    add("EchoShion", "UR", "登場人物", "朝倉志遠", "images/gacha/bunko/shion.png", {"portrait": true, "role": "澪の夫", "description": "物流の仕事をする澪の夫。みたらし団子が好きで、仕事帰りに甘いものを買うのが楽しみ。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion", "quote": "物流の仕事をする澪の夫。みたらし団子が好きで、仕事帰りに甘いものを買うのが楽しみ。", "quoteLabel": "登場人物紹介"});
+    add("EchoShion", "UR", "登場人物", "朝倉澪", "images/gacha/bunko/mio.png", {"portrait": true, "role": "志遠の妻", "description": "おはぎとお茶を好む、穏やかな女性。日々の暮らしのなかで記憶と声に向き合う。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion", "quote": "おはぎとお茶を好む、穏やかな女性。日々の暮らしのなかで記憶と声に向き合う。", "quoteLabel": "登場人物紹介"});
+    add("EchoShion", "UR", "登場人物", "EchoShion", "images/gacha/bunko/echoshion.png", {"portrait": true, "role": "端末の中の存在", "description": "志遠の記憶と声をもとに、端末の画面を通して澪と向き合う存在。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion", "quote": "志遠の記憶と声をもとに、端末の画面を通して澪と向き合う存在。", "quoteLabel": "登場人物紹介"});
+    add("EchoShion", "C", "登場人物", "ECHO-Usa", "images/gacha/bunko/echo-usa.png", {"portrait": true, "role": "うさぎ型ECHO", "description": "まだ本物のうさぎを完全には再現できない、ぎこちない動きに近未来の日常がのぞく。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
+    add("EchoShion", "C", "登場人物", "人型ECHO", "images/gacha/bunko/echo-humanoid.png", {"portrait": true, "role": "暮らしを支えるロボット", "description": "スーパーなどで人の仕事を手伝う人型ロボット。商品を棚に並べる姿に、この世界の日常が表れている。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
 
     return Object.freeze({
         version: 1,

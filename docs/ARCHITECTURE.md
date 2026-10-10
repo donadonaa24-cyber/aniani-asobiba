@@ -1,10 +1,10 @@
 # ARCHITECTURE
 
-最終確認日: 2026-09-16
+最終確認日: 2026-10-09
 
 ## 全体構成
 
-このプロジェクトは、ビルド工程を持たない静的Webアプリケーションである。`index.html` を入口に、通常のscript、ES Module、CSS、画像をブラウザが直接読み込む。共通アカウント部分だけSupabaseへ通信する。
+このプロジェクトは、ビルド工程を持たない静的Webアプリケーションである。`index.html` を入口に、script、CSS、画像をブラウザが直接読み込む。この公開用リポジトリには共通アカウントの `common/` と `supabase/` は含まれず、HTMLからも参照しない。以下のSupabase・共通アカウントの構成は未公開ローカル版を説明している。
 
 ```text
 Browser
@@ -32,12 +32,16 @@ Browser
 | `galaxy.css` | 宇宙ライブラリ、回転ゲームケース、コンソールドック、流れ星 |
 | `arcade.css` | ミニゲーム全画面、固定レイアウト、仮想パッド、レスポンシブ調整 |
 | `trial-gacha.css` | 無料試験ガチャのコイン投入・銀河回転・白転・UR予兆・カード公開、図鑑、レスポンシブ表示 |
-| `trial-gacha-data.js` | 81枚の公開用カードカタログ、排出率、生成スプライト位置 |
+| `trial-gacha-data.js` | 94枚の公開用カードカタログ、排出率、生成スプライト位置 |
 | `trial-gacha.js` | 無料10連抽選、1枚ずつの状態遷移、スキップ、Web Audio効果音、端末内所持数、図鑑表示 |
 | `common/portal.css` | 共通アカウント、ウォレット、ガチャ、カード図鑑 |
 | `aniani.js` | モーダル、localStorage、記事/コメント、8ミニゲームのロジック |
 | `galaxy.js` | 登録作品数に応じた円軌道と総件数表示、選択、スワイプ、キーボード、モーション軽減 |
 | `arcade-layout.js` | ミニゲーム開始/終了、Fullscreen、画面向き、盤面サイズ調整、ホーム復帰 |
+| `scripts/serve.cjs` | Node標準機能による開発用HTTPサーバー（既定127.0.0.1:3000） |
+| `scripts/serve.test.cjs` | 配信内容、MIME、HEAD、非公開ファイル・ルート外配信の拒否検査 |
+| `package.json` / `package-lock.json` / `.nvmrc` | 開発コマンドとNode.jsバージョン管理。外部npm依存なし |
+| `.github/workflows/test.yml` | PR/mainで構文・回帰・開発サーバー検査を実行 |
 | `common/portal.js` | Supabase Auth、デイリー、ガチャ、図鑑、セッションUI、通信中ガード |
 | `common/api.js` | 公開/認証REST・RPCクライアント、20秒タイムアウト |
 | `common/config.js` | Supabase URLと公開可能キーのみ |
@@ -52,7 +56,7 @@ Browser
 - `common/`: 共通アカウント・コイン・ガチャ・図鑑のフロントエンド。
 - `supabase/`: DB migration、検証SQL、運用記録。
 - `docs/`: Codex向け正式仕様、現在状態、変更履歴、技術構成。
-- `.publish-aniani/`: GitHub Pagesへpushする独立Git作業ツリー。ローカル開発ルートとは別管理。
+- `.publish-aniani/`: 従来のPC作業フォルダでGitHub Pagesへpushする独立Git作業ツリー。cloneしたリポジトリではルート自体がGit作業ツリーで、このフォルダを作る必要はない。
 - `.publish-battle-3d/`: Unity版専用の紹介・配布リポジトリ作業ツリー。Unityソース一式は含まない。
 - `release-artifacts/`: ローカル配布ZIP。ポータルのGit管理対象外。
 - `images/battle-3d-20261001.webp`: Unity版の現在の対戦画面（1600×900、ロスレスWebP）。旧 `images/battle-3d.png` は保持。
@@ -94,11 +98,13 @@ Browser
 
 ### 無料試験ガチャ
 
-- `trial-gacha-data.js` の配列がカード追加の単一入口。Battle a la carteと架空運輸のカードを作品・カテゴリ・レアリティで管理する。
+- `trial-gacha-data.js` の配列がカード追加の単一入口。Battle a la carte、架空運輸、小説3作品のカードを作品・カテゴリ・レアリティで管理する。既存81枚の末尾へHOS / HAN / ECHのIDを追加する。
 - 抽選はクライアント完結。先にレアリティをC 60% / SR 25% / SSR 10% / UR 5%で選び、同レアリティのカードから1枚を選ぶ。
 - 下部コンソールドックの `[data-modal-target="trial-gacha"]` だけを入口にし、ゲームケースが回る軌道中央にはDOM要素を置かない。
 - コイン投入、銀河回転、ホワイトアウト、通常カード公開、UR流れ星、UR台詞、UR公開、結果一覧を `data-phase` で切り替える。途中スキップは未公開分を含む10枚を一度だけ端末内所持へ加算する。
-- URキャラクター画像は `assets/images/battle-mode-cutins/` の4画像を使用する。URカードはすべて決め台詞データを持つ。
+- URキャラクター画像は `assets/images/battle-mode-cutins/` の4画像を使用する。既存URの決め台詞は維持する。小説URは `quoteLabel` で「登場人物紹介」と明記し、紹介文を表示する。
+- 小説の画像13枚は `images/gacha/bunko/` に配置。別リポジトリ `book` の `public/assets/novels/<作品ID>/characters/` に同じ承認済みPNGを配置し、キャラ紹介と共有する。本文・本棚アプリは複製しない。
+- 縦長画像は全体表示。拡大はネイティブ `dialog` で、Escapeは画像だけを閉じる。小説サイトへのリンクは作品別 `#characters=` を用いる。
 - 共通アカウント、Supabase、あにあにコインを使用しない。公開前の演出・コレクション試験として独立させる。
 
 ## データ保存方式
@@ -155,16 +161,18 @@ Browser
 
 ## 主要Package・ライブラリ
 
-- package.json / npm依存: なし。
-- Supabase JS `2.57.4`: CDN動的読込。
-- UIフレームワーク、ゲームエンジン、テストフレームワーク: なし。
-- テストはNode.jsの標準 `assert`、`vm`、`fs` 等を使用する。
+- package.json / package-lock.json: 開発コマンド管理のみ。外部npm依存なし。
+- Node.js `24.19.0`: `.nvmrc` に固定し、CIも同じバージョンを使用。
+- Supabase JS `2.57.4`: 未公開ローカル版でCDN動的読込。公開用リポジトリからの読込はなし。
+- UIフレームワーク、ゲームエンジン、外部テストフレームワーク: なし。
+- テストはNode.jsの標準 `assert`、`vm`、`fs`、`node:test` 等を使用する。
 
 ## ビルド・公開方式
 
 - ビルド工程: なし。静的ファイルをそのまま配信する。
-- ローカル確認: HTTPサーバーを起動して `index.html` を開く。共通機能は `file://` 不可。
-- 公開: 必要ファイルを `.publish-aniani/` に反映し、同Gitリポジトリの `main` をGitHubへpushする。
+- ローカル確認: `npm run dev` でHTTPサーバーを起動する。クラウドのポート公開時は `-- --host 0.0.0.0 --port 3000` を指定。手順は `docs/DEVELOPMENT.md`。
+- テスト: `npm test` で構文、既存4テスト、開発サーバー検査。GitHub Actionsも同じコマンドを実行する。
+- 公開: cloneしたリポジトリでは作業ブランチをPRでmainへ反映する。従来のPC作業フォルダを使う場合にのみ `.publish-aniani/` へ同期する。mainへの反映と公開は所有者の指示に従う。
 - GitHub Pagesの設定詳細（branch/folder）はリポジトリ設定画面で未確認。
 - `supabase.txt` は公開対象外。
 - Unity版ZIPは既存Windows成果物から作成し、デバッグバックアップ、PDB/MDB、ログを除外。exeとData/DLL等の195ファイル一式をReleasesへ保存する。Unityの再ビルドはこのポータル作業では実施しない。
@@ -186,4 +194,4 @@ Browser
 - Supabase RLS・RPC引数 ↔ `common/api.js`。片側だけ変更しない。
 - Auth redirect URL ↔ GitHub Pagesの正確な公開URL。
 - 架空運輸home導線 ↔ `?view=home`。省略するとスマホ環境でゲーム画面へ直接入る仕様がある。
-- 公開版 ↔ `.publish-aniani/`。ルート編集だけではGitHub Pagesへ反映されない。
+- 従来のPCローカル版 ↔ `.publish-aniani/`。cloneしたリポジトリではrootがGit作業ツリー。どちらも作業ファイルの編集だけではGitHub Pagesへ反映されない。
