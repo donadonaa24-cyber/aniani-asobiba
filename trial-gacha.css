@@ -159,7 +159,7 @@
 
 .trial-single-reveal { position: absolute; z-index: 12; inset: 14px; display: grid; place-items: center; }
 .trial-reveal-count { position: absolute; z-index: 4; top: 0; left: 0; margin: 0; padding: 6px 12px; border: 1px solid #a2e9ff55; border-radius: 999px; color: #d9f7ff; background: #03101dcc; font: 800 11px Georgia, serif; letter-spacing: .13em; }
-.trial-current-card { width: min(470px, 78%); }
+.trial-current-card { width: min(260px, 72%); }
 .trial-ur-quote { width: min(720px, 92%); text-align: center; animation: trial-quote-in .65s cubic-bezier(.16,.84,.28,1) both; }
 .trial-ur-quote span { color: #ffe784; font: 900 10px 'M PLUS Rounded 1c', sans-serif; letter-spacing: .3em; text-shadow: 0 0 15px #ffd54d; }
 .trial-ur-quote blockquote { margin: 18px 0 0; color: #fff; font: 700 clamp(25px, 4vw, 48px) 'Shippori Mincho', serif; letter-spacing: .08em; line-height: 1.45; text-shadow: 0 0 10px #fff, 0 0 35px #ffcb62, 0 0 72px #ff58d1; }
@@ -214,17 +214,20 @@
 .trial-results-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 9px; }
 .trial-results-head h3 { margin: 0; font-size: 13px; letter-spacing: .12em; color: #a6d8ec; }
 .trial-gacha-results { display: grid; grid-template-columns: repeat(5, minmax(108px, 1fr)); gap: 9px; align-content: start; }
-.trial-card { position: relative; min-width: 0; padding: 5px; border: 1px solid var(--rarity-color); border-radius: 12px; color: #eef8ff; background: linear-gradient(155deg, color-mix(in srgb, var(--rarity-color) 18%, #071222), #030714 72%); box-shadow: 0 6px 18px #0007, inset 0 0 18px color-mix(in srgb, var(--rarity-color) 11%, transparent); text-align: left; overflow: hidden; }
-.trial-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 25%, #fff5 45%, transparent 62%); translate: -140% 0; pointer-events: none; }
+.trial-card { position: relative; display: flex; flex-direction: column; aspect-ratio: 2 / 3; box-sizing: border-box; min-width: 0; padding: 5px; border: 1px solid var(--rarity-color); border-radius: 12px; color: #eef8ff; background: linear-gradient(155deg, color-mix(in srgb, var(--rarity-color) 18%, #071222), #030714 72%); box-shadow: 0 6px 18px #0007, inset 0 0 18px color-mix(in srgb, var(--rarity-color) 11%, transparent); text-align: left; overflow: hidden; }
+.trial-card::after, .trial-art-image::after { content: ""; position: absolute; z-index: 2; inset: 0; opacity: 0; translate: -140% 0; pointer-events: none; }
+.trial-card:not(.is-locked).rarity-ssr::after, .trial-art-image[data-rarity="ssr"]::after { opacity: .45; background: linear-gradient(110deg, transparent 30%, #fff5 43%, #fffbd7bb 48%, #fff5 53%, transparent 66%); animation: trial-ssr-foil 6s ease-in-out infinite; }
+.trial-card:not(.is-locked).rarity-ur::after, .trial-art-image[data-rarity="ur"]::after { opacity: .6; background: linear-gradient(110deg, transparent 25%, #9befff66 36%, #e4baff99 43%, #fff8ccbb 49%, #ffa4d699 55%, #8aefff66 62%, transparent 72%); animation: trial-ur-foil 4.8s ease-in-out infinite; }
+.trial-card:not(.is-locked).rarity-ur::before, .trial-art-image[data-rarity="ur"]::before { content: ""; position: absolute; z-index: 3; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(circle at 8% 14%, #fff 0 1px, #ffd78888 2px, transparent 8px), radial-gradient(circle at 93% 28%, #fff 0 1px, #ffb2ee99 2px, transparent 8px), radial-gradient(circle at 12% 82%, #fff 0 1px, #a8efff88 2px, transparent 7px), radial-gradient(circle at 91% 92%, #fff 0 1px, #ffe89199 2px, transparent 9px); animation: trial-ur-sparkles 2.8s ease-in-out infinite alternate; }
 .trial-card.rarity-c { --rarity-color: var(--trial-c); }
 .trial-card.rarity-sr { --rarity-color: var(--trial-sr); }
 .trial-card.rarity-ssr { --rarity-color: var(--trial-ssr); }
 .trial-card.rarity-ur { --rarity-color: var(--trial-ur); box-shadow: 0 0 18px #ff78da38, 0 6px 18px #0008; }
-.trial-card-art { position: relative; aspect-ratio: 1.15 / 1; display: grid; place-content: center; overflow: hidden; border-radius: 8px; background: radial-gradient(circle, #39536a, #07101e); }
-.trial-card-art img { width: 100%; height: 100%; object-fit: cover; }
-.trial-card-art.is-sprite { background-repeat: no-repeat; }
+.trial-card-art { position: relative; flex: 1 1 0; min-height: 0; display: grid; place-content: center; overflow: hidden; border-radius: 8px; background: radial-gradient(circle, #39536a, #07101e); }
+.trial-card-art img, .trial-card-art svg { display: block; width: 100%; height: 100%; object-fit: contain; }
+.trial-card:not(.is-locked) .trial-card-art { display: block; }
 .trial-card-art > span { font: 700 36px Georgia, serif; color: #87a0b4; }
-.trial-card-meta { position: relative; padding: 7px 4px 4px; display: grid; gap: 2px; }
+.trial-card-meta { position: relative; flex: 0 0 68px; padding: 7px 4px 4px; display: grid; align-content: start; gap: 2px; }
 .trial-card-number { color: #8fa5b5; font: 700 8px Georgia, serif; letter-spacing: .08em; }
 .trial-card-meta strong { padding-right: 29px; overflow: hidden; font-size: 11px; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
 .trial-card-meta small { overflow: hidden; color: #91a7b8; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
@@ -232,16 +235,14 @@
 .trial-card-meta em { position: absolute; right: 3px; bottom: 3px; padding: 1px 5px; border-radius: 99px; color: #fff; background: #0009; font-size: 8px; font-style: normal; }
 
 .trial-card.is-featured { width: 100%; padding: 8px; border-width: 2px; border-radius: 18px; animation: trial-featured-reveal .72s cubic-bezier(.14,.82,.22,1) both; box-shadow: 0 0 36px color-mix(in srgb, var(--rarity-color) 50%, transparent), 0 20px 50px #000c; }
-.trial-card.is-featured .trial-card-art { aspect-ratio: 1.54 / 1; border-radius: 12px; }
+.trial-card.is-featured .trial-card-art { border-radius: 12px; }
 .trial-card.is-featured .trial-card-meta { padding: 11px 8px 8px; }
-.trial-card.is-featured .trial-card-meta strong { font-size: clamp(19px, 3vw, 30px); }
+.trial-card.is-featured .trial-card-meta strong { font-size: 18px; }
 .trial-card.is-featured .trial-card-meta small { font-size: 11px; }
 .trial-card.is-featured .trial-card-meta b { top: 10px; right: 8px; font-size: 20px; text-shadow: 0 0 14px var(--rarity-color); }
 .trial-card.is-featured .trial-card-number { font-size: 10px; }
-.trial-card.is-featured::after { animation: trial-card-shine 1s ease .22s both; }
 .trial-card.is-featured.rarity-ur { animation: trial-featured-reveal .72s cubic-bezier(.14,.82,.22,1) both, trial-ur-card-glow 1.7s ease-in-out .72s infinite alternate; }
 .trial-gacha-results.is-revealing .trial-card { animation: trial-card-reveal .55s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--reveal-index) * 85ms); }
-.trial-gacha-results.is-revealing .trial-card::after { animation: trial-card-shine .72s ease both; animation-delay: calc(var(--reveal-index) * 85ms + 150ms); }
 
 .trial-book-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
 .trial-book-head h3 { margin: 0; font-size: 16px; }
@@ -251,17 +252,13 @@
 .trial-card-detail small { color: #9bb0c0; }
 .trial-gacha-book { display: grid; grid-template-columns: repeat(7, minmax(105px, 1fr)); gap: 9px; }
 .trial-card.is-compact { width: 100%; font: inherit; cursor: pointer; }
+.trial-card.is-compact:not(.is-locked) { cursor: zoom-in; }
 .trial-card.is-compact:hover { translate: 0 -3px; }
 .trial-card.is-locked { --rarity-color: #526879; filter: saturate(.3); }
 
-/* 小説の縦長イラストは全体を見せる。既存カードの切り出しは維持する。 */
-.trial-card.is-portrait .trial-card-art { aspect-ratio: 2 / 3; display: block; }
-.trial-card.is-portrait.is-locked .trial-card-art { display: grid; }
-.trial-card.is-portrait .trial-card-art img { object-fit: contain; }
-.trial-card.is-featured.is-portrait { width: min(100%, 300px); margin-inline: auto; }
-.trial-card.is-featured.is-portrait .trial-card-art { height: clamp(140px, 28dvh, 310px); aspect-ratio: auto; }
+/* 枠は全カード共通の2:3。画像の縦横比にかかわらず全体を収める。 */
 .trial-gacha-book { align-items: start; }
-.trial-art-open { display: block; margin: 5px auto; padding: 6px 9px; border: 1px solid #8cdfff66; border-radius: 7px; color: #c9f3ff; background: #10243c; font: inherit; font-size: 11px; cursor: zoom-in; }
+.trial-art-open { display: block; flex: 0 0 auto; margin: 5px auto; padding: 6px 9px; border: 1px solid #8cdfff66; border-radius: 7px; color: #c9f3ff; background: #10243c; font: inherit; font-size: 11px; cursor: zoom-in; }
 .trial-card-detail p { flex-basis: 100%; margin: 0; line-height: 1.7; }
 .trial-card-detail .trial-art-open { margin: 0; }
 .trial-card-detail a, .trial-art-dialog a { color: #9be8ff; }
@@ -270,9 +267,9 @@
 .trial-art-dialog header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
 .trial-art-dialog h3 { margin: 0; font-size: 16px; }
 .trial-art-dialog header button { flex-shrink: 0; padding: 8px 12px; border: 1px solid #8cdfff66; border-radius: 8px; color: inherit; background: #10243c; cursor: pointer; }
+.trial-art-image { position: relative; overflow: hidden; border-radius: 8px; }
 .trial-art-image .trial-card-art { display: block; height: 68dvh; aspect-ratio: auto; background: #030714; }
 .trial-art-image .trial-card-art img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.trial-art-image .trial-card-art.is-sprite { height: auto; aspect-ratio: 1.15 / 1; }
 .trial-art-dialog p { margin: 12px 0; font-size: 13px; line-height: 1.7; }
 .trial-gacha-head .trial-illustration-credit { display: block; margin-top: 8px; font-size: 11px; line-height: 1.6; }
 .trial-art-dialog button:focus-visible, .trial-art-open:focus-visible { outline: 2px solid #9be8ff; outline-offset: 3px; }
@@ -286,7 +283,9 @@
 @keyframes trial-quote-in { from { opacity: 0; filter: blur(12px); scale: .8; } to { opacity: 1; filter: blur(0); scale: 1; } }
 @keyframes trial-featured-reveal { 0% { opacity: 0; transform: perspective(1100px) rotateY(94deg) scale(.58); filter: brightness(3) blur(8px); } 62% { opacity: 1; transform: perspective(1100px) rotateY(-7deg) scale(1.06); filter: brightness(1.35) blur(0); } 100% { transform: perspective(1100px) rotateY(0) scale(1); filter: brightness(1); } }
 @keyframes trial-card-reveal { from { opacity: 0; transform: perspective(700px) rotateY(90deg) scale(.72); } to { opacity: 1; transform: perspective(700px) rotateY(0) scale(1); } }
-@keyframes trial-card-shine { from { translate: -140% 0; } to { translate: 140% 0; } }
+@keyframes trial-ssr-foil { 0% { translate: -140% 0; } 22%, 100% { translate: 140% 0; } }
+@keyframes trial-ur-foil { 0% { translate: -140% 0; } 35%, 100% { translate: 140% 0; } }
+@keyframes trial-ur-sparkles { from { opacity: .25; filter: brightness(.9); } to { opacity: .85; filter: brightness(1.5); } }
 @keyframes trial-ur-stage { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(24deg) brightness(1.12); } }
 @keyframes trial-ur-card-glow { from { box-shadow: 0 0 25px #ff65d870, 0 20px 50px #000c; } to { box-shadow: 0 0 58px #ffd86da8, 0 0 92px #ff65d849, 0 20px 50px #000c; } }
 
@@ -310,7 +309,7 @@
     .trial-summon-controls { display: grid; grid-template-columns: 1fr 1fr; }
     .trial-draw-button, .trial-next-button { grid-column: 1 / -1; }
     .trial-rates, .trial-gacha-note, #trial-gacha-status { grid-column: 1 / -1; }
-    .trial-current-card { width: min(420px, 88%); }
+    .trial-current-card { width: min(240px, 64%, 30dvh); }
     .trial-ur-quote blockquote { font-size: clamp(22px, 8vw, 36px); }
     .trial-gacha-results { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
     .trial-gacha-book { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
@@ -321,7 +320,7 @@
     .trial-gacha-book { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .trial-free-badge { display: none; }
     .trial-summon-experience { min-height: 340px; }
-    .trial-current-card { width: 94%; }
+    .trial-current-card { width: min(210px, 64%, 30dvh); }
 }
 
 @media (max-height: 500px) and (orientation: landscape) {
@@ -337,17 +336,17 @@
     .trial-summon-experience { min-height: 238px; }
     .trial-summon-controls { display: flex; }
     .trial-idle-copy p, .trial-gacha-note { display: none; }
-    .trial-current-card { width: min(350px, 64%); }
-    .trial-card.is-featured .trial-card-art { aspect-ratio: 1.8 / 1; }
-    .trial-card.is-featured.is-portrait .trial-card-art { height: 80px; }
-    .trial-card.is-featured.is-portrait .trial-card-meta { padding: 5px 4px 3px; }
-    .trial-card.is-featured.is-portrait .trial-card-meta strong { font-size: 16px; }
-    .trial-card.is-featured.is-portrait .trial-card-meta small { font-size: 9px; }
-    .trial-card.is-featured.is-portrait .trial-card-meta b { top: 4px; font-size: 16px; }
+    .trial-current-card { width: min(130px, 28%); }
+    .trial-card.is-featured .trial-card-meta { padding: 5px 4px 3px; flex-basis: 60px; }
+    .trial-card.is-featured .trial-card-meta strong { font-size: 14px; }
+    .trial-card.is-featured .trial-card-meta small { font-size: 9px; }
+    .trial-card.is-featured .trial-card-meta b { top: 4px; font-size: 14px; }
     .trial-ur-quote blockquote { margin-top: 8px; font-size: 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .trial-card::before, .trial-card::after,
+    .trial-art-image::before, .trial-art-image::after,
     .trial-summon-experience::after,
     .trial-summon-experience[data-phase="coin"] .trial-summon-coin,
     .trial-summon-experience[data-phase="vortex"] .trial-galaxy-ring,

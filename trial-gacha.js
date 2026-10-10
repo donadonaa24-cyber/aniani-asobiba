@@ -79,9 +79,19 @@
         if (card.sprite) {
             const { columns, rows, column, row } = card.sprite;
             art.classList.add("is-sprite");
-            art.style.backgroundImage = `url("${card.image}")`;
-            art.style.backgroundSize = `${columns * 100}% ${rows * 100}%`;
-            art.style.backgroundPosition = `${columns === 1 ? 50 : (column / (columns - 1)) * 100}% ${rows === 1 ? 50 : (row / (rows - 1)) * 100}%`;
+            // 社員スプライトの正方形を、カード枠に合わせて引き伸ばさず表示する。
+            const svgNamespace = "http://www.w3.org/2000/svg";
+            const frame = document.createElementNS(svgNamespace, "svg");
+            frame.setAttribute("viewBox", "0 0 100 100");
+            frame.setAttribute("aria-hidden", "true");
+            const sheet = document.createElementNS(svgNamespace, "image");
+            sheet.setAttribute("href", card.image);
+            sheet.setAttribute("x", String(-column * 100));
+            sheet.setAttribute("y", String(-row * 100));
+            sheet.setAttribute("width", String(columns * 100));
+            sheet.setAttribute("height", String(rows * 100));
+            frame.append(sheet);
+            art.append(frame);
         } else {
             const image = document.createElement("img");
             image.src = card.image;
@@ -210,6 +220,7 @@
             artTitle.textContent = `${card.title} / ${card.rarity}`;
             artImage.replaceChildren(artElement(card, true, true));
             artImage.classList.toggle("is-portrait", !!card.portrait);
+            artImage.dataset.rarity = card.rarity.toLowerCase();
             artDescription.textContent = card.description || `${card.work} / ${card.role || card.category}`;
             artCredit.hidden = !card.generatedWithAI;
             artBookLink.hidden = !card.bookUrl;
@@ -286,7 +297,10 @@
             filtered.forEach((card) => {
                 const count = inventory[card.id] || 0;
                 const element = cardElement(card, { compact: true, unlocked: count > 0, count });
-                element.addEventListener("click", () => showDetail(card, count > 0));
+                element.addEventListener("click", () => {
+                    showDetail(card, count > 0);
+                    if (count > 0) showArtwork(card);
+                });
                 bookElement.append(element);
             });
             const unlocked = catalog.cards.filter((card) => inventory[card.id]).length;
