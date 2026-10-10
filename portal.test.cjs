@@ -47,7 +47,7 @@ assert(html.includes('無料お試し版'));
 assert(html.includes('ログイン・コイン・実際のお金は必要ありません'));
 assert(html.includes('id="trial-reveal-skip"'));
 assert(html.includes('id="trial-reveal-next"'));
-assert(html.includes('trial-gacha-data.js?v=20261011e1'));
+assert(html.includes('trial-gacha-data.js?v=20261012b1'));
 assert(html.includes('trial-gacha.js?v=20261012a1'));
 assert(html.includes('trial-gacha.css?v=20261012a1'));
 assert(html.includes('架空運輸 ホームページへ'));
