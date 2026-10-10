@@ -238,15 +238,17 @@
         }
 
         function simulate() {
-            const damping = 0.989;
+            const damping = 0.993;
             for (let y = 1; y < gh - 1; y += 1) {
                 const row = y * gw;
                 for (let x = 1; x < gw - 1; x += 1) {
                     const index = row + x;
-                    const around = (current[index - 1] + current[index + 1] + current[index - gw] + current[index + gw]) * 0.5;
+                    // 斜めの隣も使い、波紋が四角くならず丸く広がるようにする。
+                    const around = ((current[index - 1] + current[index + 1] + current[index - gw] + current[index + gw]) * 2
+                        + current[index - gw - 1] + current[index - gw + 1] + current[index + gw - 1] + current[index + gw + 1]) / 6;
                     const next = (around - previous[index]) * damping;
                     // わずかな粘性で、格子の細かいノイズを抑える。
-                    previous[index] = next + (around * 0.5 - next) * 0.025;
+                    previous[index] = next + (around * 0.5 - next) * 0.02;
                 }
             }
             const swap = current;
@@ -290,7 +292,7 @@
                 for (let x = 0; x < gw; x += 1) field[row + x] = smooth[row + x - gw] * 0.25 + smooth[row + x] * 0.5 + smooth[row + x + gw] * 0.25;
             }
             const data = seaImage.data;
-            const refract = 0.32;
+            const refract = 0.36;
             const reflectance = 0.5 * (1 - blessing * 0.35);
             const glowStrength = blessing * (0.86 + 0.14 * Math.sin(seconds * 2.6));
             for (let y = 0; y < gh; y += 1) {
@@ -325,7 +327,7 @@
                     const rb = reflection[p00 + 2] * w00 + reflection[p10 + 2] * w10 + reflection[p01 + 2] * w01 + reflection[p11 + 2] * w11;
                     // 波の斜面が夜空の光を返すつやと、谷の陰。
                     const slope = dx * 0.55 - dy * 0.8;
-                    const specular = slope > 0 ? Math.min(1.3, slope * 0.045 + slope * slope * 0.0035) : 0;
+                    const specular = slope > 0 ? Math.min(1.15, slope * 0.04 + slope * slope * 0.0026) : 0;
                     const shadow = slope < 0 ? Math.max(0.45, 1 + slope * 0.02) : 1;
                     let red = (3 + rr * 255 * reflectance) * depth * shadow + specular * 105;
                     let green = (8 + rg * 255 * reflectance) * depth * shadow + specular * 145;
@@ -355,27 +357,6 @@
             if (blessing < 0.01) return;
             context.save();
             context.globalCompositeOperation = "lighter";
-            const originX = width * 0.5;
-            const originY = top + height * 1.18;
-            for (let index = 0; index < 15; index += 1) {
-                const angle = -0.66 + index * 0.094 + Math.sin(seconds * 0.7 + index * 1.7) * 0.04;
-                const length = height * 1.5;
-                const spread = 0.012 + (index % 4) * 0.009;
-                const alpha = (0.11 + 0.09 * Math.sin(seconds * 3.1 + index * 2.3)) * blessing;
-                const tx = originX + Math.sin(angle) * length;
-                const ty = originY - Math.cos(angle) * length;
-                const gradient = context.createLinearGradient(originX, originY, tx, ty);
-                gradient.addColorStop(0, `rgba(255,236,190,${alpha * 1.6})`);
-                gradient.addColorStop(0.45, `rgba(130,226,255,${alpha})`);
-                gradient.addColorStop(1, "rgba(130,200,255,0)");
-                context.fillStyle = gradient;
-                context.beginPath();
-                context.moveTo(originX, originY);
-                context.lineTo(originX + Math.sin(angle - spread) * length, originY - Math.cos(angle - spread) * length);
-                context.lineTo(originX + Math.sin(angle + spread) * length, originY - Math.cos(angle + spread) * length);
-                context.closePath();
-                context.fill();
-            }
             const core = context.createRadialGradient(width * 0.5, top + height * 0.62, 0, width * 0.5, top + height * 0.62, Math.max(width, height) * 0.3);
             core.addColorStop(0, `rgba(255,248,222,${0.42 * blessing})`);
             core.addColorStop(0.35, `rgba(120,220,255,${0.12 * blessing})`);
@@ -383,11 +364,12 @@
             context.fillStyle = core;
             context.fillRect(0, top, width, height);
             motes.forEach((mote) => {
+                // 水面の発光の中で、光の粒がゆっくり瞬きながら漂う。
                 const life = (seconds * mote.speed + mote.offset) % 1;
-                const x = (mote.x + Math.sin(seconds * mote.sway + mote.offset * TAU) * 0.02) * width;
-                const y = top + (1.05 - life * 0.95) * height;
+                const x = (mote.x + Math.sin(seconds * mote.sway + mote.offset * TAU) * 0.025) * width;
+                const y = top + (mote.y - life * 0.08) * height;
                 const alpha = Math.sin(life * Math.PI) * blessing * mote.alpha;
-                const radius = mote.size * dpr * (0.6 + life);
+                const radius = mote.size * dpr * (0.7 + life * 0.6);
                 const glow = context.createRadialGradient(x, y, 0, x, y, radius * 4);
                 glow.addColorStop(0, `rgba(${mote.color},${alpha})`);
                 glow.addColorStop(1, `rgba(${mote.color},0)`);
@@ -450,8 +432,12 @@
             context.restore();
         }
 
+        // 流れ星：青白い彗星のような頭部と、長く残る残光（アフターグロー）。世界座標に残すので、
+        // 画面が海へ追いかけても、空から海までの光の筋が残る。
+        const AFTERGLOW = 1800;
+
         function meteorPosition(progress) {
-            const eased = Math.pow(progress, 1.55);
+            const eased = Math.pow(progress, 1.25);
             return {
                 x: meteor.from.x + (meteor.to.x - meteor.from.x) * eased,
                 y: meteor.from.y + (meteor.to.y - meteor.from.y) * eased
@@ -460,28 +446,36 @@
 
         function updateMeteor(time) {
             if (!meteor) return;
-            const progress = clamp((time - meteor.start) / meteor.duration, 0, 1);
-            const position = meteorPosition(progress);
-            meteor.head = position;
-            meteor.trail.push({ x: position.x, y: position.y, time });
-            while (meteor.trail.length && time - meteor.trail[0].time > 420) meteor.trail.shift();
-            cam = clamp(0.42 - position.y / height, 0, 1);
-            if (progress < 1 && Math.random() < 0.75) {
-                const direction = Math.atan2(meteor.to.y - meteor.from.y, meteor.to.x - meteor.from.x);
-                const angle = direction + Math.PI + (Math.random() - 0.5) * 0.9;
-                const speed = (40 + Math.random() * 120) * dpr;
-                sparks.push({ x: position.x, y: position.y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed + 30 * dpr, born: time, life: 260 + Math.random() * 260 });
+            if (!meteor.landed) {
+                const progress = clamp((time - meteor.start) / meteor.duration, 0, 1);
+                const position = meteorPosition(progress);
+                const last = meteor.trail[meteor.trail.length - 1];
+                if (last) {
+                    // 描画間隔が空いても残光が途切れないよう、間を補う。
+                    const steps = Math.min(12, Math.ceil(Math.hypot(position.x - last.x, position.y - last.y) / (12 * dpr)));
+                    for (let step = 1; step < steps; step += 1) {
+                        const t = step / steps;
+                        meteor.trail.push({ x: last.x + (position.x - last.x) * t, y: last.y + (position.y - last.y) * t, time: last.time + (time - last.time) * t });
+                    }
+                }
+                meteor.trail.push({ x: position.x, y: position.y, time });
+                meteor.head = position;
+                cam = clamp(0.42 - position.y / height, 0, 1);
+                for (let count = 0; count < 2; count += 1) {
+                    const angle = meteor.direction + Math.PI + (Math.random() - 0.5) * 1.2;
+                    const speed = (12 + Math.random() * 50) * dpr;
+                    sparks.push({ x: position.x, y: position.y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, born: time, life: 500 + Math.random() * 900 });
+                }
+                if (progress >= 1) {
+                    meteor.landed = true;
+                    drop(position.x / width, position.y / height, 2.6, false);
+                    flashes.push({ x: position.x, y: position.y, start: time, duration: 1000, tint: "150,196,255" });
+                    meteor.sink = { x: position.x, y: position.y, start: time };
+                    wobbleTarget = 1.3;
+                }
             }
-            if (progress >= 1 && !meteor.landed) {
-                meteor.landed = true;
-                const fx = position.x / width;
-                const fy = position.y / height;
-                drop(fx, fy, 3.2);
-                flashes.push({ x: position.x, y: position.y, start: time, duration: 900 });
-                wobbleTarget = 1;
-                meteor.endAt = time + 120;
-            }
-            if (meteor.endAt && time > meteor.endAt) meteor = null;
+            while (meteor.trail.length && time - meteor.trail[0].time > AFTERGLOW) meteor.trail.shift();
+            if (meteor.landed && !meteor.trail.length && time - meteor.sink.start > 1200) meteor = null;
         }
 
         function drawMeteor(viewTop, time) {
@@ -492,54 +486,88 @@
                 const age = time - spark.born;
                 if (age > spark.life) { sparks.splice(index, 1); continue; }
                 const t = age / 1000;
+                const fade = 1 - age / spark.life;
                 const x = spark.x + spark.vx * t;
                 const y = spark.y + spark.vy * t - viewTop;
-                context.fillStyle = `rgba(255,236,190,${1 - age / spark.life})`;
-                context.fillRect(x - dpr * 0.8, y - dpr * 0.8, dpr * 1.6, dpr * 1.6);
+                const size = dpr * (0.7 + fade * 0.9);
+                context.fillStyle = `rgba(205,228,255,${fade * (0.55 + 0.45 * Math.sin(age * 0.03 + index))})`;
+                context.fillRect(x - size, y - size, size * 2, size * 2);
             }
-            if (meteor && meteor.trail.length > 1 && !meteor.landed) {
+            if (meteor && meteor.trail.length > 1) {
                 const points = meteor.trail;
-                const count = points.length;
-                context.lineCap = "round";
-                for (let pass = 0; pass < 2; pass += 1) {
-                    for (let index = 1; index < count; index += 1) {
-                        const t = index / (count - 1);
+                const nx = -Math.sin(meteor.direction);
+                const ny = Math.cos(meteor.direction);
+                const layers = [
+                    { width: (life) => (22 + (1 - life) * 46) * dpr, color: "70,118,255", alpha: (life) => 0.15 * Math.pow(life, 1.1), cap: "butt" },
+                    { width: (life) => (8 + (1 - life) * 16) * dpr, color: "122,178,255", alpha: (life) => 0.42 * Math.pow(life, 1.3), cap: "butt" },
+                    { width: (life) => (0.8 + 3.6 * Math.pow(life, 0.7)) * dpr, color: null, alpha: (life) => Math.pow(life, 1.6), cap: "round" }
+                ];
+                layers.forEach((layer) => {
+                    context.lineCap = layer.cap;
+                    for (let index = 1; index < points.length; index += 1) {
                         const from = points[index - 1];
                         const to = points[index];
-                        context.lineWidth = (pass === 0 ? 20 : 4.6) * dpr * Math.pow(t, 1.3) + 0.4 * dpr;
-                        const alpha = Math.pow(t, 1.6) * (pass === 0 ? 0.16 : 1);
-                        context.strokeStyle = t > 0.82 ? `rgba(236,255,246,${alpha})` : t > 0.45 ? `rgba(150,255,214,${alpha})` : `rgba(96,170,255,${alpha})`;
+                        const life = 1 - (time - to.time) / AFTERGLOW;
+                        if (life <= 0) continue;
+                        const alpha = layer.alpha(life);
+                        context.lineWidth = layer.width(life);
+                        context.strokeStyle = `rgba(${layer.color || (life > 0.9 ? "240,248,255" : "186,220,255")},${alpha})`;
                         context.beginPath();
                         context.moveTo(from.x, from.y - viewTop);
                         context.lineTo(to.x, to.y - viewTop);
                         context.stroke();
+                        if (!layer.color) {
+                            // 彗星が分かれるように、細い光が両側へ少しずつ広がって残る。
+                            const offset = (1 - life) * 16 * dpr;
+                            context.lineWidth = 0.9 * dpr;
+                            context.strokeStyle = `rgba(160,205,255,${alpha * 0.4})`;
+                            context.beginPath();
+                            context.moveTo(from.x + nx * offset, from.y + ny * offset - viewTop);
+                            context.lineTo(to.x + nx * offset, to.y + ny * offset - viewTop);
+                            context.moveTo(from.x - nx * offset * 0.6, from.y - ny * offset * 0.6 - viewTop);
+                            context.lineTo(to.x - nx * offset * 0.6, to.y - ny * offset * 0.6 - viewTop);
+                            context.stroke();
+                        }
+                    }
+                });
+                if (!meteor.landed && meteor.head) {
+                    const head = meteor.head;
+                    const flicker = 0.9 + Math.random() * 0.2;
+                    const radius = 34 * dpr * flicker;
+                    const glow = context.createRadialGradient(head.x, head.y - viewTop, 0, head.x, head.y - viewTop, radius);
+                    glow.addColorStop(0, "rgba(255,255,255,1)");
+                    glow.addColorStop(0.15, "rgba(226,240,255,0.92)");
+                    glow.addColorStop(0.45, "rgba(140,188,255,0.36)");
+                    glow.addColorStop(1, "rgba(90,130,255,0)");
+                    context.fillStyle = glow;
+                    context.fillRect(head.x - radius, head.y - viewTop - radius, radius * 2, radius * 2);
+                    const bloom = radius * 4;
+                    const halo = context.createRadialGradient(head.x, head.y - viewTop, 0, head.x, head.y - viewTop, bloom);
+                    halo.addColorStop(0, "rgba(130,176,255,0.26)");
+                    halo.addColorStop(1, "rgba(80,120,255,0)");
+                    context.fillStyle = halo;
+                    context.fillRect(head.x - bloom, head.y - viewTop - bloom, bloom * 2, bloom * 2);
+                    if (head.y > 0) {
+                        // 海へ迫る流れ星の光が、水面を青く照らす。
+                        const near = clamp(head.y / meteor.to.y, 0, 1);
+                        const pool = 150 * dpr * (0.4 + near);
+                        const light = context.createRadialGradient(head.x, head.y - viewTop, 0, head.x, head.y - viewTop, pool);
+                        light.addColorStop(0, `rgba(150,196,255,${0.26 * near})`);
+                        light.addColorStop(1, "rgba(90,140,255,0)");
+                        context.fillStyle = light;
+                        context.fillRect(head.x - pool, head.y - viewTop - pool, pool * 2, pool * 2);
                     }
                 }
-                const head = meteor.head;
-                const flicker = 0.85 + Math.random() * 0.3;
-                const radius = 30 * dpr * flicker;
-                const glow = context.createRadialGradient(head.x, head.y - viewTop, 0, head.x, head.y - viewTop, radius);
-                glow.addColorStop(0, "rgba(255,255,255,1)");
-                glow.addColorStop(0.18, "rgba(220,255,240,0.85)");
-                glow.addColorStop(0.5, "rgba(120,240,200,0.28)");
-                glow.addColorStop(1, "rgba(80,180,255,0)");
-                context.fillStyle = glow;
-                context.fillRect(head.x - radius, head.y - viewTop - radius, radius * 2, radius * 2);
-                const bloom = radius * 3.2;
-                const halo = context.createRadialGradient(head.x, head.y - viewTop, 0, head.x, head.y - viewTop, bloom);
-                halo.addColorStop(0, "rgba(160,255,220,0.22)");
-                halo.addColorStop(1, "rgba(80,160,255,0)");
-                context.fillStyle = halo;
-                context.fillRect(head.x - bloom, head.y - viewTop - bloom, bloom * 2, bloom * 2);
-                if (head.y > 0) {
-                    // 海へ迫る流れ星の光が、水面を照らす。
-                    const near = clamp(head.y / meteor.to.y, 0, 1);
-                    const pool = 120 * dpr * (0.4 + near);
-                    const light = context.createRadialGradient(head.x, head.y - viewTop, 0, head.x, head.y - viewTop, pool);
-                    light.addColorStop(0, `rgba(170,255,226,${0.22 * near})`);
-                    light.addColorStop(1, "rgba(120,200,255,0)");
-                    context.fillStyle = light;
-                    context.fillRect(head.x - pool, head.y - viewTop - pool, pool * 2, pool * 2);
+                if (meteor.sink) {
+                    // 水面を突き抜けた光が、深みへ沈みながら広がって消える。
+                    const t = clamp((time - meteor.sink.start) / 1200, 0, 1);
+                    const radius = (40 + t * 260) * dpr;
+                    const glow = context.createRadialGradient(meteor.sink.x, meteor.sink.y - viewTop, 0, meteor.sink.x, meteor.sink.y - viewTop, radius);
+                    glow.addColorStop(0, `rgba(170,210,255,${(1 - t) * 0.55})`);
+                    glow.addColorStop(0.5, `rgba(90,140,255,${(1 - t) * 0.22})`);
+                    glow.addColorStop(1, "rgba(60,100,255,0)");
+                    context.fillStyle = glow;
+                    context.fillRect(meteor.sink.x - radius, meteor.sink.y - viewTop - radius, radius * 2, radius * 2);
                 }
             }
             flashes = flashes.filter((flash) => time - flash.start < flash.duration);
@@ -549,7 +577,7 @@
                 const glow = context.createRadialGradient(flash.x, flash.y - viewTop, 0, flash.x, flash.y - viewTop, radius);
                 glow.addColorStop(0, `rgba(255,255,255,${(1 - t) * 0.95})`);
                 glow.addColorStop(0.25, `rgba(${flash.tint || "190,255,240"},${(1 - t) * 0.6})`);
-                glow.addColorStop(1, "rgba(90,180,255,0)");
+                glow.addColorStop(1, "rgba(90,140,255,0)");
                 context.fillStyle = glow;
                 context.fillRect(0, 0, width, height);
             });
@@ -618,11 +646,11 @@
             frame(now());
         }
 
-        function drop(fx, fy, strength = 1) {
+        function drop(fx, fy, strength = 1, splash = true) {
             if (!current && !resize()) return;
             const cx = Math.round(clamp(fx, 0, 1) * (gw - 1));
             const cy = Math.round(clamp(fy, 0, 1) * (gh - 1));
-            const radius = Math.max(2, Math.round((2.2 + strength) * (2 / cell)));
+            const radius = Math.max(5, Math.round((6 + strength * 2.6) * (2 / cell)));
             for (let y = -radius; y <= radius; y += 1) {
                 for (let x = -radius; x <= radius; x += 1) {
                     const px = cx + x;
@@ -630,10 +658,11 @@
                     if (px < 1 || py < 1 || px >= gw - 1 || py >= gh - 1) continue;
                     const distance = Math.sqrt(x * x + y * y) / radius;
                     if (distance > 1) continue;
-                    current[py * gw + px] -= 95 * strength * (0.5 + 0.5 * Math.cos(distance * Math.PI));
+                    // 中心のくぼみと、その外側の山・谷。1回の着水から何重もの細い輪が広がる。
+                    current[py * gw + px] -= 150 * strength * Math.cos(distance * Math.PI * 1.75) * Math.pow(1 - distance, 1.2);
                 }
             }
-            splashes.push({ x: fx, y: fy, start: now(), size: Math.min(2.4, 0.8 + strength * 0.25) });
+            if (splash) splashes.push({ x: fx, y: fy, start: now(), size: Math.min(1.6, 0.8 + strength * 0.25) });
             wobbleTarget = Math.min(1.25, wobbleTarget + 0.12 * strength);
             if (reduced) paintOnce();
         }
@@ -679,13 +708,13 @@
                 blessingTarget = on ? 1 : 0;
                 if (on && current) {
                     flashes.push({ x: width * 0.5, y: height * 0.62, start: now(), duration: 1300, tint: "255,232,170" });
-                    drop(0.5, 0.62, 2.6);
+                    drop(0.5, 0.62, 1.6, false);
                 }
                 if (on && !motes.length) {
                     const random = seededRandom(5);
                     const colors = ["255,240,200", "160,236,255", "255,200,240", "255,255,255"];
                     motes = Array.from({ length: 70 }, () => ({
-                        x: 0.12 + random() * 0.76, speed: 0.12 + random() * 0.22, offset: random(), sway: 0.6 + random(),
+                        x: 0.5 + (random() - 0.5) * 0.7, y: 0.62 + (random() - 0.5) * 0.6, speed: 0.25 + random() * 0.35, offset: random(), sway: 0.6 + random(),
                         size: 0.8 + random() * 1.8, alpha: 0.35 + random() * 0.6, color: colors[Math.floor(random() * colors.length)]
                     }));
                 }
@@ -695,7 +724,7 @@
                 if (reduced) { cam = 1; paintOnce(); return; }
                 camTween = { from: cam, to: 1, start: now(), duration };
             },
-            meteor(duration = 1300) {
+            meteor(duration = 650) {
                 if (!current && !resize()) return;
                 if (reduced) { cam = 0; drop(0.62, 0.58, 3.2); return; }
                 camTween = null;
@@ -707,8 +736,9 @@
                     trail: [],
                     head: null,
                     landed: false,
-                    endAt: 0
+                    sink: null
                 };
+                meteor.direction = Math.atan2(meteor.to.y - meteor.from.y, meteor.to.x - meteor.from.x);
             }
         };
         return api;

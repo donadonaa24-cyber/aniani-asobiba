@@ -245,7 +245,7 @@
             plop: (pitch = 1) => { plop(pitch); noise(0.32, 2400 * pitch, 420, 0.02); },
             blessing: () => { swell(46, 98, 2.2, 0.16); swell(92, 196, 2.2, 0.05, "triangle"); noise(1.8, 300, 2600, 0.035, "bandpass"); tones([1319, 1976, 2637], 1.1, "sine", 0.014); },
             lift: () => noise(0.45, 500, 5200, 0.05, "bandpass"),
-            meteor: () => { noise(1.3, 7000, 900, 0.045, "bandpass"); tones([2637, 3520], 0.5, "sine", 0.012); },
+            meteor: () => { noise(0.7, 7000, 900, 0.05, "bandpass"); tones([2637, 3520], 0.4, "sine", 0.012); },
             impact: () => { swell(110, 32, 1.1, 0.24); noise(0.9, 3200, 160, 0.09); },
             dive: () => tones([262, 392, 523, 784], 0.32, "square", 0.018),
             decode: () => tones([1760, 2217], 0.07, "square", 0.012),
@@ -676,7 +676,7 @@
             audio.coin();
             if (statusElement) statusElement.textContent = "無料お試しコイン10枚を、夜の海へ投げ入れました…";
             landings.forEach((landing) => schedule(() => {
-                sea?.drop(landing.x, landing.y, 1);
+                sea?.drop(landing.x, landing.y, 1.3);
                 audio.plop(0.8 + Math.random() * 0.5);
             }, landing.at, thisRun));
             // 着水 → 波紋で星が揺らぐ →（UR確定なら海の底から光）→ 夜空へ見上げる → 流れ星が海へ落ちる → デジタル空間
@@ -688,8 +688,8 @@
                     audio.blessing();
                 } }] : []),
                 { phase: "sky", wait: blessed ? 1600 : 1000, text: "見上げると、満天の星空…", run: () => { sea?.lift(420); audio.lift(); } },
-                { phase: "meteor", wait: 820, text: "流れ星が、海へ落ちていきます…", run: () => { sea?.meteor(1350); audio.meteor(); } },
-                { phase: "plunge", wait: 1350, text: "星の記憶のデジタル空間へ接続…", run: () => { audio.impact(); audio.dive(); } }
+                { phase: "meteor", wait: 760, text: "流れ星が、海へ落ちていきます…", run: () => { sea?.meteor(650); audio.meteor(); schedule(() => audio.impact(), 650, thisRun); } },
+                { phase: "plunge", wait: 1000, text: "星の記憶のデジタル空間へ接続…", run: () => { audio.dive(); } }
             ];
             let elapsed = 0;
             steps.forEach((step) => {
