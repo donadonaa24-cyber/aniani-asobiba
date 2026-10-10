@@ -10,6 +10,37 @@
     // 新しい記事は先頭に追加してください。id は記事コメントの保存キーなので、公開後は変えないでください。
     const officialArticles = [
         {
+            id: "2026-10-11-battle-story-v060",
+            title: "Battle à la carte：ストーリー特別編と新キャラクター4人／Unity版 v0.6.0 公開",
+            category: "アップデート",
+            body: [
+                "Web版とUnity版（3D版）の Battle à la carte を更新しました。",
+                "・ストーリーに特別編（夏休み編・ハロウィン編・弓道編・幼馴染編 前編／後編）を追加",
+                "・特別編をクリアすると、新しいキャラクター（剛・栞那・結月・龍太）が使えます",
+                "・着せ替え、アチーブメント（称号）、キャラクターごとのテーマ曲を追加",
+                "・新しい4人は通信対戦でも使えます（古いUnity版 v0.5.0以前は、新しい4人がいる部屋に入れません）",
+                "・Unity版 v0.6.0：ストーリーが全15話に。Windows / Android（試験版）を Unity版ホームページからダウンロードできます",
+                "本作のキャラクターは、フェニチルさんの創作作品『天涯比隣』のキャラクターデザインと名前をお借りした二次創作です。性格・関係性・ストーリー・設定はすべて本作独自のもので、原作とは関係ありません。"
+            ].join("\n"),
+            createdAt: "2026-10-11T00:30:00+09:00"
+        },
+        {
+            id: "2026-10-03-oshikoma-android",
+            title: "推し駒battle Android版（APK）を追加",
+            category: "お知らせ",
+            body: [
+                "推し駒battleの試験版2（v1.0-trial.2）に、Android版を追加しました。Android 8.0以上の64bit端末で、横画面で遊べます。",
+                "Android端末のブラウザでAPKをダウンロードし、「提供元不明のアプリ」を聞かれたら、そのブラウザ（またはファイルアプリ）を許可してインストールしてください。",
+                "Google Play外の試験配布で、実機での動作は確認中です。感想・不具合はGitHubのIssuesへお寄せください。"
+            ].join("\n\n"),
+            links: [
+                { href: "https://donadonaa24-cyber.github.io/oshikoma/", label: "ホームページ・遊び方へ" },
+                { href: "https://github.com/donadonaa24-cyber/oshikoma/releases/download/v1.0-trial.2/OshigomaBattle-trial2-android.apk", label: "Android版をダウンロード（APK・約87MB）" },
+                { href: "https://github.com/donadonaa24-cyber/oshikoma/releases/download/v1.0-trial.2/OshigomaBattle-trial2-win64.zip", label: "Windows版をダウンロード（zip・約103MB）" }
+            ],
+            createdAt: "2026-10-03T02:35:00+09:00"
+        },
+        {
             id: "2026-10-06-aniani-bunko",
             title: "あにあに文庫オープン：小説3作品・全6冊を公開",
             category: "新作",
