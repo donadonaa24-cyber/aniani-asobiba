@@ -103,10 +103,10 @@
     }
 
     function cardElement(card, options = {}) {
-        const { compact = false, featured = false, unlocked = true, count = 0, index = 0, onZoom } = options;
-        const item = document.createElement(compact ? "button" : "article");
-        if (compact) item.type = "button";
-        item.className = `trial-card rarity-${card.rarity.toLowerCase()}${compact ? " is-compact" : ""}${featured ? " is-featured" : ""}${card.portrait ? " is-portrait" : ""}${unlocked ? "" : " is-locked"}`;
+        const { compact = false, featured = false, result = false, unlocked = true, count = 0, index = 0, onZoom } = options;
+        const item = document.createElement(compact || result ? "button" : "article");
+        if (compact || result) item.type = "button";
+        item.className = `trial-card rarity-${card.rarity.toLowerCase()}${compact ? " is-compact" : ""}${result ? " is-result" : ""}${featured ? " is-featured" : ""}${card.portrait ? " is-portrait" : ""}${unlocked ? "" : " is-locked"}`;
         item.style.setProperty("--reveal-index", index);
         item.dataset.cardId = card.id;
         item.setAttribute("aria-label", unlocked ? `No.${String(card.no).padStart(3, "0")} ${card.title} ${card.rarity}` : `No.${String(card.no).padStart(3, "0")} 未入手`);
@@ -116,7 +116,9 @@
         meta.className = "trial-card-meta";
         meta.innerHTML = `<span class="trial-card-number">No.${String(card.no).padStart(3, "0")}</span><strong>${unlocked ? card.title : "UNKNOWN"}</strong><small>${unlocked ? `${card.work} / ${card.role || card.category}` : "未入手"}</small><b>${card.rarity}</b>${count > 1 ? `<em>×${count}</em>` : ""}`;
         item.append(meta);
-        if (!compact && unlocked && onZoom) {
+        if (result && unlocked && onZoom) {
+            item.addEventListener("click", () => onZoom(card));
+        } else if (!compact && unlocked && onZoom) {
             const button = document.createElement("button");
             button.type = "button";
             button.className = "trial-art-open";
@@ -189,6 +191,7 @@
         const quoteLabel = rootElement.querySelector("#trial-ur-quote-label");
         const resultsWrap = rootElement.querySelector("#trial-results-wrap");
         const resultsElement = rootElement.querySelector("#trial-gacha-results");
+        const resultsStatus = rootElement.querySelector("#trial-results-status");
         const statusElement = rootElement.querySelector("#trial-gacha-status");
         const bookElement = rootElement.querySelector("#trial-gacha-book");
         const countElement = rootElement.querySelector("#trial-book-count");
@@ -254,6 +257,7 @@
             if (!stage) return;
             stage.dataset.phase = phase;
             stage.dataset.rarity = rarity.toLowerCase();
+            rootElement.classList.toggle("is-results-view", phase === "results" && rootElement.dataset.trialView !== "book");
         }
 
         function setTabsDisabled(disabled) {
@@ -309,6 +313,8 @@
 
         function setView(view) {
             if (drawing) return;
+            rootElement.dataset.trialView = view;
+            rootElement.classList.toggle("is-results-view", view === "summon" && stage?.dataset.phase === "results");
             viewButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.trialView === view)));
             panes.forEach((pane) => { pane.hidden = pane.dataset.trialPane !== view; });
             if (view === "book") renderBook();
@@ -352,15 +358,18 @@
             if (skipButton) skipButton.hidden = true;
             if (drawButton) { drawButton.hidden = true; drawButton.disabled = false; }
             if (resultsElement) {
-                resultsElement.replaceChildren(...activeResults.map((card, index) => cardElement(card, { index, onZoom: showArtwork })));
+                resultsElement.replaceChildren(...activeResults.map((card, index) => cardElement(card, { result: true, index, onZoom: showArtwork })));
                 resultsElement.classList.remove("is-revealing");
                 void resultsElement.offsetWidth;
                 resultsElement.classList.add("is-revealing");
             }
             if (resultsWrap) resultsWrap.hidden = false;
-            if (statusElement) statusElement.textContent = saved
+            const message = saved
                 ? "10枚の星を発見しました。図鑑に保存しました。"
                 : "10枚の星を発見しました。ブラウザの保存機能が無効なため、図鑑には保存できませんでした。";
+            if (statusElement) statusElement.textContent = message;
+            if (resultsStatus) resultsStatus.textContent = `${message} カードを押すと拡大できます。`;
+            rootElement.querySelector(".trial-gacha-body")?.scrollTo(0, 0);
             renderBook();
         }
 
