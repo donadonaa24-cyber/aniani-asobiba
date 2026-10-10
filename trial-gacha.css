@@ -274,6 +274,7 @@
 .trial-art-image .trial-card-art img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .trial-art-image .trial-card-art.is-sprite { height: auto; aspect-ratio: 1.15 / 1; }
 .trial-art-dialog p { margin: 12px 0; font-size: 13px; line-height: 1.7; }
+.trial-gacha-head .trial-illustration-credit { display: block; margin-top: 8px; font-size: 11px; line-height: 1.6; }
 .trial-art-dialog button:focus-visible, .trial-art-open:focus-visible { outline: 2px solid #9be8ff; outline-offset: 3px; }
 
 @keyframes trial-space-drift { to { rotate: 360deg; scale: 1.08; } }
