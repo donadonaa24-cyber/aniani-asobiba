@@ -16,9 +16,19 @@ assert(!html.includes('gacha-core-app'), 'gacha launcher must not remain in the 
 assert(!html.includes('orbit-core'), 'galaxy center decoration must remain removed');
 assert(html.includes('id="trial-reveal-next"') && html.includes('id="trial-reveal-skip"'), 'sequential reveal controls must exist');
 
-for (const phase of ['coin', 'vortex', 'whiteout', 'portal', 'omen', 'quote', 'card', 'results']) {
+for (const phase of ['coin', 'portal', 'omen', 'quote', 'card', 'results']) {
     assert(source.includes(`setStagePhase("${phase}"`), `gacha phase ${phase} must be implemented`);
 }
+// 開始演出: 水面への投げ入れ → 波紋 → 星空の反射 → (UR確定の星) → 流れ星 → デジタル空間
+for (const phase of ['ripple', 'reflection', 'blessing', 'meteor', 'dive']) {
+    assert(source.includes(`phase: "${phase}"`), `opening phase ${phase} must be implemented`);
+    assert(css.includes(`[data-phase="${phase}"]`), `opening phase ${phase} must be styled`);
+}
+assert(css.includes('[data-blessed="true"]'), 'UR blessing stars must be styled');
+assert(css.includes('preserve-3d') && source.includes('trial-coin-edge'), 'coin must be a layered 3D coin');
+for (const layer of ['trial-card-frame', 'trial-card-holo', 'trial-card-glare']) assert(css.includes(`.${layer}`) && source.includes(layer), `card layer ${layer} must exist`);
+assert.equal(gacha.hasBlessing([{ rarity: 'C' }, { rarity: 'SSR' }]), false, 'no blessing without UR');
+assert.equal(gacha.hasBlessing([{ rarity: 'C' }, { rarity: 'UR' }]), true, 'blessing when any UR is drawn');
 assert(css.includes('env(safe-area-inset-bottom'), 'mobile layout must account for the bottom safe area');
 assert(css.includes('[data-phase="omen"]'), 'UR-only omen styling must exist');
 assert(css.includes('@media (prefers-reduced-motion: reduce)'), 'reduced-motion mode must be supported');
@@ -42,7 +52,7 @@ function previousVehicle(card) {
         sprite: { columns: 5, rows: 1, column: card.no - 41, row: 0 },
         ...(quote ? { quote } : {}) };
 }
-assert.equal(catalog.cards.length, 135, 'catalog should include 4 additional characters and 7 costume cards');
+assert.equal(catalog.cards.length, 159, 'catalog should include 135 published cards and 24 Oshikoma characters');
 assert.equal(createHash('sha256').update(JSON.stringify(catalog.cards.slice(0, 81).map(previousVehicle).map(previousBattleDialogue))).digest('hex'),
     '8684b50adfa797b5064744091f073b03c255dd22374f2809bd468acf12a38002',
     'the original 81 cards must retain metadata apart from requested vehicle artwork and Battle UR dialogue');
@@ -62,7 +72,16 @@ const published124 = catalog.cards.slice(0, 124).map(previousVehicle).map(previo
 assert.equal(createHash('sha256').update(JSON.stringify(published124)).digest('hex'),
     'ffd62bc9083f0cf4c8c11b97c9a2bb6d83ac59e695956f56ded5eb020ed3780c',
     'all 124 published cards must retain IDs, metadata and inventory compatibility');
-assert.equal(new Set(catalog.cards.map((card) => card.id)).size, 135, 'card IDs must be unique');
+assert.equal(new Set(catalog.cards.map((card) => card.id)).size, 159, 'card IDs must be unique');
+// 推し駒battleの24人は公開済み135枚の末尾に追加し、既存カードは1件も変えない。
+assert.equal(createHash('sha256').update(JSON.stringify(catalog.cards.slice(0, 135))).digest('hex'),
+    'e9d40bf1c9ec695d0defe00fe99d2b942352dc4dac816ce9c07230a7bf008821', 'all 135 published cards must stay unchanged');
+const oshikoma = catalog.cards.slice(135);
+assert(oshikoma.every((card, index) => card.work === '推し駒battle' && card.id === `OSK-${136 + index}` && card.generatedWithAI && fs.existsSync(card.image)));
+assert.deepEqual(['C', 'SR', 'SSR', 'UR'].map((rarity) => oshikoma.filter((card) => card.rarity === rarity).length), [0, 16, 3, 5]);
+assert.deepEqual(oshikoma.filter((card) => card.rarity === 'UR').map((card) => card.title), ['蓮', '結衣', '美桜', '歩太', '黒獅子王']);
+assert(oshikoma.filter((card) => card.rarity === 'UR').every((card) => card.quoteLabel === 'キャラクター紹介' && card.description.startsWith(card.quote)), 'Oshikoma UR text is the official introduction, not invented dialogue');
+assert(html.includes('data-trial-filter="推し駒battle"'), 'collection filter for Oshikoma must exist');
 assert.equal(catalog.storageKey, 'aniani.trial-gacha.v1.inventory');
 assert.deepEqual(catalog.rates, { C: 60, SR: 25, SSR: 10, UR: 5 });
 assert(catalog.cards.every((card) => fs.existsSync(card.image)), 'every card image must be published');

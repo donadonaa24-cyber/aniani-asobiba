@@ -1,5 +1,5 @@
 /* The orbital home is isolated from the arcade and existing dialogs. */
-body { background: #02050d url('images/galaxy-library.png') center / cover fixed no-repeat; }
+body { background: #02050d url('images/galaxy-library-20261008.webp') center / cover fixed no-repeat; }
 body::before { content: ''; position: fixed; inset: 0; background: linear-gradient(180deg, #02061055, transparent 45%, #020610dd); pointer-events: none; }
 .bg-grid, .bg-glow { display: none; }
 .site-header { background: transparent; border: 0; backdrop-filter: none; }

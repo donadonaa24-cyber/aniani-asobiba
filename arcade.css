@@ -82,9 +82,9 @@
 #mini-game #tetris-rotate:active { transform: scale(.96); }
 #mini-game #tetris-next small { margin-bottom: 2px; font-size: 11px; }
 #mini-game .next-shape { grid-template-columns: repeat(4,clamp(4px,1.5dvh,12px)); grid-template-rows: repeat(4,clamp(4px,1.5dvh,12px)); }
-#mini-game[data-game='tetris'] .mini-modal-panel { background: linear-gradient(#03091780,#020817b0), url('images/galaxy-library.png') center / cover; }
+#mini-game[data-game='tetris'] .mini-modal-panel { background: linear-gradient(#03091780,#020817b0), url('images/galaxy-library-20261008.webp') center / cover; }
 #mini-game #mini-panel-tetris { background: #030b2080; border-color: #9fdcff50; }
-#mini-game #tetris-canvas { background: linear-gradient(#07112b50,#02071780), url('images/galaxy-library.png') center / cover; box-shadow: 0 0 24px #61b7ff40; }
+#mini-game #tetris-canvas { background: linear-gradient(#07112b50,#02071780), url('images/galaxy-library-20261008.webp') center / cover; box-shadow: 0 0 24px #61b7ff40; }
 #mini-game #drop-board { grid-template-columns: repeat(3,minmax(0,1fr)); grid-template-rows: repeat(3,minmax(0,1fr)); gap: 6px; padding: 6px; }
 #mini-game .slide-tile { min-width: 0; min-height: 0; padding: 0; border: 1px solid #92dcff; border-radius: 12px; background: linear-gradient(145deg,#245878,#123045); color: #f5f1d3; font: 800 clamp(20px,5vmin,44px) 'Shippori Mincho',serif; touch-action: manipulation; }
 #mini-game .slide-tile:disabled { opacity: .8; cursor: default; }
