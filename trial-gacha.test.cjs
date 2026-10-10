@@ -19,10 +19,17 @@ assert(html.includes('id="trial-reveal-next"') && html.includes('id="trial-revea
 for (const phase of ['coin', 'portal', 'omen', 'quote', 'card', 'results']) {
     assert(source.includes(`setStagePhase("${phase}"`), `gacha phase ${phase} must be implemented`);
 }
-// 開始演出: 水面への投げ入れ → 波紋 → 星空の反射 → (UR確定の星) → 流れ星 → デジタル空間
-for (const phase of ['ripple', 'reflection', 'blessing', 'meteor', 'dive']) {
+// 開始演出: 10枚を夜の海へ投げ入れ → 波紋で星が揺らぐ → (UR確定なら海の底から光) → 夜空 → 流れ星が海へ落ちる → デジタル空間
+for (const phase of ['ripple', 'blessing', 'sky', 'meteor', 'plunge']) {
     assert(source.includes(`phase: "${phase}"`), `opening phase ${phase} must be implemented`);
-    assert(css.includes(`[data-phase="${phase}"]`), `opening phase ${phase} must be styled`);
+}
+assert(css.includes('[data-phase="coin"] .trial-coin-throw') && css.includes('[data-phase="plunge"]'), 'coin throw and plunge must be styled');
+assert(html.includes('class="trial-sea-canvas"') && html.includes('class="trial-coins"'), 'sea canvas and thrown coins must exist');
+assert(/COIN_TARGETS = \[(\[[^\]]+\],? ?){10}\]/.test(source), 'ten coins are thrown for a ten-pull');
+const sea = require('./trial-gacha-sea.js');
+assert.equal(typeof sea.create, 'function', 'sea renderer must expose create()');
+for (const method of ['drop', 'setBlessing', 'lift', 'meteor', 'reset', 'setActive', 'resize']) {
+    assert(fs.readFileSync('trial-gacha-sea.js', 'utf8').includes(`${method}(`), `sea renderer must implement ${method}`);
 }
 assert(css.includes('[data-blessed="true"]'), 'UR blessing stars must be styled');
 assert(css.includes('preserve-3d') && source.includes('trial-coin-edge'), 'coin must be a layered 3D coin');
