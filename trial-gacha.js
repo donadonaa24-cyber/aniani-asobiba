@@ -205,29 +205,48 @@
             source.stop(start + duration + 0.02);
         }
 
-        function plop() {
+        function plop(pitch = 1) {
             const audio = ensureContext();
             if (!audio) return;
             const start = audio.currentTime;
             const oscillator = audio.createOscillator();
             const gain = audio.createGain();
             oscillator.type = "sine";
-            oscillator.frequency.setValueAtTime(420, start);
-            oscillator.frequency.exponentialRampToValueAtTime(90, start + 0.22);
+            oscillator.frequency.setValueAtTime(420 * pitch, start);
+            oscillator.frequency.exponentialRampToValueAtTime(90 * pitch, start + 0.22);
             gain.gain.setValueAtTime(0.0001, start);
-            gain.gain.exponentialRampToValueAtTime(0.09, start + 0.015);
+            gain.gain.exponentialRampToValueAtTime(0.05, start + 0.015);
             gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.3);
             oscillator.connect(gain).connect(audio.destination);
             oscillator.start(start);
             oscillator.stop(start + 0.32);
         }
 
+        // 低い音の立ち上がり（海の底から光が湧く、流れ星の着水）。
+        function swell(from, to, duration, volume, wave = "sine") {
+            const audio = ensureContext();
+            if (!audio) return;
+            const start = audio.currentTime;
+            const oscillator = audio.createOscillator();
+            const gain = audio.createGain();
+            oscillator.type = wave;
+            oscillator.frequency.setValueAtTime(from, start);
+            oscillator.frequency.exponentialRampToValueAtTime(to, start + duration);
+            gain.gain.setValueAtTime(0.0001, start);
+            gain.gain.exponentialRampToValueAtTime(volume, start + duration * 0.35);
+            gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+            oscillator.connect(gain).connect(audio.destination);
+            oscillator.start(start);
+            oscillator.stop(start + duration + 0.05);
+        }
+
         return {
-            coin: () => tones([1568, 2093, 2637], 0.22, "triangle", 0.035),
-            splash: () => { plop(); noise(0.55, 2600, 380, 0.05); },
-            shimmer: () => tones([1047, 1319, 1568, 2093], 0.5, "sine", 0.022),
-            blessing: () => tones([1568, 2349, 1976, 2637, 3136, 2637, 3520], 0.6, "sine", 0.026),
-            meteor: () => noise(0.9, 1400, 7000, 0.035, "bandpass"),
+            coin: () => tones([1568, 2093, 2637, 3136], 0.24, "triangle", 0.03),
+            plop: (pitch = 1) => { plop(pitch); noise(0.32, 2400 * pitch, 420, 0.02); },
+            blessing: () => { swell(46, 98, 2.2, 0.16); swell(92, 196, 2.2, 0.05, "triangle"); noise(1.8, 300, 2600, 0.035, "bandpass"); tones([1319, 1976, 2637], 1.1, "sine", 0.014); },
+            lift: () => noise(0.45, 500, 5200, 0.05, "bandpass"),
+            meteor: () => { noise(1.3, 7000, 900, 0.045, "bandpass"); tones([2637, 3520], 0.5, "sine", 0.012); },
+            impact: () => { swell(110, 32, 1.1, 0.24); noise(0.9, 3200, 160, 0.09); },
             dive: () => tones([262, 392, 523, 784], 0.32, "square", 0.018),
             decode: () => tones([1760, 2217], 0.07, "square", 0.012),
             reveal: (rarity) => tones(rarity === "SSR" ? [523, 659, 784] : rarity === "SR" ? [440, 554] : [392], 0.2, "sine", 0.035),
@@ -235,10 +254,29 @@
         };
     }
 
-    const COIN_FRONT = `<svg viewBox="0 0 120 120"><defs><radialGradient id="tg-coin-face" cx="36%" cy="30%" r="78%"><stop offset="0" stop-color="#fffbe0"/><stop offset=".3" stop-color="#ffe187"/><stop offset=".68" stop-color="#e3a52a"/><stop offset="1" stop-color="#8f5a07"/></radialGradient><linearGradient id="tg-coin-rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6c6"/><stop offset=".35" stop-color="#c88a17"/><stop offset=".6" stop-color="#ffe9a0"/><stop offset="1" stop-color="#7a4a02"/></linearGradient><linearGradient id="tg-coin-star" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffef2"/><stop offset=".55" stop-color="#ffd35c"/><stop offset="1" stop-color="#b87508"/></linearGradient><path id="tg-coin-ring" d="M60 60m-41 0a41 41 0 1 1 82 0a41 41 0 1 1-82 0"/></defs><circle cx="60" cy="60" r="59" fill="url(#tg-coin-rim)"/><circle cx="60" cy="60" r="51" fill="url(#tg-coin-face)" stroke="#7a4a02" stroke-opacity=".55" stroke-width="1.5"/><circle cx="60" cy="60" r="46.5" fill="none" stroke="#fff4c2" stroke-opacity=".75" stroke-width=".9" stroke-dasharray="1.2 2.4"/><text font-size="8" font-weight="700" fill="#734502" fill-opacity=".85" font-family="Georgia, serif" textLength="246" lengthAdjust="spacingAndGlyphs"><textPath href="#tg-coin-ring">ANIANI ✦ PLAYGROUND ✦ STAR COIN ✦</textPath></text><circle cx="60" cy="60" r="32" fill="none" stroke="#8f5a07" stroke-opacity=".5"/><path d="M61.5 37.5C63.5 53.5 69.5 59.5 85.5 61.5C69.5 63.5 63.5 69.5 61.5 85.5C59.5 69.5 53.5 63.5 37.5 61.5C53.5 59.5 59.5 53.5 61.5 37.5Z" fill="#6b3f00" fill-opacity=".55"/><path d="M60 36C62 52 68 58 84 60C68 62 62 68 60 84C58 68 52 62 36 60C52 58 58 52 60 36Z" fill="url(#tg-coin-star)"/><path d="M60 41C61 53 64 56 70 58" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="1.2" stroke-linecap="round"/></svg>`;
-    const COIN_BACK = `<svg viewBox="0 0 120 120"><defs><radialGradient id="tg-coin-back" cx="62%" cy="30%" r="80%"><stop offset="0" stop-color="#fff7d2"/><stop offset=".32" stop-color="#ffd877"/><stop offset=".7" stop-color="#d79621"/><stop offset="1" stop-color="#875204"/></radialGradient><path id="tg-coin-ring-b" d="M60 60m-41 0a41 41 0 1 1 82 0a41 41 0 1 1-82 0"/></defs><circle cx="60" cy="60" r="59" fill="#c88a17"/><circle cx="60" cy="60" r="51" fill="url(#tg-coin-back)" stroke="#7a4a02" stroke-opacity=".55" stroke-width="1.5"/><circle cx="60" cy="60" r="46.5" fill="none" stroke="#fff4c2" stroke-opacity=".75" stroke-width=".9" stroke-dasharray="1.2 2.4"/><text font-size="8" font-weight="700" fill="#734502" fill-opacity=".85" font-family="Georgia, serif" textLength="246" lengthAdjust="spacingAndGlyphs"><textPath href="#tg-coin-ring-b">FREE TRIAL ✦ MEMORY OF STARS ✦</textPath></text><text x="61.5" y="75.5" text-anchor="middle" font-size="44" font-weight="700" fill="#6b3f00" fill-opacity=".55" font-family="Georgia, serif">A</text><text x="60" y="74" text-anchor="middle" font-size="44" font-weight="700" fill="#fff1b8" font-family="Georgia, serif">A</text></svg>`;
+    const COIN_FRONT = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs><radialGradient id="tg-coin-face" cx="36%" cy="30%" r="78%"><stop offset="0" stop-color="#fffbe0"/><stop offset=".3" stop-color="#ffe187"/><stop offset=".68" stop-color="#e3a52a"/><stop offset="1" stop-color="#8f5a07"/></radialGradient><linearGradient id="tg-coin-rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6c6"/><stop offset=".35" stop-color="#c88a17"/><stop offset=".6" stop-color="#ffe9a0"/><stop offset="1" stop-color="#7a4a02"/></linearGradient><linearGradient id="tg-coin-star" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffef2"/><stop offset=".55" stop-color="#ffd35c"/><stop offset="1" stop-color="#b87508"/></linearGradient><path id="tg-coin-ring" d="M60 60m-41 0a41 41 0 1 1 82 0a41 41 0 1 1-82 0"/></defs><circle cx="60" cy="60" r="59" fill="url(#tg-coin-rim)"/><circle cx="60" cy="60" r="51" fill="url(#tg-coin-face)" stroke="#7a4a02" stroke-opacity=".55" stroke-width="1.5"/><circle cx="60" cy="60" r="46.5" fill="none" stroke="#fff4c2" stroke-opacity=".75" stroke-width=".9" stroke-dasharray="1.2 2.4"/><text font-size="8" font-weight="700" fill="#734502" fill-opacity=".85" font-family="Georgia, serif" textLength="246" lengthAdjust="spacingAndGlyphs"><textPath href="#tg-coin-ring">ANIANI ✦ PLAYGROUND ✦ STAR COIN ✦</textPath></text><circle cx="60" cy="60" r="32" fill="none" stroke="#8f5a07" stroke-opacity=".5"/><path d="M61.5 37.5C63.5 53.5 69.5 59.5 85.5 61.5C69.5 63.5 63.5 69.5 61.5 85.5C59.5 69.5 53.5 63.5 37.5 61.5C53.5 59.5 59.5 53.5 61.5 37.5Z" fill="#6b3f00" fill-opacity=".55"/><path d="M60 36C62 52 68 58 84 60C68 62 62 68 60 84C58 68 52 62 36 60C52 58 58 52 60 36Z" fill="url(#tg-coin-star)"/><path d="M60 41C61 53 64 56 70 58" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="1.2" stroke-linecap="round"/></svg>`;
+    const COIN_BACK = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs><radialGradient id="tg-coin-back" cx="62%" cy="30%" r="80%"><stop offset="0" stop-color="#fff7d2"/><stop offset=".32" stop-color="#ffd877"/><stop offset=".7" stop-color="#d79621"/><stop offset="1" stop-color="#875204"/></radialGradient><path id="tg-coin-ring-b" d="M60 60m-41 0a41 41 0 1 1 82 0a41 41 0 1 1-82 0"/></defs><circle cx="60" cy="60" r="59" fill="#c88a17"/><circle cx="60" cy="60" r="51" fill="url(#tg-coin-back)" stroke="#7a4a02" stroke-opacity=".55" stroke-width="1.5"/><circle cx="60" cy="60" r="46.5" fill="none" stroke="#fff4c2" stroke-opacity=".75" stroke-width=".9" stroke-dasharray="1.2 2.4"/><text font-size="8" font-weight="700" fill="#734502" fill-opacity=".85" font-family="Georgia, serif" textLength="246" lengthAdjust="spacingAndGlyphs"><textPath href="#tg-coin-ring-b">FREE TRIAL ✦ MEMORY OF STARS ✦</textPath></text><text x="61.5" y="75.5" text-anchor="middle" font-size="44" font-weight="700" fill="#6b3f00" fill-opacity=".55" font-family="Georgia, serif">A</text><text x="60" y="74" text-anchor="middle" font-size="44" font-weight="700" fill="#fff1b8" font-family="Georgia, serif">A</text></svg>`;
 
-    // 演出の繰り返し部品（コインの厚み・波紋・しぶき・祝福の星・データの雨）を組み立てる。
+    // 投げ入れる10枚の着水点（ステージに対する割合）。重なりすぎないよう散らす。
+    const COIN_TARGETS = [[0.3, 0.36], [0.52, 0.28], [0.71, 0.4], [0.41, 0.53], [0.62, 0.58], [0.22, 0.6], [0.8, 0.63], [0.48, 0.74], [0.32, 0.82], [0.67, 0.8]];
+
+    // コイン1枚：縁の層を重ねて厚みを出したCSS 3D。表裏の刻印は画像として共有する。
+    function buildCoin(coin, layers) {
+        if (!coin || coin.childElementCount) return;
+        for (let index = 0; index < layers; index += 1) {
+            const edge = document.createElement("span");
+            edge.className = "trial-coin-edge";
+            edge.style.setProperty("--z", (index / (layers - 1) - 0.5).toFixed(3));
+            coin.append(edge);
+        }
+        for (const side of ["front", "back"]) {
+            const face = document.createElement("span");
+            face.className = `trial-coin-face is-${side}`;
+            coin.append(face);
+        }
+    }
+
+    // 演出の繰り返し部品（待機中のコイン、投げ入れる10枚、データの雨）を組み立てる。
     function buildScene(stage) {
         const make = (parent, count, setup) => {
             const host = stage.querySelector(parent);
@@ -249,49 +287,26 @@
                 host.append(element);
             }
         };
-        const coin = stage.querySelector(".trial-coin");
-        if (coin && !coin.childElementCount) {
-            const layers = 12;
-            for (let index = 0; index < layers; index += 1) {
-                const edge = document.createElement("span");
-                edge.className = "trial-coin-edge";
-                edge.style.setProperty("--z", (index / (layers - 1) - 0.5).toFixed(3));
-                coin.append(edge);
-            }
-            for (const [side, markup] of [["front", COIN_FRONT], ["back", COIN_BACK]]) {
-                const face = document.createElement("span");
-                face.className = `trial-coin-face is-${side}`;
-                face.innerHTML = markup;
-                coin.append(face);
-            }
+        stage.style.setProperty("--coin-front", `url("data:image/svg+xml,${encodeURIComponent(COIN_FRONT)}")`);
+        stage.style.setProperty("--coin-back", `url("data:image/svg+xml,${encodeURIComponent(COIN_BACK)}")`);
+        buildCoin(stage.querySelector(".trial-coin-stage .trial-coin"), 12);
+        const thrown = stage.querySelector(".trial-coins");
+        if (thrown && !thrown.childElementCount) {
+            COIN_TARGETS.forEach(() => {
+                const wrap = document.createElement("span");
+                wrap.className = "trial-coin-throw";
+                const coin = document.createElement("span");
+                coin.className = "trial-coin";
+                buildCoin(coin, 8);
+                wrap.append(coin);
+                thrown.append(wrap);
+            });
         }
-        // 規則的に見えない星空。乱数は固定し、毎回同じ星座にする。
-        let seed = 20261012;
-        const random = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-        const colors = ["#ffffff", "#ffffff", "#ffffff", "#bfeeff", "#ffe9a6", "#ffd1f2"];
-        const dots = Array.from({ length: 170 }, () => {
-            const radius = random() < 0.12 ? 1.6 + random() * 0.9 : 0.5 + random() * 0.9;
-            return `<circle cx="${(random() * 1000).toFixed(1)}" cy="${(random() * 500).toFixed(1)}" r="${radius.toFixed(2)}" fill="${colors[Math.floor(random() * colors.length)]}" fill-opacity="${(0.45 + random() * 0.55).toFixed(2)}"/>`;
-        }).join("");
-        const sky = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500">${dots}</svg>`;
-        stage.style.setProperty("--starfield", `url("data:image/svg+xml,${encodeURIComponent(sky)}")`);
-        make(".trial-ripples", 4, (ripple, index) => ripple.style.setProperty("--i", index));
-        make(".trial-splash", 12, (drop, index) => {
-            drop.style.setProperty("--a", `${-160 + index * (140 / 11)}deg`);
-            drop.style.setProperty("--d", `${34 + (index * 37) % 42}px`);
-        });
-        const stars = [[8, 12], [17, 30], [26, 8], [34, 22], [43, 35], [52, 14], [61, 28], [70, 9], [79, 24], [88, 15], [94, 34], [12, 40], [57, 40], [83, 38], [22, 70], [46, 82], [68, 64], [87, 88]];
-        make(".trial-blessing", stars.length, (star, index) => {
-            star.style.left = `${stars[index][0]}%`;
-            star.style.top = `${stars[index][1]}%`;
-            star.style.setProperty("--d", `${(index * 0.13) % 1.1}s`);
-            star.style.setProperty("--s", (0.55 + ((index * 7) % 5) * 0.16).toFixed(2));
-        });
         make(".trial-digital-rain", 16, (column, index) => {
             column.textContent = Array.from({ length: 22 }, (_, offset) => "01ANI✦7F3C"[(index * 7 + offset * 3) % 10]).join("");
             column.style.left = `${3 + index * 6.1}%`;
-            column.style.setProperty("--d", `${(index * 0.37) % 2.4}s`);
-            column.style.setProperty("--t", `${2.6 + (index % 4) * 0.7}s`);
+            column.style.setProperty("--d", `${-((index * 0.83) % 3.4).toFixed(2)}s`);
+            column.style.setProperty("--t", `${3.2 + (index % 4) * 0.8}s`);
         });
         make(".trial-digital-rings", 3, (ring, index) => ring.style.setProperty("--i", index));
     }
@@ -361,6 +376,19 @@
         const reduceMotion = runtime.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
         const audio = createAudioDirector();
         if (stage) buildScene(stage);
+        const coinThrows = stage ? Array.from(stage.querySelectorAll(".trial-coin-throw")) : [];
+        const seaCanvas = stage?.querySelector(".trial-sea-canvas");
+        const sea = seaCanvas && runtime.AnianiTrialSea ? runtime.AnianiTrialSea.create(seaCanvas, { reducedMotion: reduceMotion }) : null;
+        const WATER_PHASES = ["idle", "coin", "ripple", "blessing", "sky", "meteor", "plunge"];
+        // 海の描画は、ガチャ画面が開いていて水面が見えている間だけ動かす。
+        function syncSea() {
+            if (!sea || !stage) return;
+            const open = rootElement.getAttribute("aria-hidden") === "false";
+            const visible = open && rootElement.dataset.trialView !== "book" && WATER_PHASES.includes(stage.dataset.phase || "idle");
+            sea.setActive(visible && !document.hidden);
+        }
+        if (seaCanvas && runtime.ResizeObserver) new runtime.ResizeObserver(() => sea?.resize()).observe(seaCanvas);
+        document.addEventListener("visibilitychange", syncSea);
 
         // キラカードは指・マウスの位置に合わせて傾き、光の帯が動く。
         const TILT_TARGET = ".trial-card:not(.is-locked), .trial-art-image";
@@ -432,6 +460,7 @@
             stage.dataset.phase = phase;
             stage.dataset.rarity = rarity.toLowerCase();
             stage.dataset.space = ["portal", "omen", "quote", "card"].includes(phase) ? "digital" : "water";
+            syncSea();
             rootElement.classList.toggle("is-results-view", phase === "results" && rootElement.dataset.trialView !== "book");
         }
 
@@ -493,6 +522,7 @@
             viewButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.trialView === view)));
             panes.forEach((pane) => { pane.hidden = pane.dataset.trialPane !== view; });
             if (view === "book") renderBook();
+            syncSea();
         }
 
         function resetPresentation(message = "ガチャタブから、作品カードを呼び出せます。") {
@@ -502,6 +532,7 @@
             resultsSettled = false;
             currentIndex = -1;
             if (stage) stage.dataset.blessed = "false";
+            sea?.reset();
             setStagePhase("idle");
             if (singleReveal) singleReveal.hidden = true;
             if (currentCard) currentCard.replaceChildren();
@@ -624,29 +655,52 @@
             if (skipButton) skipButton.hidden = false;
             const blessed = hasBlessing(activeResults);
             if (stage) stage.dataset.blessed = "false";
+            sea?.reset();
+            const thisRun = runId;
+            // 10枚のコインを夜の海へ。着水点は毎回少しずらす。
+            const landings = COIN_TARGETS.map(([x, y], index) => {
+                const target = { x: x + (Math.random() - 0.5) * 0.06, y: y + (Math.random() - 0.5) * 0.05 };
+                const delay = index * 55 + Math.random() * 40;
+                const duration = 820 + Math.random() * 180;
+                const coin = coinThrows[index];
+                if (coin) {
+                    coin.style.setProperty("--tx", `${(target.x * 100).toFixed(1)}%`);
+                    coin.style.setProperty("--ty", `${(target.y * 100).toFixed(1)}%`);
+                    coin.style.setProperty("--sx", `${(38 + Math.random() * 24).toFixed(1)}%`);
+                    coin.style.setProperty("--delay", `${delay.toFixed(0)}ms`);
+                    coin.style.setProperty("--dur", `${duration.toFixed(0)}ms`);
+                }
+                return { ...target, at: delay + duration };
+            });
             setStagePhase("coin");
             audio.coin();
-            if (statusElement) statusElement.textContent = "無料お試しコインを、星の水面へ投げ入れました…";
-            const thisRun = runId;
-            // 投げ入れ → 波紋 → 水面に星空 →（UR確定なら星が輝く）→ 流れ星 → デジタル空間へ
+            if (statusElement) statusElement.textContent = "無料お試しコイン10枚を、夜の海へ投げ入れました…";
+            landings.forEach((landing) => schedule(() => {
+                sea?.drop(landing.x, landing.y, 1);
+                audio.plop(0.8 + Math.random() * 0.5);
+            }, landing.at, thisRun));
+            // 着水 → 波紋で星が揺らぐ →（UR確定なら海の底から光）→ 夜空へ見上げる → 流れ星が海へ落ちる → デジタル空間
             const steps = [
-                { phase: "ripple", wait: 1100, sound: audio.splash, text: "波紋が広がり、水面に夜空が映りはじめました…" },
-                { phase: "reflection", wait: 900, sound: audio.shimmer, text: "水面に映る星々が、10個の記憶を選んでいます…" },
-                ...(blessed ? [{ phase: "blessing", wait: 800, sound: audio.blessing, text: "宇宙の小さな星々が輝きました――UR確定！", blessed: true }] : []),
-                { phase: "meteor", wait: blessed ? 1400 : 800, sound: audio.meteor, text: "流れ星が、星の水面を横切りました…" },
-                { phase: "dive", wait: 1000, sound: audio.dive, text: "星の記憶のデジタル空間へ接続…" }
+                { phase: "ripple", wait: 1450, text: "重なる波紋に、水面の星が揺らいでいます…", run: () => sea?.setWobble(1.2) },
+                ...(blessed ? [{ phase: "blessing", wait: 1000, text: "海の底から光が湧き上がる――UR確定！", run: () => {
+                    if (stage) stage.dataset.blessed = "true";
+                    sea?.setBlessing(true);
+                    audio.blessing();
+                } }] : []),
+                { phase: "sky", wait: blessed ? 1600 : 1000, text: "見上げると、満天の星空…", run: () => { sea?.lift(420); audio.lift(); } },
+                { phase: "meteor", wait: 820, text: "流れ星が、海へ落ちていきます…", run: () => { sea?.meteor(1350); audio.meteor(); } },
+                { phase: "plunge", wait: 1350, text: "星の記憶のデジタル空間へ接続…", run: () => { audio.impact(); audio.dive(); } }
             ];
             let elapsed = 0;
             steps.forEach((step) => {
                 elapsed += step.wait;
                 schedule(() => {
-                    if (step.blessed && stage) stage.dataset.blessed = "true";
                     setStagePhase(step.phase);
-                    step.sound();
+                    step.run();
                     if (statusElement) statusElement.textContent = step.text;
                 }, elapsed, thisRun);
             });
-            schedule(() => revealCard(0), elapsed + 720, thisRun);
+            schedule(() => revealCard(0), elapsed + 650, thisRun);
         }
 
         drawButton?.addEventListener("click", beginDraw);
@@ -669,6 +723,7 @@
         }));
 
         new MutationObserver(() => {
+            syncSea();
             if (rootElement.getAttribute("aria-hidden") === "true") {
                 if (artDialog?.open) artDialog.close();
                 if (drawing) resetPresentation("召喚を中断しました。もう一度10連を開始できます。");
