@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="aniani.css?v=20261006a1">
     <link rel="stylesheet" href="galaxy.css?v=20260929a1">
     <link rel="stylesheet" href="arcade.css?v=20260915a1">
-    <link rel="stylesheet" href="trial-gacha.css?v=20260920b1">
+    <link rel="stylesheet" href="trial-gacha.css?v=20261011a1">
 </head>
 <body>
     <div class="bg-glow bg-glow-a"></div>
@@ -620,7 +620,7 @@
                                 <div class="trial-single-reveal" id="trial-single-reveal" hidden>
                                     <p class="trial-reveal-count" id="trial-reveal-count">1 / 10</p>
                                     <div class="trial-ur-quote" id="trial-ur-quote" hidden>
-                                        <span>UR / CHARACTER SIGNAL</span>
+                                        <span id="trial-ur-quote-label">UR / CHARACTER SIGNAL</span>
                                         <blockquote id="trial-ur-quote-text"></blockquote>
                                     </div>
                                     <div class="trial-current-card" id="trial-current-card"></div>
@@ -641,16 +641,25 @@
                         </div>
                     </section>
                     <section data-trial-pane="book" hidden>
-                        <div class="trial-book-head"><h3>星のコレクション図鑑</h3><span id="trial-book-count">0 / 81</span></div>
+                        <div class="trial-book-head"><h3>星のコレクション図鑑</h3><span id="trial-book-count">0 / 94</span></div>
                         <div class="trial-filter" aria-label="作品で絞り込む">
                             <button type="button" data-trial-filter="all" aria-pressed="true">すべて</button>
                             <button type="button" data-trial-filter="Battle a la carte" aria-pressed="false">Battle a la carte</button>
                             <button type="button" data-trial-filter="架空運輸" aria-pressed="false">架空運輸</button>
+                            <button type="button" data-trial-filter="星の終わりに君は生きる" aria-pressed="false">星の終わりに君は生きる</button>
+                            <button type="button" data-trial-filter="花散るさきの、幸せのかたち" aria-pressed="false">花散るさきの、幸せのかたち</button>
+                            <button type="button" data-trial-filter="EchoShion" aria-pressed="false">EchoShion</button>
                         </div>
-                        <p class="trial-gacha-note">未入手の番号を押すと入手条件を確認できます。今後の作品カードも追加予定です。</p>
+                        <p class="trial-gacha-note">番号を押すと詳細を確認できます。入手済みの画像は大きく表示できます。小説のキャラ紹介は、あにあに文庫でも公開しています。</p>
                         <div class="trial-card-detail" id="trial-card-detail" hidden></div>
                         <div class="trial-gacha-book" id="trial-gacha-book"></div>
                     </section>
+                    <dialog class="trial-art-dialog" id="trial-art-dialog" aria-labelledby="trial-art-title">
+                        <header><h3 id="trial-art-title">カード画像</h3><button type="button" id="trial-art-close" autofocus>閉じる ×</button></header>
+                        <div id="trial-art-image" class="trial-art-image"></div>
+                        <p id="trial-art-description"></p>
+                        <a id="trial-art-book-link" href="https://donadonaa24-cyber.github.io/book/" target="_blank" rel="noopener noreferrer" hidden>小説のキャラ紹介を見る ↗</a>
+                    </dialog>
                 </div>
             </div>
         </div>
@@ -718,8 +727,8 @@
         </div>
       </div>
     </section>
-    <script src="trial-gacha-data.js?v=20260920b1"></script>
-    <script src="trial-gacha.js?v=20260920b1"></script>
+    <script src="trial-gacha-data.js?v=20261011a1"></script>
+    <script src="trial-gacha.js?v=20261011a1"></script>
     <script src="aniani.js?v=20261010a1"></script>
     <script src="galaxy.js?v=20260915a1"></script>
 <script src="arcade-layout.js?v=20260915a1"></script></body>
