@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="aniani.css?v=20261006a1">
     <link rel="stylesheet" href="galaxy.css?v=20261008a1">
     <link rel="stylesheet" href="arcade.css?v=20261008a1">
-    <link rel="stylesheet" href="trial-gacha.css?v=20261011e1">
+    <link rel="stylesheet" href="trial-gacha.css?v=20261012a1">
 </head>
 <body>
     <div class="bg-glow bg-glow-a"></div>
@@ -620,18 +620,20 @@
                     <section data-trial-pane="summon">
                         <div class="trial-summon-layout">
                             <div class="trial-summon-experience" id="trial-summon-stage" data-phase="idle">
-                                <div class="trial-cosmos" aria-hidden="true">
-                                    <span class="trial-galaxy-ring ring-one"></span>
-                                    <span class="trial-galaxy-ring ring-two"></span>
-                                    <span class="trial-galaxy-core">✦</span>
-                                    <span class="trial-summon-coin">A</span>
-                                    <span class="trial-shooting-star"></span>
-                                    <span class="trial-whiteout"></span>
+                                <div class="trial-scene" aria-hidden="true">
+                                    <div class="trial-sky"><span class="trial-sky-stars"></span><span class="trial-aurora"></span><span class="trial-meteor"></span></div>
+                                    <div class="trial-water"><span class="trial-reflection"></span><span class="trial-meteor-reflection"></span><span class="trial-ripples"></span><span class="trial-splash"></span></div>
+                                    <div class="trial-blessing"></div>
+                                    <div class="trial-coin-stage"><div class="trial-coin"></div></div>
+                                    <div class="trial-digital"><span class="trial-digital-floor"></span><span class="trial-digital-rain"></span><span class="trial-digital-rings"></span><span class="trial-digital-scan"></span></div>
+                                    <div class="trial-omen-signal"><span>UR SIGNAL</span></div>
+                                    <div class="trial-ghost-wrap"><span class="trial-card-ghost"><i>DECODING</i></span></div>
+                                    <span class="trial-dive-flash"></span>
                                 </div>
                                 <div class="trial-idle-copy">
                                     <small>GALACTIC SUMMON SYSTEM</small>
-                                    <strong>星の記憶へ、コインを。</strong>
-                                    <p>無料お試しコインを銀河へ投げ、10枚の作品カードを1枚ずつ呼び出します。</p>
+                                    <strong>星の水面へ、コインを。</strong>
+                                    <p>無料お試しコインを水面へ投げ入れ、星の記憶から10枚の作品カードを1枚ずつ呼び出します。</p>
                                 </div>
                                 <div class="trial-single-reveal" id="trial-single-reveal" hidden>
                                     <p class="trial-reveal-count" id="trial-reveal-count">1 / 10</p>
@@ -746,7 +748,7 @@
       </div>
     </section>
     <script src="trial-gacha-data.js?v=20261011e1"></script>
-    <script src="trial-gacha.js?v=20261011e1"></script>
+    <script src="trial-gacha.js?v=20261012a1"></script>
     <script src="aniani.js?v=20261011f1"></script>
     <script src="galaxy.js?v=20260915a1"></script>
 <script src="arcade-layout.js?v=20260915a1"></script></body>

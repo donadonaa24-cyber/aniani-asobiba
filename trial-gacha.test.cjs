@@ -16,9 +16,19 @@ assert(!html.includes('gacha-core-app'), 'gacha launcher must not remain in the 
 assert(!html.includes('orbit-core'), 'galaxy center decoration must remain removed');
 assert(html.includes('id="trial-reveal-next"') && html.includes('id="trial-reveal-skip"'), 'sequential reveal controls must exist');
 
-for (const phase of ['coin', 'vortex', 'whiteout', 'portal', 'omen', 'quote', 'card', 'results']) {
+for (const phase of ['coin', 'portal', 'omen', 'quote', 'card', 'results']) {
     assert(source.includes(`setStagePhase("${phase}"`), `gacha phase ${phase} must be implemented`);
 }
+// 開始演出: 水面への投げ入れ → 波紋 → 星空の反射 → (UR確定の星) → 流れ星 → デジタル空間
+for (const phase of ['ripple', 'reflection', 'blessing', 'meteor', 'dive']) {
+    assert(source.includes(`phase: "${phase}"`), `opening phase ${phase} must be implemented`);
+    assert(css.includes(`[data-phase="${phase}"]`), `opening phase ${phase} must be styled`);
+}
+assert(css.includes('[data-blessed="true"]'), 'UR blessing stars must be styled');
+assert(css.includes('preserve-3d') && source.includes('trial-coin-edge'), 'coin must be a layered 3D coin');
+for (const layer of ['trial-card-frame', 'trial-card-holo', 'trial-card-glare']) assert(css.includes(`.${layer}`) && source.includes(layer), `card layer ${layer} must exist`);
+assert.equal(gacha.hasBlessing([{ rarity: 'C' }, { rarity: 'SSR' }]), false, 'no blessing without UR');
+assert.equal(gacha.hasBlessing([{ rarity: 'C' }, { rarity: 'UR' }]), true, 'blessing when any UR is drawn');
 assert(css.includes('env(safe-area-inset-bottom'), 'mobile layout must account for the bottom safe area');
 assert(css.includes('[data-phase="omen"]'), 'UR-only omen styling must exist');
 assert(css.includes('@media (prefers-reduced-motion: reduce)'), 'reduced-motion mode must be supported');
