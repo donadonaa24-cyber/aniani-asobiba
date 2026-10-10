@@ -11,8 +11,8 @@ assert(html.split('https://donadonaa24-cyber.github.io/book/').length - 1 >= 4, 
 for (const img of ['case','shelf','cover','illust']) assert(fs.existsSync(`images/bunko/${img}-20261006.webp`));
 assert.deepEqual(cases.slice(0,3).map(m=>m[2]),['Battle a la carte','Battle à la carte Unity版（3D版）','架空運輸']);
 assert(html.includes('id="battle-3d-detail"'));
-assert(html.includes('Windows ZIP v0.5.0'));
-assert(html.includes('battle-a-la-carte-3d/releases/download/v0.5.0/BattleALaCarte-3D-Windows-v0.5.0.zip'));
+assert(html.includes('Windows ZIP v0.6.0'));
+assert(html.includes('battle-a-la-carte-3d/releases/download/v0.6.0/BattleALaCarte-3D-Windows-v0.6.0.zip'));
 assert(!/href="[^"]+\.exe"/.test(html),'Never launch a Windows exe in-browser');
 const groups = [...html.matchAll(/<div class="game-actions">([\s\S]*?)<\/div>/g)]
   .map(m => [...m[1].matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(a => ({url:a[1],label:a[2]})))
@@ -57,7 +57,7 @@ assert(fs.existsSync('images/gacha/transport-employees.png'));
 assert((html.match(/無断転載・無断配布を禁止します。/g) || []).length >= 8);
 assert(html.includes('EODaZVnp9Jx0SkJDQR-oyGH1baUfiHRkVlnkgVq0A0k'));
 assert(!html.includes('スマホ'), 'portal wording uses モバイル版, not スマホ版');
-assert(html.includes('Unity / Windows / Android · v0.5.0'));
+assert(html.includes('Unity / Windows / Android · v0.6.0'));
 assert.equal((html.match(/class="update-note"/g) || []).length, 4); // Battle Web card+modal, 架空運輸 card+modal
 const js = fs.readFileSync('aniani.js', 'utf8');
 assert(!/ADMIN|admin-login|adminSession|article-form/.test(js + html.replace(/id="guestbook-form" class="article-form"/, '')), 'article admin mode and its passcode are removed');
