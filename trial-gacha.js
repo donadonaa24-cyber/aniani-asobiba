@@ -187,6 +187,7 @@
         const artTitle = rootElement.querySelector("#trial-art-title");
         const artImage = rootElement.querySelector("#trial-art-image");
         const artDescription = rootElement.querySelector("#trial-art-description");
+        const artCredit = rootElement.querySelector("#trial-art-credit");
         const artBookLink = rootElement.querySelector("#trial-art-book-link");
         const filterButtons = Array.from(rootElement.querySelectorAll("[data-trial-filter]"));
         const viewButtons = Array.from(rootElement.querySelectorAll("[data-trial-view]"));
@@ -210,6 +211,7 @@
             artImage.replaceChildren(artElement(card, true, true));
             artImage.classList.toggle("is-portrait", !!card.portrait);
             artDescription.textContent = card.description || `${card.work} / ${card.role || card.category}`;
+            artCredit.hidden = !card.generatedWithAI;
             artBookLink.hidden = !card.bookUrl;
             if (card.bookUrl) artBookLink.href = card.bookUrl;
             if (!artDialog.open) artDialog.showModal();

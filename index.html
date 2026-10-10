@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="aniani.css?v=20261006a1">
     <link rel="stylesheet" href="galaxy.css?v=20260929a1">
     <link rel="stylesheet" href="arcade.css?v=20260915a1">
-    <link rel="stylesheet" href="trial-gacha.css?v=20261011b1">
+    <link rel="stylesheet" href="trial-gacha.css?v=20261011c1">
 </head>
 <body>
     <div class="bg-glow bg-glow-a"></div>
@@ -595,6 +595,7 @@
                     <p>ANIANI / GALACTIC ARCHIVE</p>
                     <h2 id="trial-gacha-title">あにあにガチャ <span class="trial-free-badge">無料お試し版</span></h2>
                     <small>作品の記憶を集める10連ガチャ。ログイン・コイン・実際のお金は必要ありません。</small>
+                    <small class="trial-illustration-credit">あにあに文庫3作品のキャラクターイラストは、生成AIを使用して制作しています。</small>
                 </header>
                 <nav class="trial-gacha-tabs" aria-label="ガチャメニュー">
                     <button type="button" data-trial-view="summon" aria-pressed="true">10連ガチャ</button>
@@ -641,7 +642,7 @@
                         </div>
                     </section>
                     <section data-trial-pane="book" hidden>
-                        <div class="trial-book-head"><h3>星のコレクション図鑑</h3><span id="trial-book-count">0 / 94</span></div>
+                        <div class="trial-book-head"><h3>星のコレクション図鑑</h3><span id="trial-book-count">0 / 124</span></div>
                         <div class="trial-filter" aria-label="作品で絞り込む">
                             <button type="button" data-trial-filter="all" aria-pressed="true">すべて</button>
                             <button type="button" data-trial-filter="Battle a la carte" aria-pressed="false">Battle a la carte</button>
@@ -658,6 +659,7 @@
                         <header><h3 id="trial-art-title">カード画像</h3><button type="button" id="trial-art-close" autofocus>閉じる ×</button></header>
                         <div id="trial-art-image" class="trial-art-image"></div>
                         <p id="trial-art-description"></p>
+                        <p id="trial-art-credit" hidden>このイラストは生成AIを使用して制作しています。</p>
                         <a id="trial-art-book-link" href="https://donadonaa24-cyber.github.io/book/" target="_blank" rel="noopener noreferrer" hidden>小説のキャラ紹介を見る ↗</a>
                     </dialog>
                 </div>
@@ -727,8 +729,8 @@
         </div>
       </div>
     </section>
-    <script src="trial-gacha-data.js?v=20261011b1"></script>
-    <script src="trial-gacha.js?v=20261011b1"></script>
+    <script src="trial-gacha-data.js?v=20261011c1"></script>
+    <script src="trial-gacha.js?v=20261011c1"></script>
     <script src="aniani.js?v=20261010a1"></script>
     <script src="galaxy.js?v=20260915a1"></script>
 <script src="arcade-layout.js?v=20260915a1"></script></body>
