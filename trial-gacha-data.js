@@ -64,12 +64,11 @@
         { quote, character: file }
     ));
 
-    const vehicleSheet = "images/gacha/transport-vehicles.png";
     [
-        ["フォークリフト", "SR", 0], ["2トントラック", "C", 1], ["4トントラック", "SR", 2],
-        ["10トントラック", "SSR", 3], ["20トントレーラー", "UR", 4]
-    ].forEach(([title, rarity, column]) => add("架空運輸", rarity, "車両", title, vehicleSheet, {
-        sprite: { columns: 5, rows: 1, column, row: 0 },
+        ["フォークリフト", "SR", "forklift"], ["2トントラック", "C", "truck-2t"], ["4トントラック", "SR", "truck-4t"],
+        ["10トントラック", "SSR", "truck-10t"], ["20トントレーラー", "UR", "trailer-20t"]
+    ].forEach(([title, rarity, file]) => add("架空運輸", rarity, "車両", title, `images/gacha/vehicles/${file}-20261011.png`, {
+        generatedWithAI: true,
         ...(rarity === "UR" ? { quote: "最大級の積載で、道をつなぐ。" } : {})
     }));
 
@@ -143,7 +142,7 @@
     add("花散るさきの、幸せのかたち", "SR", "登場人物", "克也", "images/gacha/bunko/katsuya.png", {"portrait": true, "generatedWithAI": true, "role": "咲と出会う男性", "description": "整った身なりと柔らかな物腰が印象的な、咲と出会う男性。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=hanachiru"});
     add("EchoShion", "C", "登場人物", "志遠の父", "images/gacha/bunko/shion-father.png", {"portrait": true, "generatedWithAI": true, "role": "志遠の家族", "description": "家族のそばに立ち、静かに澪を気遣う父。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
     add("EchoShion", "C", "登場人物", "志遠の母", "images/gacha/bunko/shion-mother.png", {"portrait": true, "generatedWithAI": true, "role": "志遠の家族", "description": "家族を思い、澪にも心を寄せる母。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
-    add("EchoShion", "C", "登場人物", "志遠の姉", "images/gacha/bunko/shion-sister.png", {"portrait": true, "generatedWithAI": true, "role": "志遠の家族", "description": "連絡や段取りを引き受け、家族と澪を支える姉。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
+    add("EchoShion", "C", "登場人物", "志遠の姉", "images/gacha/bunko/shion-sister-corrected.png", {"portrait": true, "generatedWithAI": true, "role": "志遠の家族", "description": "連絡や段取りを引き受け、家族と澪を支える姉。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
     add("EchoShion", "C", "登場人物", "志遠の弟", "images/gacha/bunko/shion-brother.png", {"portrait": true, "generatedWithAI": true, "role": "志遠の家族", "description": "スマートフォンを手に、家族のそばで澪を気にかける弟。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
     add("EchoShion", "C", "登場人物", "澪の父", "images/gacha/bunko/mio-father.png", {"portrait": true, "generatedWithAI": true, "role": "澪の家族", "description": "澪のもとへ届ける果物を選び、言葉と気遣いで支える父。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
     add("EchoShion", "C", "登場人物", "澪の母", "images/gacha/bunko/mio-mother.png", {"portrait": true, "generatedWithAI": true, "role": "澪の家族", "description": "食事を届け、澪を温かく迎える母。日々の気遣いで娘の暮らしを支える。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
@@ -151,6 +150,30 @@
     add("EchoShion", "SR", "登場人物", "日和", "images/gacha/bunko/hiyori.png", {"portrait": true, "generatedWithAI": true, "role": "澪の学生時代の後輩・友人", "description": "澪の一つ下の後輩。連絡や差し入れを通して、無理に励まさずそばにいる。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
     add("EchoShion", "SR", "登場人物", "Ray", "images/gacha/bunko/ray.png", {"portrait": true, "generatedWithAI": true, "role": "澪の年上のゲーム友達", "description": "関東に住む、澪より年上の主婦。謎解きの協力プレイが得意で、澪のペースを大切にする。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
     add("EchoShion", "C", "登場人物", "田辺さん", "images/gacha/bunko/tanabe.png", {"portrait": true, "generatedWithAI": true, "role": "スーパーの先輩", "description": "澪に仕事を教える先輩。休憩中に飴をくれる、気さくな女性。", "bookUrl": "https://donadonaa24-cyber.github.io/book/#characters=echoshion"});
+
+    // 追加キャラクターと公開済みの着せ替え。既存124枚の番号は変えない。
+    [
+        ["剛", "tsuyoshi", "夏休み"], ["栞那", "kanna", "ハロウィン"],
+        ["結月", "yuzuki", "弓道"], ["龍太", "ryuta", "幼馴染"]
+    ].forEach(([title, character, story]) => {
+        const description = `${story}の特別編をクリアすると使えるキャラクター。`;
+        add("Battle a la carte", "UR", "キャラクター", title,
+            `images/gacha/battle/${character}-battle-mode-cutin.webp`,
+            { character, description, quote: description, quoteLabel: "登場人物紹介" });
+    });
+    [
+        ["暁", "akatsuki", "summer", "サマービーチ"],
+        ["剛", "tsuyoshi", "summer", "サマービーチ"],
+        ["千鶴", "chizuru", "halloween", "ハロウィン・ブラックキャット"],
+        ["栞那", "kanna", "halloween", "ハロウィン・ウィッチ"],
+        ["舞依", "mai", "kyudo", "弓道着"],
+        ["拓海", "takumi", "kyudo", "弓道着"],
+        ["結月", "yuzuki", "kyudo", "弓道着"]
+    ].forEach(([name, character, costume, costumeName]) => add(
+        "Battle a la carte", "SSR", "着せ替え", `${name}［${costumeName}］`,
+        `images/gacha/battle/${character}-${costume}-standing-alpha.webp`,
+        { character, costume, portrait: true, role: costumeName, description: `${name}の着せ替え「${costumeName}」。ゲーム内の公開済みイラストを使用しています。` }
+    ));
 
     return Object.freeze({
         version: 1,

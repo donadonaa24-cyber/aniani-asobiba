@@ -23,50 +23,80 @@ assert(css.includes('env(safe-area-inset-bottom'), 'mobile layout must account f
 assert(css.includes('[data-phase="omen"]'), 'UR-only omen styling must exist');
 assert(css.includes('@media (prefers-reduced-motion: reduce)'), 'reduced-motion mode must be supported');
 
-assert.equal(catalog.cards.length, 124, 'catalog should contain the original 81 cards and 43 novel characters');
-assert.equal(createHash('sha256').update(JSON.stringify(catalog.cards.slice(0, 81))).digest('hex'),
+// 依頼された車両画像とAI表記だけを除き、既存カードの全データを固定する。
+function previousVehicle(card) {
+    if (card.work !== '架空運輸' || card.category !== '車両') return card;
+    const { generatedWithAI, quote, ...data } = card;
+    return { ...data, image: 'images/gacha/transport-vehicles.png',
+        sprite: { columns: 5, rows: 1, column: card.no - 41, row: 0 },
+        ...(quote ? { quote } : {}) };
+}
+assert.equal(catalog.cards.length, 135, 'catalog should include 4 additional characters and 7 costume cards');
+assert.equal(createHash('sha256').update(JSON.stringify(catalog.cards.slice(0, 81).map(previousVehicle))).digest('hex'),
     '8684b50adfa797b5064744091f073b03c255dd22374f2809bd468acf12a38002',
-    'the original 81 IDs, images, rarity and metadata must remain unchanged');
+    'the original 81 cards must remain unchanged apart from requested vehicle artwork');
 // 咲の質素な室内版への画像差し替えとAI表記だけを除き、公開済み94枚を固定する。
-const previouslyPublishedCards = catalog.cards.slice(0, 94).map(({ generatedWithAI, ...card }) =>
+const previouslyPublishedCards = catalog.cards.slice(0, 94).map(previousVehicle).map(({ generatedWithAI, ...card }) =>
     card.id === 'HAN-087' ? { ...card, image: 'images/gacha/bunko/saki.png' } : card);
 assert.equal(createHash('sha256').update(JSON.stringify(previouslyPublishedCards)).digest('hex'),
     'd9e151b1928fa78955e1bb8285ad476d682446e772be080d06305ba16b1edc88',
     'all previously published 94 cards must retain metadata apart from the requested Saki illustration and AI credit');
-assert.equal(new Set(catalog.cards.map((card) => card.id)).size, 124, 'card IDs must be unique');
+const published124 = catalog.cards.slice(0, 124).map(previousVehicle).map((card) =>
+    card.image === 'images/gacha/bunko/shion-sister-corrected.png'
+        ? { ...card, image: 'images/gacha/bunko/shion-sister.png' } : card);
+assert.equal(createHash('sha256').update(JSON.stringify(published124)).digest('hex'),
+    'ffd62bc9083f0cf4c8c11b97c9a2bb6d83ac59e695956f56ded5eb020ed3780c',
+    'all 124 published cards must retain IDs, metadata and inventory compatibility');
+assert.equal(new Set(catalog.cards.map((card) => card.id)).size, 135, 'card IDs must be unique');
 assert.equal(catalog.storageKey, 'aniani.trial-gacha.v1.inventory');
 assert.deepEqual(catalog.rates, { C: 60, SR: 25, SSR: 10, UR: 5 });
 assert(catalog.cards.every((card) => fs.existsSync(card.image)), 'every card image must be published');
 
 const battle = catalog.cards.filter((card) => card.work === 'Battle a la carte');
-assert.equal(battle.length, 40);
+assert.equal(battle.length, 51);
 assert(battle.filter((card) => card.category === '素材').every((card) => card.rarity === 'C'));
 assert(battle.filter((card) => card.category === '料理').every((card) => card.rarity === 'SR'));
 assert(battle.filter((card) => card.category === 'イベント').every((card) => card.rarity === 'SSR'));
 assert(battle.filter((card) => card.category === 'キャラクター').every((card) => card.rarity === 'UR'));
-assert(battle.filter((card) => card.category === 'キャラクター').every((card) => card.image.includes('/battle-mode-cutins/')));
+assert(battle.filter((card) => card.category === 'キャラクター').every((card) => card.image.includes('battle-mode-cutin')));
 assert(battle.filter((card) => card.category === 'キャラクター').every((card) => card.quote));
-assert.deepEqual(battle.filter((card) => card.category === 'キャラクター').map((card) => card.title), ['暁', '千鶴', '舞依', '拓海']);
+assert.deepEqual(battle.filter((card) => card.category === 'キャラクター').map((card) => card.title), ['暁', '千鶴', '舞依', '拓海', '剛', '栞那', '結月', '龍太']);
+const costumes = battle.filter((card) => card.category === '着せ替え');
+assert.equal(costumes.length, 7);
+assert(costumes.every((card) => card.rarity === 'SSR' && card.portrait));
+assert.deepEqual(costumes.map((card) => [card.character, card.costume]), [
+    ['akatsuki', 'summer'], ['tsuyoshi', 'summer'], ['chizuru', 'halloween'],
+    ['kanna', 'halloween'], ['mai', 'kyudo'], ['takumi', 'kyudo'], ['yuzuki', 'kyudo']
+]);
+const officialAssets = require('./images/gacha/battle/source.json');
+for (const asset of officialAssets.paths) {
+    const bytes = fs.readFileSync(`images/gacha/battle/${asset.path.split('/').pop()}`);
+    assert.equal(bytes.length, asset.size);
+    assert.equal(createHash('sha1').update(Buffer.from(`blob ${bytes.length}\0`)).update(bytes).digest('hex'), asset.blob,
+        `official artwork must be copied unchanged: ${asset.path}`);
+}
 
 const transport = catalog.cards.filter((card) => card.work === '架空運輸');
 assert.equal(transport.length, 41);
 assert.equal(transport.filter((card) => card.category === '車両').length, 5);
+assert(transport.filter((card) => card.category === '車両').every((card) => !card.sprite && card.generatedWithAI));
+assert.equal(new Set(transport.filter((card) => card.category === '車両').map((card) => card.image)).size, 5);
 assert.equal(transport.filter((card) => card.category === '社員').length, 36);
 assert.equal(transport.find((card) => card.title === '社長').rarity, 'UR');
 assert.equal(transport.find((card) => card.title === '20トントレーラー').rarity, 'UR');
 assert(catalog.cards.filter((card) => card.rarity === 'UR').every((card) => card.quote), 'every UR needs a pre-reveal quote');
 
-const novels = catalog.cards.slice(81);
+const novels = catalog.cards.slice(81, 124);
 assert.deepEqual(['星の終わりに君は生きる', '花散るさきの、幸せのかたち', 'EchoShion'].map((work) => novels.filter((card) => card.work === work).length), [20, 8, 15]);
 assert.deepEqual(['C', 'SR', 'SSR', 'UR'].map((rarity) => novels.filter((card) => card.rarity === rarity).length), [19, 13, 4, 7]);
 assert(novels.every((card) => card.generatedWithAI), 'all novel illustrations must disclose AI use');
-assert(catalog.cards.slice(94).every((card) => ['C', 'SR'].includes(card.rarity)), 'supporting characters belong in C and SR');
+assert(catalog.cards.slice(94, 124).every((card) => ['C', 'SR'].includes(card.rarity)), 'supporting characters belong in C and SR');
 assert.equal(novels.filter((card) => card.title === 'シロ').length, 1);
 assert.equal(novels.find((card) => card.title === 'シロ').rarity, 'SSR');
 assert.equal(novels.filter((card) => card.title === '人型ECHO').length, 1);
 assert.equal(novels.find((card) => card.title === '人型ECHO').rarity, 'C');
 assert(novels.filter((card) => card.rarity === 'UR').every((card) => card.quoteLabel === '登場人物紹介'), 'novel descriptions must not be presented as invented dialogue');
-for (const card of novels) {
+for (const card of [...novels, ...catalog.cards.slice(124)]) {
     const pool = catalog.cards.filter((item) => item.rarity === card.rarity);
     const samples = [({ C: .3, SR: .7, SSR: .9, UR: .97 })[card.rarity], (pool.indexOf(card) + .5) / pool.length];
     assert.equal(gacha.drawCards(1, () => samples.shift())[0].id, card.id, `new card ${card.title} must be obtainable`);
@@ -96,15 +126,15 @@ const fakeStorage = {
 };
 assert.deepEqual(gacha.loadInventory(fakeStorage), { [results[0].id]: 3 });
 
-const previousInventory = Object.fromEntries(catalog.cards.slice(0, 94).map((card, index) => [card.id, index + 1]));
+const previousInventory = Object.fromEntries(catalog.cards.slice(0, 124).map((card, index) => [card.id, index + 1]));
 let stored = JSON.stringify(previousInventory);
 const existingStorage = { getItem: () => stored, setItem: (_key, value) => { stored = value; } };
 const loaded = gacha.loadInventory(existingStorage);
 assert.deepEqual(loaded, previousInventory, 'all existing collections must load without migration');
-const updated = gacha.addToInventory(loaded, [novels[13], novels[13], catalog.cards[0]]);
+const updated = gacha.addToInventory(loaded, [catalog.cards[124], catalog.cards[124], catalog.cards[0]]);
 assert(gacha.saveInventory(existingStorage, updated));
 assert.deepEqual(gacha.loadInventory(existingStorage), updated);
-assert.equal(updated[novels[13].id], 2);
+assert.equal(updated[catalog.cards[124].id], 2);
 assert.equal(updated[catalog.cards[0].id], previousInventory[catalog.cards[0].id] + 1);
 
 console.log('PASS: trial gacha catalog, rarity boundaries, sequential UR plan, 10-pull, and inventory validation.');
