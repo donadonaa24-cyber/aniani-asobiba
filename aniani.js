@@ -3,7 +3,8 @@
         articleComments: "aniani_article_comments_v1",
         guestbook: "aniani_guestbook_comments_v1",
         memoryRanking: "aniani_memory_rankings_v1",
-        reactionBest: "aniani_reaction_best_v1"
+        reactionBest: "aniani_reaction_best_v1",
+        breakoutBest: "aniani_breakout_best_v1"
     };
 
     // 公式記事: ここに書いた記事が全員に同じ内容で表示されます（端末内保存ではありません）。
@@ -249,6 +250,8 @@
     const breakoutStatusEl = document.getElementById("breakout-status");
     const breakoutScoreEl = document.getElementById("breakout-score");
     const breakoutLivesEl = document.getElementById("breakout-lives");
+    const breakoutStageEl = document.getElementById("breakout-stage");
+    const breakoutBestEl = document.getElementById("breakout-best");
     const breakoutStartButton = document.getElementById("breakout-start");
     const breakoutResetButton = document.getElementById("breakout-reset");
     const dropBoardEl = document.getElementById("drop-board");
@@ -259,6 +262,7 @@
     const dropLeftButton = document.getElementById("drop-left");
     const dropRightButton = document.getElementById("drop-right");
     const dropDownButton = document.getElementById("drop-down");
+    const dropArtEl = document.getElementById("drop-art");
     const snakeCanvasEl = document.getElementById("snake-canvas");
     const snakeStatusEl = document.getElementById("snake-status");
     const snakeScoreEl = document.getElementById("snake-score");
@@ -398,10 +402,14 @@
         });
 
         if (tabKey === "breakout") {
-            ensureBreakoutImages();
             window.setTimeout(() => {
                 drawBreakout();
             }, 0);
+            return;
+        }
+        if (tabKey === "drop" && !slideState.art) {
+            pickSlideArt();
+            renderSlideBoard();
             return;
         }
         if (tabKey === "snake") {
@@ -1655,53 +1663,12 @@
         reactionTargetButton.addEventListener("click", handleReactionTap);
     }
 
-    const breakoutCtx = breakoutCanvasEl ? breakoutCanvasEl.getContext("2d") : null;
-    const BREAKOUT_COLS = 7;
-    const BREAKOUT_ROWS = 4;
-    const BREAKOUT_PADDLE_WIDTH = 86;
-    const BREAKOUT_PADDLE_HEIGHT = 12;
-    const BREAKOUT_BALL_RADIUS = 7;
-    const BREAKOUT_BRICK_PATHS = [
-        "assets/images/recipes/chahan.png",
-        "assets/images/recipes/curry-rice.png",
-        "assets/images/recipes/omurice.png",
-        "assets/images/recipes/nikujaga.png",
-        "assets/images/recipes/yasai-itame.png",
-        "assets/images/recipes/hamburg-steak.png",
-        "assets/images/recipes/cream-stew.png",
-        "assets/images/recipes/onigiri.png"
-    ];
-    const BREAKOUT_BRICK_IMAGES = BREAKOUT_BRICK_PATHS.map(() => {
-        const image = new Image();
-        image.addEventListener("load", () => drawBreakout());
-        image.addEventListener("error", () => {
-            setBreakoutStatus("一部の料理画像を読み込めません。色付きブロックでプレイできます。");
-            drawBreakout();
-        });
-        return image;
-    });
-
-    // 料理画像は大きいため、ポータル表示時ではなくブロック崩しを開いた時に読み込む。
-    function ensureBreakoutImages() {
-        BREAKOUT_BRICK_IMAGES.forEach((image, index) => {
-            if (!image.getAttribute("src")) {
-                image.src = BREAKOUT_BRICK_PATHS[index];
-            }
-        });
-    }
-
-    const breakoutState = {
-        running: false,
-        rafId: 0,
-        score: 0,
-        lives: 3,
-        paddleX: 0,
-        ballX: 0,
-        ballY: 0,
-        ballVx: 2.8,
-        ballVy: -2.8,
-        bricks: []
-    };
+    // ブロック崩し（全5ステージ）。進行と描画は minigame-breakout.js、ここはボタン・入力・HUDを担当する。
+    const BREAKOUT = window.AnianiBreakout;
+    const breakoutCtx = breakoutCanvasEl && BREAKOUT ? breakoutCanvasEl.getContext("2d") : null;
+    const breakoutGame = BREAKOUT ? BREAKOUT.createGame() : null;
+    const breakoutLoop = { rafId: 0, last: 0 };
+    let breakoutBest = loadObject(STORAGE.breakoutBest, { score: 0, stage: 0 });
 
     function setBreakoutStatus(text) {
         if (breakoutStatusEl) {
@@ -1710,241 +1677,117 @@
     }
 
     function updateBreakoutHud() {
-        if (breakoutScoreEl) {
-            breakoutScoreEl.textContent = String(breakoutState.score);
-        }
-        if (breakoutLivesEl) {
-            breakoutLivesEl.textContent = String(breakoutState.lives);
-        }
+        if (!breakoutGame) return;
+        if (breakoutScoreEl) breakoutScoreEl.textContent = String(breakoutGame.score);
+        if (breakoutLivesEl) breakoutLivesEl.textContent = String(breakoutGame.lives);
+        if (breakoutStageEl) breakoutStageEl.textContent = String(breakoutGame.stageIndex + 1);
+        if (breakoutBestEl) breakoutBestEl.textContent = `${breakoutBest.score || 0}点（ステージ${breakoutBest.stage || 1}）`;
+    }
+
+    function recordBreakoutBest() {
+        const stage = breakoutGame.stageIndex + 1;
+        if (breakoutGame.score <= (breakoutBest.score || 0)) return false;
+        breakoutBest = { score: breakoutGame.score, stage: Math.min(stage, BREAKOUT.STAGES.length) };
+        try { save(STORAGE.breakoutBest, breakoutBest); } catch { /* 保存できなくても遊べる */ }
+        return true;
     }
 
     function stopBreakoutLoop() {
-        if (breakoutState.rafId) {
-            window.cancelAnimationFrame(breakoutState.rafId);
-            breakoutState.rafId = 0;
+        if (breakoutLoop.rafId) {
+            window.cancelAnimationFrame(breakoutLoop.rafId);
+            breakoutLoop.rafId = 0;
         }
-    }
-
-    function createBreakoutBricks() {
-        if (!breakoutCanvasEl) {
-            return [];
-        }
-        const gap = 6;
-        const top = 28;
-        const left = 18;
-        const width = (breakoutCanvasEl.width - left * 2 - gap * (BREAKOUT_COLS - 1)) / BREAKOUT_COLS;
-        const height = 24;
-        const bricks = [];
-        let imageIndex = 0;
-
-        for (let row = 0; row < BREAKOUT_ROWS; row += 1) {
-            for (let col = 0; col < BREAKOUT_COLS; col += 1) {
-                bricks.push({
-                    x: left + col * (width + gap),
-                    y: top + row * (height + gap),
-                    width,
-                    height,
-                    alive: true,
-                    image: BREAKOUT_BRICK_IMAGES[imageIndex % BREAKOUT_BRICK_IMAGES.length]
-                });
-                imageIndex += 1;
-            }
-        }
-
-        return bricks;
-    }
-
-    function resetBreakoutBall() {
-        if (!breakoutCanvasEl) {
-            return;
-        }
-        breakoutState.ballX = breakoutCanvasEl.width / 2;
-        breakoutState.ballY = breakoutCanvasEl.height - 42;
-        breakoutState.ballVx = (Math.random() > 0.5 ? 1 : -1) * (2.1 + Math.random() * 1.2);
-        breakoutState.ballVy = -2.8;
     }
 
     function drawBreakout() {
-        if (!breakoutCtx || !breakoutCanvasEl) {
-            return;
+        if (breakoutCtx && breakoutGame) {
+            BREAKOUT.draw(breakoutCtx, breakoutGame, performance.now());
         }
+    }
 
-        breakoutCtx.clearRect(0, 0, breakoutCanvasEl.width, breakoutCanvasEl.height);
-
-        breakoutState.bricks.forEach((brick) => {
-            if (!brick.alive) {
-                return;
+    function handleBreakoutEvents() {
+        for (const event of breakoutGame.events) {
+            if (event.type === "item") {
+                setBreakoutStatus(`アイテム：${BREAKOUT.ITEMS[event.kind].name}！`);
+            } else if (event.type === "clear") {
+                setBreakoutStatus(`ステージ${breakoutGame.stageIndex + 1}クリア！ 次のステージへ。`);
+            } else if (event.type === "complete") {
+                const best = recordBreakoutBest();
+                setBreakoutStatus(`全ステージクリア！ ${breakoutGame.score}点${best ? "（ベスト更新！）" : ""}`);
+            } else if (event.type === "over") {
+                const best = recordBreakoutBest();
+                setBreakoutStatus(`ゲームオーバー。${breakoutGame.score}点${best ? "（ベスト更新！）" : ""} スタートで再挑戦。`);
+            } else if (event.type === "miss") {
+                setBreakoutStatus("ミス！ タップ・スペースで発射。");
             }
+        }
+    }
 
-            breakoutCtx.save();
-            breakoutCtx.beginPath();
-            breakoutCtx.rect(brick.x, brick.y, brick.width, brick.height);
-            breakoutCtx.clip();
-            if (brick.image && brick.image.complete && brick.image.naturalWidth > 0) {
-                breakoutCtx.drawImage(brick.image, brick.x, brick.y, brick.width, brick.height);
-            } else {
-                breakoutCtx.fillStyle = "rgba(255, 194, 74, 0.45)";
-                breakoutCtx.fillRect(brick.x, brick.y, brick.width, brick.height);
-            }
-            breakoutCtx.restore();
-            breakoutCtx.strokeStyle = "rgba(168, 210, 255, 0.45)";
-            breakoutCtx.lineWidth = 1;
-            breakoutCtx.strokeRect(brick.x, brick.y, brick.width, brick.height);
-        });
+    function breakoutFrame(now) {
+        breakoutLoop.rafId = 0;
+        if (!breakoutGame) return;
+        const ms = Math.min(50, Math.max(0, now - (breakoutLoop.last || now)));
+        breakoutLoop.last = now;
+        const stageBefore = breakoutGame.stageIndex;
+        BREAKOUT.step(breakoutGame, ms / (1000 / 60), ms);
+        handleBreakoutEvents();
+        if (breakoutGame.stageIndex !== stageBefore) {
+            setBreakoutStatus(`ステージ${breakoutGame.stageIndex + 1}「${BREAKOUT.STAGES[breakoutGame.stageIndex].name}」 タップ・スペースで発射。`);
+        }
+        updateBreakoutHud();
+        drawBreakout();
+        if (!["over", "complete", "idle"].includes(breakoutGame.phase)) {
+            breakoutLoop.rafId = window.requestAnimationFrame(breakoutFrame);
+        }
+    }
 
-        const paddleY = breakoutCanvasEl.height - 20;
-        breakoutCtx.fillStyle = "#f4c36f";
-        breakoutCtx.fillRect(
-            breakoutState.paddleX,
-            paddleY,
-            BREAKOUT_PADDLE_WIDTH,
-            BREAKOUT_PADDLE_HEIGHT
-        );
-
-        breakoutCtx.beginPath();
-        breakoutCtx.arc(
-            breakoutState.ballX,
-            breakoutState.ballY,
-            BREAKOUT_BALL_RADIUS,
-            0,
-            Math.PI * 2
-        );
-        breakoutCtx.fillStyle = "#f3f9ff";
-        breakoutCtx.fill();
-        breakoutCtx.closePath();
+    function runBreakoutLoop() {
+        if (breakoutLoop.rafId) return;
+        breakoutLoop.last = performance.now();
+        breakoutLoop.rafId = window.requestAnimationFrame(breakoutFrame);
     }
 
     function resetBreakoutGame() {
         stopBreakoutLoop();
-        breakoutState.running = false;
-        breakoutState.score = 0;
-        breakoutState.lives = 3;
-        breakoutState.bricks = createBreakoutBricks();
-        if (breakoutCanvasEl) {
-            breakoutState.paddleX = (breakoutCanvasEl.width - BREAKOUT_PADDLE_WIDTH) / 2;
-        }
-        resetBreakoutBall();
+        if (!breakoutGame) return;
+        Object.assign(breakoutGame, BREAKOUT.createGame());
         updateBreakoutHud();
-        setBreakoutStatus("スタートで開始。");
+        setBreakoutStatus("スタートで開始。全5ステージ。");
         drawBreakout();
-    }
-
-    function finishBreakout(resultText) {
-        breakoutState.running = false;
-        stopBreakoutLoop();
-        setBreakoutStatus(resultText);
-        drawBreakout();
-    }
-
-    function breakoutFrame() {
-        if (!breakoutState.running || !breakoutCanvasEl) {
-            return;
-        }
-
-        const width = breakoutCanvasEl.width;
-        const height = breakoutCanvasEl.height;
-        const paddleY = height - 20;
-
-        breakoutState.ballX += breakoutState.ballVx;
-        breakoutState.ballY += breakoutState.ballVy;
-
-        if (breakoutState.ballX - BREAKOUT_BALL_RADIUS <= 0 || breakoutState.ballX + BREAKOUT_BALL_RADIUS >= width) {
-            breakoutState.ballVx *= -1;
-            breakoutState.ballX = Math.min(
-                width - BREAKOUT_BALL_RADIUS,
-                Math.max(BREAKOUT_BALL_RADIUS, breakoutState.ballX)
-            );
-        }
-
-        if (breakoutState.ballY - BREAKOUT_BALL_RADIUS <= 0) {
-            breakoutState.ballVy = Math.abs(breakoutState.ballVy);
-            breakoutState.ballY = BREAKOUT_BALL_RADIUS;
-        }
-
-        if (
-            breakoutState.ballVy > 0 &&
-            breakoutState.ballY + BREAKOUT_BALL_RADIUS >= paddleY &&
-            breakoutState.ballY - BREAKOUT_BALL_RADIUS <= paddleY + BREAKOUT_PADDLE_HEIGHT &&
-            breakoutState.ballX >= breakoutState.paddleX &&
-            breakoutState.ballX <= breakoutState.paddleX + BREAKOUT_PADDLE_WIDTH
-        ) {
-            breakoutState.ballY = paddleY - BREAKOUT_BALL_RADIUS;
-            breakoutState.ballVy = -Math.abs(breakoutState.ballVy);
-            const offset = (breakoutState.ballX - (breakoutState.paddleX + BREAKOUT_PADDLE_WIDTH / 2)) / (BREAKOUT_PADDLE_WIDTH / 2);
-            breakoutState.ballVx = offset * 4.4;
-        }
-
-        for (const brick of breakoutState.bricks) {
-            if (!brick.alive) {
-                continue;
-            }
-
-            const hitX = breakoutState.ballX + BREAKOUT_BALL_RADIUS >= brick.x &&
-                breakoutState.ballX - BREAKOUT_BALL_RADIUS <= brick.x + brick.width;
-            const hitY = breakoutState.ballY + BREAKOUT_BALL_RADIUS >= brick.y &&
-                breakoutState.ballY - BREAKOUT_BALL_RADIUS <= brick.y + brick.height;
-
-            if (hitX && hitY) {
-                brick.alive = false;
-                breakoutState.ballVy *= -1;
-                breakoutState.score += 10;
-                updateBreakoutHud();
-                break;
-            }
-        }
-
-        if (!breakoutState.bricks.some((brick) => brick.alive)) {
-            finishBreakout("クリア！ 全ブロック破壊！");
-            return;
-        }
-
-        if (breakoutState.ballY - BREAKOUT_BALL_RADIUS > height) {
-            breakoutState.lives -= 1;
-            updateBreakoutHud();
-            if (breakoutState.lives <= 0) {
-                finishBreakout("ゲームオーバー。リセットで再挑戦。");
-                return;
-            }
-            resetBreakoutBall();
-            setBreakoutStatus("ミス！ 続行します。");
-        }
-
-        drawBreakout();
-        breakoutState.rafId = window.requestAnimationFrame(breakoutFrame);
     }
 
     function startBreakoutGame() {
-        if (breakoutState.running) {
+        if (!breakoutGame) return;
+        if (["ready", "playing", "clear"].includes(breakoutGame.phase)) {
+            BREAKOUT.launch(breakoutGame);
             return;
         }
-        ensureBreakoutImages();
-        if (!breakoutState.bricks.length || !breakoutState.bricks.some((brick) => brick.alive)) {
-            breakoutState.bricks = createBreakoutBricks();
-            breakoutState.score = 0;
-            breakoutState.lives = 3;
-            updateBreakoutHud();
-            resetBreakoutBall();
-        }
-        breakoutState.running = true;
-        setBreakoutStatus("プレイ中");
-        breakoutState.rafId = window.requestAnimationFrame(breakoutFrame);
+        BREAKOUT.newGame(breakoutGame);
+        updateBreakoutHud();
+        setBreakoutStatus("ステージ1「" + BREAKOUT.STAGES[0].name + "」 タップ・スペースで発射。");
+        runBreakoutLoop();
+    }
+
+    function launchBreakoutBall() {
+        return Boolean(breakoutGame && BREAKOUT.launch(breakoutGame));
+    }
+
+    function setBreakoutHold(direction, active) {
+        if (!breakoutGame || (direction !== "left" && direction !== "right")) return false;
+        breakoutGame.hold[direction] = active;
+        return true;
     }
 
     function setBreakoutPaddleByClientX(clientX) {
-        if (!breakoutCanvasEl) {
+        if (!breakoutCanvasEl || !breakoutGame) {
             return;
         }
         const rect = breakoutCanvasEl.getBoundingClientRect();
         if (!rect.width) {
             return;
         }
-        const localX = (clientX - rect.left) * (breakoutCanvasEl.width / rect.width);
-        const next = localX - BREAKOUT_PADDLE_WIDTH / 2;
-        breakoutState.paddleX = Math.max(
-            0,
-            Math.min(breakoutCanvasEl.width - BREAKOUT_PADDLE_WIDTH, next)
-        );
-        if (!breakoutState.running) {
+        BREAKOUT.setPaddleCenter(breakoutGame, (clientX - rect.left) * (breakoutCanvasEl.width / rect.width));
+        if (!breakoutLoop.rafId) {
             drawBreakout();
         }
     }
@@ -1958,8 +1801,17 @@
     }
 
     if (breakoutCanvasEl) {
-        breakoutCanvasEl.addEventListener("mousemove", (event) => {
+        breakoutCanvasEl.addEventListener("pointermove", (event) => {
             setBreakoutPaddleByClientX(event.clientX);
+        });
+
+        breakoutCanvasEl.addEventListener("pointerdown", (event) => {
+            setBreakoutPaddleByClientX(event.clientX);
+            if (breakoutGame?.phase === "idle" || breakoutGame?.phase === "over" || breakoutGame?.phase === "complete") {
+                startBreakoutGame();
+            } else {
+                launchBreakoutBall();
+            }
         });
 
         breakoutCanvasEl.addEventListener("touchmove", (event) => {
@@ -2486,7 +2338,22 @@
     }
 
     // Keep the existing tab ID so saved links and modal navigation remain valid.
-    const slideState = { board: [1,2,3,4,5,6,7,8,0], initial: null, moves: 0, running: false };
+    const slideState = { board: [1,2,3,4,5,6,7,8,0], initial: null, moves: 0, running: false, art: null };
+    // 8パズルの透かしイラスト（推し駒battle・生成AIを使用）。シャッフルごとにランダムで選ぶ。
+    const SLIDE_ARTS = [
+        ["蓮", "ren"], ["結衣", "yui"], ["美桜", "mio"], ["歩太", "honoka"], ["伊吹", "ibuki"], ["蛙瑠", "kaeru"],
+        ["乃音", "non"], ["莉胡", "riko"], ["豹妬レイラ", "shade1"], ["銀狼シオン", "shade2"], ["鹿角ノア", "shade3"], ["黒獅子王", "king"]
+    ].map(([name, file]) => ({ name, src: `images/gacha/oshikoma/${file}.webp` }));
+    function pickSlideArt() {
+        const options = SLIDE_ARTS.filter(art => art !== slideState.art);
+        slideState.art = options[Math.floor(Math.random() * options.length)];
+        if (dropArtEl) dropArtEl.textContent = `イラスト：${slideState.art.name}（推し駒battle／生成AIを使用）`;
+    }
+    function slideArtStyle(value) {
+        if (!slideState.art) return '';
+        const piece = (value || 9) - 1;
+        return ` style="--slide-art:url('${slideState.art.src}');--slide-x:${(piece % 3) * 50}%;--slide-y:${Math.floor(piece / 3) * 50}%"`;
+    }
     function slideNeighbors(empty) {
         return [empty - 3, empty + 3, empty - 1, empty + 1].filter(index =>
             index >= 0 && index < 9 && Math.abs(Math.floor(index / 3) - Math.floor(empty / 3)) + Math.abs(index % 3 - empty % 3) === 1);
@@ -2511,9 +2378,13 @@
     function renderSlideBoard() {
         if (!dropBoardEl) return;
         const movable = slideNeighbors(slideState.board.indexOf(0));
+        const complete = !slideState.running && slideSolved(slideState.board);
+        dropBoardEl.classList.toggle('is-complete', complete);
         dropBoardEl.innerHTML = slideState.board.map((value, index) => value
-            ? `<button class="slide-tile" type="button" data-slide-index="${index}" ${!slideState.running || !movable.includes(index) ? 'disabled' : ''} aria-label="${value}を空きマスへ移動">${value}</button>`
-            : '<div class="slide-empty" aria-label="空きマス"></div>').join('');
+            ? `<button class="slide-tile${movable.includes(index) && slideState.running ? ' is-movable' : ''}" type="button" data-slide-index="${index}"${slideArtStyle(value)} ${!slideState.running || !movable.includes(index) ? 'disabled' : ''} aria-label="${value}を空きマスへ移動"><span>${value}</span></button>`
+            : complete && slideState.art
+                ? `<div class="slide-empty is-filled"${slideArtStyle(0)} aria-hidden="true"></div>`
+                : '<div class="slide-empty" aria-label="空きマス"></div>').join('');
         if (dropScoreEl) dropScoreEl.textContent = String(slideState.moves);
     }
     function moveSlideTile(index) {
@@ -2537,6 +2408,7 @@
         renderSlideBoard();
     }
     if (dropStartButton) dropStartButton.addEventListener('click', () => {
+        pickSlideArt();
         slideState.initial = shuffledSlideBoard();
         slideState.board = [...slideState.initial];
         slideState.moves = 0;
@@ -2589,17 +2461,19 @@
     }
 
     function moveBreakoutByDirection(direction) {
-        if (!breakoutCanvasEl || (direction !== "left" && direction !== "right")) {
+        if (!breakoutGame) {
             return false;
         }
-
-        const step = 30;
-        const next = breakoutState.paddleX + (direction === "left" ? -step : step);
-        breakoutState.paddleX = Math.max(
-            0,
-            Math.min(breakoutCanvasEl.width - BREAKOUT_PADDLE_WIDTH, next)
-        );
-        drawBreakout();
+        if (direction === "up") {
+            return launchBreakoutBall();
+        }
+        if (direction !== "left" && direction !== "right") {
+            return false;
+        }
+        BREAKOUT.nudgePaddle(breakoutGame, direction);
+        if (!breakoutLoop.rafId) {
+            drawBreakout();
+        }
         return true;
     }
 
@@ -2661,10 +2535,39 @@
         return false;
     }
     virtualPadButtons.forEach((button) => {
+        const direction = button.dataset.padDir || "";
         button.addEventListener("click", () => {
-            handleDirectionalInput(button.dataset.padDir || "");
+            // ブロック崩しの左右は押している間だけ動かす（pointerdown/up）。
+            if (getActiveMiniGameKey() === "breakout" && (direction === "left" || direction === "right")) {
+                return;
+            }
+            handleDirectionalInput(direction);
         });
+        button.addEventListener("pointerdown", () => {
+            if (getActiveMiniGameKey() === "breakout") setBreakoutHold(direction, true);
+        });
+        for (const type of ["pointerup", "pointercancel", "pointerleave"]) {
+            button.addEventListener(type, () => setBreakoutHold(direction, false));
+        }
     });
+
+    // スペース：テトリスは回転、ブロック崩しは発射（停止中はスタート）。
+    function handleSpaceKey() {
+        const activeKey = getActiveMiniGameKey();
+        if (activeKey === "tetris" && tetrisState.running) {
+            rotateTetris();
+            return true;
+        }
+        if (activeKey === "breakout" && breakoutGame) {
+            if (["idle", "over", "complete"].includes(breakoutGame.phase)) startBreakoutGame();
+            else launchBreakoutBall();
+            return true;
+        }
+        return false;
+    }
+    function isSpaceKey(event) {
+        return event.key === " " || event.code === "Space";
+    }
 
     window.addEventListener("keydown", (event) => {
         const target = event.target;
@@ -2675,10 +2578,39 @@
             return;
         }
 
+        if (isSpaceKey(event)) {
+            // フォーカス中のボタン（×など）がスペースで押されないようにする。
+            if (["tetris", "breakout"].includes(getActiveMiniGameKey()) && miniGameSection.classList.contains("is-playing")) {
+                event.preventDefault();
+                if (!event.repeat) handleSpaceKey();
+            }
+            return;
+        }
+
         const direction = getDirectionFromKey(event.key);
+        if (direction && getActiveMiniGameKey() === "breakout" && (direction === "left" || direction === "right")) {
+            setBreakoutHold(direction, true);
+            event.preventDefault();
+            return;
+        }
         if (direction && handleDirectionalInput(direction)) {
             event.preventDefault();
         }
+    });
+
+    window.addEventListener("blur", () => {
+        setBreakoutHold("left", false);
+        setBreakoutHold("right", false);
+    });
+
+    window.addEventListener("keyup", (event) => {
+        if (isSpaceKey(event) && miniGameSection?.classList.contains("is-playing") &&
+            ["tetris", "breakout"].includes(getActiveMiniGameKey())) {
+            event.preventDefault();
+            return;
+        }
+        const direction = getDirectionFromKey(event.key);
+        if (direction === "left" || direction === "right") setBreakoutHold(direction, false);
     });
 
     if (miniTabsRoot) {

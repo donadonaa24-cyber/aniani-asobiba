@@ -120,3 +120,67 @@ assert(html.includes('id="memory-score"'), 'memory scoreboard exists');
 const arcadeCss = fs.readFileSync('arcade.css', 'utf8');
 assert(arcadeCss.includes("[data-game='tetris'] .arcade-control-deck > .arcade-session-actions { grid-column: 1; grid-row: 1; align-self: start; }") && arcadeCss.includes('.tetris-tools .arcade-session-actions') && fs.readFileSync('arcade-layout.js', 'utf8').includes('function placeTetrisActions'), 'tetris start/reset: top-left on PC, under NEXT on portrait phones');
 console.log('PASS: 1000 solvable shuffles, valid tile movement, win detection, move count and row boundary.');
+
+// ブロック崩し：5ステージ、赤は2回・銀は3回、紫は周りを巻き込む、灰色は壊れない。アイテムの効果。
+{
+  const B = require('./minigame-breakout.js');
+  assert.equal(B.STAGES.length, 5, 'five stages');
+  B.STAGES.forEach((stage, i) => {
+    stage.rows.forEach(row => assert.equal(row.length, B.COLS, `stage ${i + 1} row width`));
+    if (i) assert(stage.speed > B.STAGES[i - 1].speed, 'later stages are faster');
+  });
+  const solid = B.STAGES.map(stage => stage.rows.join('').replace(/[^rsx]/g, '').length);
+  assert(solid[4] > solid[0], 'later stages have more tough blocks');
+  const game = B.createGame(); B.newGame(game);
+  assert.equal(game.phase, 'ready', 'ball waits on the paddle');
+  assert(B.launch(game, () => 0.5) && game.phase === 'playing');
+  const place = (kind, x, y) => Object.assign(B.buildBricks({ rows: [kind.padEnd(B.COLS, '.')] })[0], { x, y });
+  const red = place('r', 100, 100);
+  game.bricks = [red, place('c', 300, 20)];
+  game.balls = [{ x: 115, y: 125, vx: 0, vy: -4, trail: [] }];
+  for (let i = 0; i < 4; i++) B.step(game, 1, 16, () => 0.99);
+  assert(red.alive && red.hp === 1, 'red survives the first hit');
+  game.balls = [{ x: 115, y: 125, vx: 0, vy: -4, trail: [] }];
+  for (let i = 0; i < 4; i++) B.step(game, 1, 16, () => 0.99);
+  assert(!red.alive, 'red breaks on the second hit');
+  const steel = place('x', 100, 100);
+  game.bricks = [steel, place('c', 300, 20)];
+  game.balls = [{ x: 115, y: 125, vx: 0, vy: -4, trail: [] }];
+  game.effects.pierce = 5000;
+  for (let i = 0; i < 4; i++) B.step(game, 1, 16, () => 0.99);
+  assert(steel.alive && game.balls[0].vy > 0, 'steel never breaks and bounces even a piercing ball');
+  const bombGame = B.createGame(); B.newGame(bombGame); B.launch(bombGame, () => 0.5);
+  const around = B.buildBricks({ rows: ['cpc'.padEnd(B.COLS, '.'), 'ccc'.padEnd(B.COLS, '.'), 'x'.padEnd(B.COLS, 'g')] });
+  bombGame.bricks = around;
+  bombGame.balls = [{ x: around[1].x + 15, y: around[1].y + 40, vx: 0, vy: -4, trail: [] }];
+  // 下の段を消して、ボールが紫に届くようにする。
+  around.filter(b => b.row === 1).forEach(b => { b.alive = false; });
+  for (let i = 0; i < 12; i++) B.step(bombGame, 1, 16, () => 0.99);
+  assert(!around[0].alive && !around[2].alive, 'purple bomb destroys its neighbours');
+  const multi = B.createGame(); B.newGame(multi); B.launch(multi, () => 0.5);
+  B.applyItem(multi, 'multi');
+  assert.equal(multi.balls.length, 3, 'multi-ball adds two balls');
+  B.applyItem(multi, 'wide');
+  assert.equal(multi.paddleW, B.PADDLE_WIDE, 'wide paddle');
+  const lives = multi.lives; B.applyItem(multi, 'life');
+  assert.equal(multi.lives, lives + 1, 'extra life');
+  // 自動で追いかけるパドルなら、止まらずに全ステージを最後まで遊べる。
+  let s = 7; const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+  const auto = B.createGame(); B.newGame(auto);
+  for (let frame = 0; frame < 60 * 60 * 30 && !['over', 'complete'].includes(auto.phase); frame++) {
+    const ball = auto.balls.filter(b => !b.stuck).sort((a, b) => b.y - a.y)[0];
+    if (ball) B.setPaddleCenter(auto, ball.x + (rnd() - 0.5) * 30);
+    B.step(auto, 1, 16.7, rnd);
+  }
+  assert.equal(auto.phase, 'complete', 'all five stages can be cleared');
+  assert(!source.includes('BREAKOUT_BRICK_PATHS'), 'breakout no longer squeezes recipe images into bricks');
+  assert(html.includes('width="360" height="480"'), 'taller breakout field');
+}
+// キーの透かし表示と、スペースでの回転。8パズルの透かしイラスト。
+assert(/data-pad-dir="up" data-key-hint="W"/.test(html) && /data-pad-dir="left" data-key-hint="A"/.test(html) && /data-pad-dir="down" data-key-hint="S"/.test(html) && /data-pad-dir="right" data-key-hint="D"/.test(html), 'WASD hints on the pad');
+assert(/id="tetris-rotate" data-key-hint="SPACE"/.test(html) && source.includes('function handleSpaceKey') && source.includes('rotateTetris();\n            return true;'), 'space rotates tetris');
+const slideArts = source.slice(source.indexOf('const SLIDE_ARTS'), source.indexOf('function pickSlideArt'));
+assert(slideArts.length > 0);
+for (const m of slideArts.match(/\["[^"]+", "(\w+)"\]/g).map(x => x.match(/"(\w+)"\]$/)[1])) assert(fs.existsSync(`images/gacha/oshikoma/${m}.webp`), `8 puzzle art ${m}`);
+assert(source.includes('生成AIを使用') && html.includes('id="drop-art"'), '8 puzzle credits the AI-generated art');
+console.log('PASS: breakout stages, tough/bomb/steel bricks, items, full clear; key hints; 8 puzzle art.');
