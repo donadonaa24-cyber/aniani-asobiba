@@ -5,6 +5,7 @@
     const close = modal.querySelector('[data-modal-close]');
     const controls = document.getElementById('arcade-controls');
     const sessions = [];
+    let tetrisActions = null;
     if (controls) {
         // Move existing buttons, not copies, so game handlers and IDs stay intact.
         root.querySelectorAll('[data-mini-panel]').forEach(panel => {
@@ -13,6 +14,7 @@
             actions.classList.add('arcade-session-actions');
             actions.dataset.controlGame = panel.dataset.miniPanel;
             actions.hidden = true;
+            if (panel.dataset.miniPanel === 'tetris') tetrisActions = actions;
             controls.append(actions);
             sessions.push(actions);
         });
@@ -32,7 +34,8 @@
         const width = panel.clientWidth - number(style.paddingLeft) - number(style.paddingRight);
         for (const child of panel.children) {
             const cs = getComputedStyle(child);
-            if (cs.display === 'none') continue;
+            // 盤面に重ねる遊び方の選択・結果表示は、盤面の大きさの計算に含めない。
+            if (cs.display === 'none' || cs.position === 'absolute') continue;
             height -= number(cs.marginTop) + number(cs.marginBottom);
             if (child !== board) height -= child.offsetHeight;
         }
@@ -56,7 +59,16 @@
         board.style.width = `${Math.max(1, w)}px`;
         board.style.height = `${Math.max(1, h)}px`;
     }
-    function schedule() { if (!frame) frame = requestAnimationFrame(fit); }
+    // テトリスのスタート・リセットは、十字キーや回転から離す。PC・横画面は左上の余白、
+    // スマホ縦画面は右側のNEXTの下（同じ列に積むので重ならない）。
+    function placeTetrisActions() {
+        if (!tetrisActions?.parentNode) return;
+        const tools = document.querySelector?.('.tetris-tools');
+        const portrait = window.matchMedia?.('(orientation: portrait) and (max-width: 700px), (max-width: 540px)')?.matches;
+        const target = portrait && typeof tools?.append === 'function' ? tools : controls;
+        if (target && tetrisActions.parentNode !== target) target.append(tetrisActions);
+    }
+    function schedule() { placeTetrisActions(); if (!frame) frame = requestAnimationFrame(fit); }
     function menuTabs() { root.querySelectorAll('[data-mini-tab]').forEach(tab => tab.tabIndex = 0); }
     function safely(action) {
         try { return Promise.resolve(action()).catch(() => {}); }

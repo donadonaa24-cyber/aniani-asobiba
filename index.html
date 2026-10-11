@@ -26,8 +26,8 @@
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="aniani.css?v=20261006a1">
     <link rel="stylesheet" href="galaxy.css?v=20261008a1">
-    <link rel="stylesheet" href="arcade.css?v=20261008a1">
-    <link rel="stylesheet" href="trial-gacha.css?v=20261013a1">
+    <link rel="stylesheet" href="arcade.css?v=20261014a1">
+    <link rel="stylesheet" href="trial-gacha.css?v=20261014a1">
 </head>
 <body>
     <div class="bg-glow bg-glow-a"></div>
@@ -290,22 +290,82 @@
                 <div class="mini-game-stage">
                 <article id="mini-panel-ttt" class="panel mini-game-panel mini-tab-panel is-active" data-mini-panel="ttt" role="tabpanel" aria-labelledby="mini-tab-ttt">
                     <h4>〇×ゲーム（9×9・5目並べ）</h4>
-                    <p class="panel-note">交互にマスを押して、縦・横・斜めのどれかで先に5つそろえたら勝ちです。</p>
+                    <p class="panel-note">交互にマスを押して、縦・横・斜めのどれかで先に5つそろえたら勝ちです。1人（CPUあり・なし）か2人で遊べます。</p>
+                    <div class="mini-setup" id="ttt-setup" data-setup="ttt">
+                        <div class="mini-setup-card">
+                            <p class="mini-setup-title" data-setup-title>遊び方を選んでください</p>
+                            <div class="mini-setup-choices" data-setup-step="players">
+                                <button type="button" data-setup-choice="1">1人で遊ぶ</button>
+                                <button type="button" data-setup-choice="2">2人で遊ぶ<small>交代で遊んで得点を競う</small></button>
+                            </div>
+                            <div class="mini-setup-choices" data-setup-step="opponent" hidden>
+                                <button type="button" data-setup-choice="none">CPUなし<small>〇と×を自分で交互に打つ</small></button>
+                                <button type="button" data-setup-choice="cpu">CPUと対戦<small>先攻はランダム</small></button>
+                            </div>
+                            <div class="mini-setup-choices is-levels" data-setup-step="level" hidden>
+                                <button type="button" data-setup-choice="easy">やさしい</button>
+                                <button type="button" data-setup-choice="normal">ふつう</button>
+                                <button type="button" data-setup-choice="hard">つよい<small>かなり強い</small></button>
+                            </div>
+                            <button type="button" class="mini-setup-back" data-setup-back hidden>← 戻る</button>
+                        </div>
+                    </div>
+                    <div class="mini-result" id="ttt-result" hidden>
+                        <div class="mini-result-card">
+                            <p class="mini-result-title" data-result-title></p>
+                            <p class="mini-result-detail" data-result-detail></p>
+                            <div class="mini-result-actions">
+                                <button type="button" class="btn btn-primary btn-mini" data-result-again>もう一度</button>
+                                <button type="button" class="btn btn-ghost btn-mini" data-result-mode>遊び方を変える</button>
+                            </div>
+                        </div>
+                    </div>
                     <div id="ttt-board" class="ttt-board" aria-label="〇×ゲーム盤面"></div>
                     <p id="ttt-status" class="ttt-status">○ の番です</p>
                     <div class="form-actions">
+                        <button class="btn btn-ghost btn-mini" type="button" id="ttt-mode">遊び方</button>
                         <button class="btn btn-primary btn-mini" type="button" id="ttt-reset">リセット</button>
                     </div>
                 </article>
 
                 <article id="mini-panel-memory" class="panel mini-game-panel memory-panel mini-tab-panel" data-mini-panel="memory" role="tabpanel" aria-labelledby="mini-tab-memory">
                     <h4>神経衰弱（材料カード）</h4>
-                    <p class="panel-note">材料カード15種類を2枚ずつ使用。すべてそろえるまでの時間でスコアを競います。</p>
+                    <p class="panel-note">材料カード15種類を2枚ずつ使用。1人ならタイムを、CPUや2人なら取ったペアの数を競います。</p>
+                    <div class="mini-setup" id="memory-setup" data-setup="memory">
+                        <div class="mini-setup-card">
+                            <p class="mini-setup-title" data-setup-title>遊び方を選んでください</p>
+                            <div class="mini-setup-choices" data-setup-step="players">
+                                <button type="button" data-setup-choice="1">1人で遊ぶ</button>
+                                <button type="button" data-setup-choice="2">2人で遊ぶ<small>交代で遊んで得点を競う</small></button>
+                            </div>
+                            <div class="mini-setup-choices" data-setup-step="opponent" hidden>
+                                <button type="button" data-setup-choice="none">CPUなし<small>すべてそろえるまでのタイムを競う</small></button>
+                                <button type="button" data-setup-choice="cpu">CPUと対戦<small>交互にめくって取ったペアの数を競う</small></button>
+                            </div>
+                            <div class="mini-setup-choices is-levels" data-setup-step="level" hidden>
+                                <button type="button" data-setup-choice="easy">やさしい</button>
+                                <button type="button" data-setup-choice="normal">ふつう</button>
+                                <button type="button" data-setup-choice="hard">つよい<small>かなり強い</small></button>
+                            </div>
+                            <button type="button" class="mini-setup-back" data-setup-back hidden>← 戻る</button>
+                        </div>
+                    </div>
+                    <div class="mini-result" id="memory-result" hidden>
+                        <div class="mini-result-card">
+                            <p class="mini-result-title" data-result-title></p>
+                            <p class="mini-result-detail" data-result-detail></p>
+                            <div class="mini-result-actions">
+                                <button type="button" class="btn btn-primary btn-mini" data-result-again>もう一度</button>
+                                <button type="button" class="btn btn-ghost btn-mini" data-result-mode>遊び方を変える</button>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="memory-controls">
                         <label for="memory-nickname">ニックネーム</label>
                         <input id="memory-nickname" type="text" maxlength="20" placeholder="プレイヤー名を入力">
                         <div class="memory-button-row">
+                            <button class="btn btn-ghost btn-mini" type="button" id="memory-mode">遊び方</button>
                             <button class="btn btn-primary btn-mini" type="button" id="memory-start">スタート</button>
                             <button class="btn btn-ghost btn-mini" type="button" id="memory-reset">リセット</button>
                         </div>
@@ -314,6 +374,7 @@
                     <div class="memory-hud">
                         <p id="memory-status">スタートを押すと開始します。</p>
                         <p id="memory-timer">00:00.000</p>
+                        <p id="memory-score" class="memory-score" hidden><span data-score-player="0"><em>プレイヤー1</em> <b>0</b></span><span data-score-player="1"><em>プレイヤー2</em> <b>0</b></span></p>
                     </div>
 
                     <div id="memory-board" class="memory-board" aria-label="神経衰弱盤面"></div>
@@ -652,7 +713,7 @@
                                 <p id="trial-gacha-status" role="status" aria-live="polite">ガチャタブから、作品カードを呼び出せます。</p>
                             </div>
                             <div class="trial-results-wrap" id="trial-results-wrap" hidden>
-                                <div class="trial-results-head"><h3>10連の結果</h3><button type="button" id="trial-results-again">もう一度10連</button></div>
+                                <div class="trial-results-head"><h3>10連の結果</h3><div class="trial-results-actions"><button type="button" id="trial-results-top">10連トップへ</button><button type="button" id="trial-results-again">もう一度10連</button></div></div>
                                 <div class="trial-gacha-results" id="trial-gacha-results" aria-label="10連ガチャ結果"></div>
                                 <p id="trial-results-status" role="status" aria-live="polite"></p>
                             </div>
@@ -749,8 +810,9 @@
     </section>
     <script src="trial-gacha-data.js?v=20261012b1"></script>
     <script src="trial-gacha-sea.js?v=20261013b1"></script>
-    <script src="trial-gacha.js?v=20261013b1"></script>
-    <script src="aniani.js?v=20261011f1"></script>
+    <script src="trial-gacha.js?v=20261014a1"></script>
+    <script src="minigame-ai.js?v=20261014a1"></script>
+    <script src="aniani.js?v=20261014a1"></script>
     <script src="galaxy.js?v=20260915a1"></script>
-<script src="arcade-layout.js?v=20260915a1"></script></body>
+<script src="arcade-layout.js?v=20261014a1"></script></body>
 </html>

@@ -166,6 +166,9 @@
 .trial-next-button { border: 1px solid #c7f2ff; color: #06111f; background: linear-gradient(120deg, #75ddff, #d8f8ff); box-shadow: 0 0 25px #60dbff35; }
 .trial-skip-button { min-height: 44px; border: 1px solid #8ea7bb55; color: #c4d4df; background: #081829d9; }
 #trial-results-again { min-height: 40px; padding: 7px 15px; border: 1px solid #ffd98588; color: #fff2be; background: #352207aa; font-size: 12px; }
+.trial-results-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+#trial-results-top { min-height: 40px; padding: 7px 15px; border: 1px solid #8fdcff66; border-radius: 14px; color: #d9f4ff; background: #0b2440cc; font: 800 12px 'M PLUS Rounded 1c', sans-serif; cursor: pointer; }
+#trial-results-top:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .trial-draw-button:focus-visible,
 .trial-next-button:focus-visible,
 .trial-skip-button:focus-visible,
@@ -260,7 +263,9 @@
 .trial-gacha-results .trial-card, .trial-gacha-book .trial-card { touch-action: pan-y; }
 .trial-gacha-results .trial-card:not(.is-locked)::before, .trial-gacha-book .trial-card:not(.is-locked)::before { --gem-size: 7px; inset: calc(var(--frame-w) + 2px); border-radius: 6px; }
 .trial-gacha-results .trial-card.rarity-ur::after, .trial-gacha-book .trial-card.rarity-ur::after { font-size: 9px; }
-.trial-gacha-book .trial-card.rarity-sr .trial-card-holo { animation: none; }
+/* コレクション画面のSRは、白い靄にならないよう光沢を控えめにする（演出中は従来どおり）。 */
+.trial-gacha-book .trial-card.rarity-sr .trial-card-holo { opacity: .18; animation: none; background-position: 0 0; }
+.trial-art-image { cursor: zoom-out; }
 .trial-art-image:not([data-rarity="c"])::before { --gem-size: 14px; }
 
 .trial-book-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }

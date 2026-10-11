@@ -48,8 +48,8 @@ assert(html.includes('ログイン・コイン・実際のお金は必要あり�
 assert(html.includes('id="trial-reveal-skip"'));
 assert(html.includes('id="trial-reveal-next"'));
 assert(html.includes('trial-gacha-data.js?v=20261012b1'));
-assert(html.includes('trial-gacha.js?v=20261013b1'));
-assert(html.includes('trial-gacha.css?v=20261013a1')); assert(html.includes('trial-gacha-sea.js?v=20261013b1'));
+assert(html.includes('trial-gacha.js?v=20261014a1'));
+assert(html.includes('trial-gacha.css?v=20261014a1')); assert(html.includes('trial-gacha-sea.js?v=20261013b1'));
 assert(html.includes('架空運輸 ホームページへ'));
 assert(/social-card[^>]+tumikomi\/index\.html\?view=home[\s\S]*?<h4>架空運輸<\/h4>/.test(html));
 assert(fs.existsSync('images/gacha/transport-vehicles.png'));

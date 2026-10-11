@@ -217,6 +217,9 @@
     const tttBoardEl = document.getElementById("ttt-board");
     const tttStatusEl = document.getElementById("ttt-status");
     const tttResetButton = document.getElementById("ttt-reset");
+    const tttModeButton = document.getElementById("ttt-mode");
+    const tttSetupEl = document.getElementById("ttt-setup");
+    const tttResultEl = document.getElementById("ttt-result");
     const memoryNicknameInput = document.getElementById("memory-nickname");
     const memoryStartButton = document.getElementById("memory-start");
     const memoryResetButton = document.getElementById("memory-reset");
@@ -224,6 +227,11 @@
     const memoryStatusEl = document.getElementById("memory-status");
     const memoryTimerEl = document.getElementById("memory-timer");
     const memoryRankingListEl = document.getElementById("memory-ranking-list");
+    const memoryModeButton = document.getElementById("memory-mode");
+    const memorySetupEl = document.getElementById("memory-setup");
+    const memoryResultEl = document.getElementById("memory-result");
+    const memoryScoreEl = document.getElementById("memory-score");
+    const memoryControlsEl = document.querySelector(".memory-controls");
     const moleBoardEl = document.getElementById("mole-board");
     const moleStatusEl = document.getElementById("mole-status");
     const moleTimeEl = document.getElementById("mole-time");
@@ -671,32 +679,84 @@
 
     const TTT_SIZE = 9;
     const TTT_GOAL = 5;
+    const MINI_AI = window.AnianiMiniGameAI;
+    const LEVEL_LABELS = { easy: "やさしい", normal: "ふつう", hard: "つよい" };
     let tttBoard = Array(TTT_SIZE * TTT_SIZE).fill("");
     let tttTurn = "○";
     let tttFinished = false;
     let tttWinLine = [];
-    function findWinLine(board) {
-        for (let row = 0; row < TTT_SIZE; row++) {
-            for (let col = 0; col < TTT_SIZE; col++) {
-                const mark = board[row * TTT_SIZE + col];
-                if (!mark) continue;
-                for (const [dx, dy] of [[1,0],[0,1],[1,1],[-1,1]]) {
-                    const line = [];
-                    for (let n = 0; n < TTT_GOAL; n++) {
-                        const x = col + dx * n, y = row + dy * n;
-                        if (x < 0 || x >= TTT_SIZE || y >= TTT_SIZE || board[y * TTT_SIZE + x] !== mark) break;
-                        line.push(y * TTT_SIZE + x);
-                    }
-                    if (line.length === TTT_GOAL) return line;
-                }
-            }
+    let tttLastMove = -1;
+    let tttMode = { players: 2, cpu: false, level: "normal" };
+    let tttHuman = "○";
+    let tttCpuMark = "×";
+    let tttCpuTimer = 0;
+
+    // 盤面の上に重ねる「遊び方の選択」：人数 → CPUの有無 → 強さ。
+    function createModeSetup(element, onComplete) {
+        if (!element) return { open() {}, close() {} };
+        const steps = Array.from(element.querySelectorAll("[data-setup-step]"));
+        const back = element.querySelector("[data-setup-back]");
+        const title = element.querySelector("[data-setup-title]");
+        const titles = { players: "遊び方を選んでください", opponent: "1人で遊ぶ：CPUと対戦しますか？", level: "CPUの強さを選んでください" };
+        let current = "players";
+        function show(step) {
+            current = step;
+            steps.forEach((item) => { item.hidden = item.dataset.setupStep !== step; });
+            if (back) back.hidden = step === "players";
+            if (title) title.textContent = titles[step];
+            element.querySelector(`[data-setup-step="${step}"] button`)?.focus({ preventScroll: true });
         }
-        return [];
+        element.addEventListener("click", (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            if (target?.closest("[data-setup-back]")) {
+                show(current === "level" ? "opponent" : "players");
+                return;
+            }
+            const choice = target?.closest("[data-setup-choice]")?.dataset.setupChoice;
+            if (!choice) return;
+            if (current === "players") {
+                if (choice === "2") { element.hidden = true; onComplete({ players: 2, cpu: false, level: "normal" }); }
+                else show("opponent");
+            } else if (current === "opponent") {
+                if (choice === "none") { element.hidden = true; onComplete({ players: 1, cpu: false, level: "normal" }); }
+                else show("level");
+            } else {
+                element.hidden = true;
+                onComplete({ players: 1, cpu: true, level: choice });
+            }
+        });
+        return {
+            open() { element.hidden = false; show("players"); },
+            close() { element.hidden = true; }
+        };
     }
+
+    function showMiniResult(element, title, detail) {
+        if (!element) return;
+        element.querySelector("[data-result-title]").textContent = title;
+        element.querySelector("[data-result-detail]").textContent = detail;
+        element.hidden = false;
+    }
+
+    function findWinLine(board) {
+        return MINI_AI ? MINI_AI.findWinLine(board, TTT_SIZE, TTT_GOAL) : [];
+    }
+
+    function tttLabel(mark) {
+        if (tttMode.cpu) return mark === tttHuman ? `あなた（${mark}）` : `CPU（${mark}）`;
+        if (tttMode.players === 2) return `${mark === "○" ? "プレイヤー1" : "プレイヤー2"}（${mark}）`;
+        return mark;
+    }
+
     function updateTttStatus(text) {
         if (tttStatusEl) {
             tttStatusEl.textContent = text;
         }
+    }
+
+    function tttTurnText() {
+        if (tttMode.cpu && tttTurn === tttCpuMark) return `${tttLabel(tttTurn)} が考えています…`;
+        return `${tttLabel(tttTurn)} の番です`;
     }
 
     function renderTtt() {
@@ -707,18 +767,83 @@
         tttBoardEl.innerHTML = tttBoard.map((value, index) => {
             const mark = escapeHtml(value || "");
             const winClass = tttWinLine.includes(index) ? " is-win" : "";
-            return `<button class="ttt-cell${winClass}" type="button" data-ttt-index="${index}" aria-label="${index + 1}マス">${mark}</button>`;
+            const lastClass = index === tttLastMove ? " is-last" : "";
+            return `<button class="ttt-cell${winClass}${lastClass}" type="button" data-ttt-index="${index}" aria-label="${index + 1}マス">${mark}</button>`;
         }).join("");
     }
 
+    function clearTttCpu() {
+        if (tttCpuTimer) window.clearTimeout(tttCpuTimer);
+        tttCpuTimer = 0;
+    }
+
     function resetTtt() {
+        clearTttCpu();
         tttBoard = Array(TTT_SIZE * TTT_SIZE).fill("");
         tttTurn = "○";
         tttFinished = false;
         tttWinLine = [];
-        updateTttStatus("○ の番です");
+        tttLastMove = -1;
+        if (tttResultEl) tttResultEl.hidden = true;
+        // CPU対戦の先攻（○）はランダム。
+        tttHuman = tttMode.cpu && Math.random() < 0.5 ? "×" : "○";
+        tttCpuMark = tttHuman === "○" ? "×" : "○";
+        updateTttStatus(tttTurnText());
         renderTtt();
+        if (tttMode.cpu && tttTurn === tttCpuMark) scheduleTttCpu();
     }
+
+    function finishTtt(winner) {
+        tttFinished = true;
+        clearTttCpu();
+        let title = "引き分け";
+        if (winner) {
+            if (tttMode.cpu) title = winner === tttHuman ? "あなたの勝ち！" : "CPUの勝ち…";
+            else if (tttMode.players === 2) title = `${winner === "○" ? "プレイヤー1" : "プレイヤー2"}（${winner}）の勝ち！`;
+            else title = `${winner} の勝ち！`;
+        }
+        const detail = tttMode.cpu ? `CPU：${LEVEL_LABELS[tttMode.level]}　あなたは${tttHuman === "○" ? "先攻" : "後攻"}（${tttHuman}）` : (winner ? "5つそろいました" : "盤面がすべて埋まりました");
+        updateTttStatus(winner ? `${tttLabel(winner)} の勝ちです` : "引き分けです");
+        renderTtt();
+        // 勝った並びが見えるよう、少し待ってから結果を出す。
+        window.setTimeout(() => {
+            if (tttFinished) showMiniResult(tttResultEl, title, detail);
+        }, 900);
+    }
+
+    function placeTtt(index, mark) {
+        if (tttFinished || tttBoard[index]) return;
+        tttBoard[index] = mark;
+        tttLastMove = index;
+        tttWinLine = findWinLine(tttBoard);
+        if (tttWinLine.length) {
+            finishTtt(mark);
+            return;
+        }
+        if (tttBoard.every(Boolean)) {
+            finishTtt("");
+            return;
+        }
+        tttTurn = tttTurn === "○" ? "×" : "○";
+        updateTttStatus(tttTurnText());
+        renderTtt();
+        if (tttMode.cpu && tttTurn === tttCpuMark) scheduleTttCpu();
+    }
+
+    function scheduleTttCpu() {
+        clearTttCpu();
+        tttCpuTimer = window.setTimeout(() => {
+            tttCpuTimer = 0;
+            if (tttFinished || !MINI_AI) return;
+            const index = MINI_AI.chooseGomokuMove(tttBoard, TTT_SIZE, TTT_GOAL, tttCpuMark, tttHuman, tttMode.level);
+            placeTtt(index, tttCpuMark);
+        }, 450);
+    }
+
+    const tttSetup = createModeSetup(tttSetupEl, (mode) => {
+        tttMode = mode;
+        resetTtt();
+    });
 
     if (tttBoardEl) {
         tttBoardEl.addEventListener("click", (event) => {
@@ -737,36 +862,23 @@
                 return;
             }
 
-            if (tttFinished || tttBoard[index]) {
+            if (tttFinished || tttBoard[index] || (tttMode.cpu && tttTurn === tttCpuMark)) {
                 return;
             }
 
-            tttBoard[index] = tttTurn;
-            tttWinLine = findWinLine(tttBoard);
-
-            if (tttWinLine.length) {
-                tttFinished = true;
-                updateTttStatus(`${tttTurn} の勝ちです`);
-                renderTtt();
-                return;
-            }
-
-            if (tttBoard.every(Boolean)) {
-                tttFinished = true;
-                updateTttStatus("引き分けです");
-                renderTtt();
-                return;
-            }
-
-            tttTurn = tttTurn === "○" ? "×" : "○";
-            updateTttStatus(`${tttTurn} の番です`);
-            renderTtt();
+            placeTtt(index, tttTurn);
         });
     }
 
     if (tttResetButton) {
         tttResetButton.addEventListener("click", resetTtt);
     }
+    tttModeButton?.addEventListener("click", () => { clearTttCpu(); tttSetup.open(); });
+    tttResultEl?.querySelector("[data-result-again]")?.addEventListener("click", resetTtt);
+    tttResultEl?.querySelector("[data-result-mode]")?.addEventListener("click", () => {
+        tttResultEl.hidden = true;
+        tttSetup.open();
+    });
 
     const MEMORY_CARD_BACK_PATH = "assets/images/card-back.png";
     const MEMORY_INGREDIENTS = [
@@ -916,8 +1028,60 @@
         }).join("");
     }
 
+    // 対戦（CPU・2人）の状態。1人・CPUなしは従来どおりタイムアタック。
+    const memoryVersus = {
+        mode: { players: 1, cpu: false, level: "normal" },
+        scores: [0, 0],
+        turn: 0,
+        known: new Map(),
+        timers: []
+    };
+
+    function isMemoryVersus() {
+        return memoryVersus.mode.players === 2 || memoryVersus.mode.cpu;
+    }
+
+    function memoryPlayerNames() {
+        return memoryVersus.mode.cpu ? ["あなた", "CPU"] : ["プレイヤー1", "プレイヤー2"];
+    }
+
+    function isMemoryCpuTurn() {
+        return memoryVersus.mode.cpu && memoryVersus.turn === 1;
+    }
+
+    function clearMemoryCpu() {
+        memoryVersus.timers.forEach((timer) => window.clearTimeout(timer));
+        memoryVersus.timers = [];
+    }
+
+    function updateMemoryScoreboard() {
+        if (!memoryScoreEl) return;
+        const names = memoryPlayerNames();
+        memoryScoreEl.querySelectorAll("[data-score-player]").forEach((item) => {
+            const player = Number(item.dataset.scorePlayer);
+            item.querySelector("em").textContent = names[player];
+            item.querySelector("b").textContent = String(memoryVersus.scores[player]);
+            item.classList.toggle("is-turn", memoryState.running && memoryVersus.turn === player);
+        });
+    }
+
+    // 遊び方に合わせて、タイム・ニックネーム・得点表示を切り替える。
+    function applyMemoryModeUi() {
+        const versus = isMemoryVersus();
+        if (memoryTimerEl) memoryTimerEl.hidden = versus;
+        if (memoryScoreEl) memoryScoreEl.hidden = !versus;
+        memoryControlsEl?.classList.toggle("is-versus", versus);
+        updateMemoryScoreboard();
+    }
+
+    function memoryTurnText() {
+        const name = memoryPlayerNames()[memoryVersus.turn];
+        return isMemoryCpuTurn() ? "CPUの番です…" : `${name}の番です。カードを2枚めくってください。`;
+    }
+
     function resetMemoryGameToIdle() {
         stopMemoryTimerLoop();
+        clearMemoryCpu();
         memoryState.cards = [];
         memoryState.running = false;
         memoryState.finished = false;
@@ -927,12 +1091,31 @@
         memoryState.firstId = null;
         memoryState.lock = false;
         memoryState.matchedPairs = 0;
+        memoryVersus.scores = [0, 0];
+        memoryVersus.turn = 0;
+        memoryVersus.known = new Map();
+        if (memoryResultEl) memoryResultEl.hidden = true;
         updateMemoryTimer();
         renderMemoryBoard();
-        setMemoryStatus("スタートを押すと開始します。");
+        applyMemoryModeUi();
+        setMemoryStatus(isMemoryVersus() ? "スタートを押すと対戦を開始します。" : "ニックネームを入力してスタートを押すと開始します。");
+    }
+
+    function startMemoryVersus() {
+        resetMemoryGameToIdle();
+        memoryState.cards = buildMemoryCards();
+        memoryState.running = true;
+        updateMemoryScoreboard();
+        setMemoryStatus(memoryTurnText());
+        renderMemoryBoard();
     }
 
     function startMemoryGame() {
+        memorySetup.close();
+        if (isMemoryVersus()) {
+            startMemoryVersus();
+            return;
+        }
         const rawName = String(memoryNicknameInput?.value || "").trim();
         if (!rawName) {
             window.alert("ニックネームを入力してからスタートしてください。");
@@ -941,6 +1124,7 @@
 
         const nickname = normalizeName(rawName);
         stopMemoryTimerLoop();
+        if (memoryResultEl) memoryResultEl.hidden = true;
         memoryState.cards = buildMemoryCards();
         memoryState.running = true;
         memoryState.finished = false;
@@ -976,10 +1160,51 @@
             .slice(0, 20);
         saveMemoryRankings();
         renderMemoryRanking();
+        showMiniResult(memoryResultEl, "クリア！", `${memoryState.playerName} さんのタイム：${formatDuration(memoryState.elapsedMs)}`);
     }
 
-    function handleMemoryCardClick(cardId) {
+    function finishMemoryVersus() {
+        memoryState.running = false;
+        memoryState.finished = true;
+        clearMemoryCpu();
+        const names = memoryPlayerNames();
+        const [first, second] = memoryVersus.scores;
+        let title = "引き分け！";
+        if (first !== second) {
+            const winner = first > second ? 0 : 1;
+            title = memoryVersus.mode.cpu ? (winner === 0 ? "あなたの勝ち！" : "CPUの勝ち…") : `${names[winner]}の勝ち！`;
+        }
+        const level = memoryVersus.mode.cpu ? `（CPU：${LEVEL_LABELS[memoryVersus.mode.level]}）` : "";
+        const detail = `${names[0]} ${first}ペア 対 ${second}ペア ${names[1]}${level}`;
+        updateMemoryScoreboard();
+        setMemoryStatus(`${title} ${detail}`);
+        window.setTimeout(() => {
+            if (memoryState.finished) showMiniResult(memoryResultEl, title, detail);
+        }, 600);
+    }
+
+    // CPUは、覚えているカードからペアを探し、なければまだ見ていないカードをめくる。
+    function scheduleMemoryCpu() {
+        if (!MINI_AI || !isMemoryCpuTurn() || !memoryState.running) return;
+        const level = memoryVersus.mode.level;
+        const pick = (delay) => {
+            const timer = window.setTimeout(() => {
+                if (!memoryState.running || !isMemoryCpuTurn() || memoryState.lock) return;
+                const id = MINI_AI.chooseMemoryPick(memoryState.cards, memoryVersus.known, level, memoryState.firstId);
+                if (id) handleMemoryCardClick(id, true);
+                if (memoryState.firstId && memoryState.running && isMemoryCpuTurn()) pick(750);
+            }, delay);
+            memoryVersus.timers.push(timer);
+        };
+        pick(800);
+    }
+
+    function handleMemoryCardClick(cardId, byCpu = false) {
         if (!memoryState.running || memoryState.lock) {
+            return;
+        }
+        const versus = isMemoryVersus();
+        if (versus && isMemoryCpuTurn() && !byCpu) {
             return;
         }
 
@@ -989,6 +1214,7 @@
         }
 
         card.flipped = true;
+        if (memoryVersus.mode.cpu && MINI_AI) MINI_AI.rememberCard(memoryVersus.known, card, memoryVersus.mode.level);
         renderMemoryBoard();
 
         if (!memoryState.firstId) {
@@ -1008,9 +1234,20 @@
             firstCard.matched = true;
             secondCard.matched = true;
             memoryState.matchedPairs += 1;
-            setMemoryStatus(`ナイス！ ${memoryState.matchedPairs}/${MEMORY_TOTAL_PAIRS} ペア成立`);
             renderMemoryBoard();
-
+            if (versus) {
+                memoryVersus.scores[memoryVersus.turn] += 1;
+                updateMemoryScoreboard();
+                if (memoryState.matchedPairs >= MEMORY_TOTAL_PAIRS) {
+                    finishMemoryVersus();
+                    return;
+                }
+                // ペアがそろったら、同じ人がもう一度めくる。
+                setMemoryStatus(`${memoryPlayerNames()[memoryVersus.turn]}がペアをゲット！ もう一度めくれます。`);
+                if (isMemoryCpuTurn()) scheduleMemoryCpu();
+                return;
+            }
+            setMemoryStatus(`ナイス！ ${memoryState.matchedPairs}/${MEMORY_TOTAL_PAIRS} ペア成立`);
             if (memoryState.matchedPairs >= MEMORY_TOTAL_PAIRS) {
                 finishMemoryGame();
             }
@@ -1018,14 +1255,27 @@
         }
 
         memoryState.lock = true;
-        setMemoryStatus("不一致。次のペアを探そう。");
-        window.setTimeout(() => {
+        setMemoryStatus(versus ? "そろいませんでした。交代です。" : "不一致。次のペアを探そう。");
+        const timer = window.setTimeout(() => {
             firstCard.flipped = false;
             secondCard.flipped = false;
             memoryState.lock = false;
+            if (versus && memoryState.running) {
+                memoryVersus.turn = 1 - memoryVersus.turn;
+                updateMemoryScoreboard();
+                setMemoryStatus(memoryTurnText());
+            }
             renderMemoryBoard();
-        }, 700);
+            if (versus && isMemoryCpuTurn()) scheduleMemoryCpu();
+        }, versus ? 900 : 700);
+        if (versus) memoryVersus.timers.push(timer);
     }
+
+    const memorySetup = createModeSetup(memorySetupEl, (mode) => {
+        memoryVersus.mode = mode;
+        if (isMemoryVersus()) startMemoryVersus();
+        else resetMemoryGameToIdle();
+    });
 
     if (memoryBoardEl) {
         memoryBoardEl.addEventListener("click", (event) => {
@@ -1055,6 +1305,15 @@
     if (memoryResetButton) {
         memoryResetButton.addEventListener("click", resetMemoryGameToIdle);
     }
+    memoryModeButton?.addEventListener("click", () => { resetMemoryGameToIdle(); memorySetup.open(); });
+    memoryResultEl?.querySelector("[data-result-again]")?.addEventListener("click", () => {
+        if (isMemoryVersus()) startMemoryVersus();
+        else resetMemoryGameToIdle();
+    });
+    memoryResultEl?.querySelector("[data-result-mode]")?.addEventListener("click", () => {
+        resetMemoryGameToIdle();
+        memorySetup.open();
+    });
 
     const MOLE_IMAGE_PATHS = ["images/arcade-mole.png", "images/arcade-rabbit.png", "images/arcade-dog.png"];
 
@@ -2473,7 +2732,7 @@
 
     document.addEventListener("arcade-exit", () => {
         for (const reset of [resetTtt, resetMemoryGameToIdle, resetMoleGame, resetReactionTest,
-            resetBreakoutGame, resetSnakeGame, resetTetrisGame, resetDropGame]) {
+            resetBreakoutGame, resetSnakeGame, resetTetrisGame, resetDropGame, tttSetup.open, memorySetup.open]) {
             try { reset(); } catch (error) { console.error("Arcade cleanup failed", error); }
         }
     });
