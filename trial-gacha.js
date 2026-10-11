@@ -434,6 +434,8 @@
         }
 
         rootElement.querySelector("#trial-art-close")?.addEventListener("click", () => artDialog.close());
+        // 拡大した画像をもう一度押しても閉じる。
+        artImage?.addEventListener("click", () => { if (artDialog?.open) artDialog.close(); });
         // Escape は画像だけを閉じ、背後のガチャ画面へ伝えない。
         artDialog?.addEventListener("keydown", (event) => { event.stopPropagation(); });
 
@@ -705,6 +707,11 @@
 
         drawButton?.addEventListener("click", beginDraw);
         againButton?.addEventListener("click", beginDraw);
+        // 結果画面から、コインを投げる前の10連トップ（待機画面）へ戻る。
+        rootElement.querySelector("#trial-results-top")?.addEventListener("click", () => {
+            resetPresentation();
+            drawButton?.focus({ preventScroll: true });
+        });
         nextButton?.addEventListener("click", () => {
             if (!drawing) return;
             if (currentIndex >= activeResults.length - 1) finishDraw();

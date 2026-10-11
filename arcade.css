@@ -212,3 +212,38 @@ body:has(#mini-game.is-open) .site-header { visibility: hidden; }
  #mini-game.is-playing[data-game='memory'] .memory-hud { flex-wrap: nowrap; }
  #mini-game.is-playing[data-game='memory'] #memory-status { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1; }
 }
+
+/* 遊び方の選択（人数・CPU・強さ）と対戦結果は、盤面の上に重ねて表示する。 */
+#mini-game #mini-panel-ttt, #mini-game #mini-panel-memory { position: relative; }
+#mini-game .mini-setup[hidden], #mini-game .mini-result[hidden], #mini-game .mini-setup-choices[hidden], #mini-game .mini-setup-back[hidden] { display: none; }
+#mini-game .mini-setup, #mini-game .mini-result { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; padding: 12px; background: #020818d9; backdrop-filter: blur(3px); border-radius: inherit; }
+#mini-game .mini-setup-card, #mini-game .mini-result-card { width: min(520px, 100%); max-height: 100%; overflow: auto; padding: 18px; border: 1px solid #8fdcff66; border-radius: 18px; background: linear-gradient(160deg, #0d2747f2, #050f24f2); box-shadow: 0 18px 50px #000a, inset 0 0 30px #5fd0ff14; text-align: center; box-sizing: border-box; }
+#mini-game .mini-setup-title, #mini-game .mini-result-title { margin: 0 0 14px; color: #f3fbff; font: 700 clamp(17px, 2.6vw, 24px) 'Shippori Mincho', serif; letter-spacing: .06em; }
+#mini-game .mini-setup-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+#mini-game .mini-setup-choices.is-levels { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+#mini-game .mini-setup-choices button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 64px; padding: 10px; border: 1px solid #9fe3ff66; border-radius: 14px; color: #eaf7ff; background: linear-gradient(145deg, #173a63, #0b1d38); font: 800 16px 'M PLUS Rounded 1c', sans-serif; cursor: pointer; touch-action: manipulation; }
+#mini-game .mini-setup-choices button:hover, #mini-game .mini-setup-choices button:focus-visible { border-color: #ffe08a; box-shadow: 0 0 18px #ffd56a44; outline: none; }
+#mini-game .mini-setup-choices small { color: #a9c8dc; font-size: 11px; font-weight: 700; }
+#mini-game .mini-setup-choices [data-setup-choice="hard"] { border-color: #ff9ad4aa; }
+#mini-game .mini-setup-back { margin-top: 12px; padding: 8px 14px; border: 0; color: #a9d8f0; background: none; font: 700 13px 'M PLUS Rounded 1c', sans-serif; cursor: pointer; }
+#mini-game .mini-result-title { font-size: clamp(22px, 4vw, 34px); color: #ffe7a0; text-shadow: 0 0 18px #ffcf5a66; }
+#mini-game .mini-result-detail { margin: 0 0 16px; color: #d6ecfa; font-size: 14px; line-height: 1.6; }
+#mini-game .mini-result-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+#mini-game .mini-result-actions .btn { min-height: 44px; padding: 8px 16px; font-size: 14px; }
+#mini-game .ttt-cell.is-last { box-shadow: inset 0 0 0 2px #ffe08a; }
+#mini-game .memory-score { display: flex; gap: 10px; margin: 0; font-size: 13px; }
+#mini-game .memory-score[hidden] { display: none; }
+#mini-game .memory-score span { padding: 2px 10px; border: 1px solid #9fdcff44; border-radius: 99px; color: #bcd4e4; white-space: nowrap; }
+#mini-game .memory-score em { font-style: normal; }
+#mini-game .memory-score b { margin-left: 4px; color: #fff; font-size: 15px; }
+#mini-game .memory-score .is-turn { border-color: #ffe08a; color: #fff6d6; background: #ffe08a22; box-shadow: 0 0 12px #ffd56a44; }
+#mini-game #memory-timer[hidden] { display: none; }
+#mini-game .memory-controls.is-versus input { display: none; }
+
+/* 簡単テトリス：スタート・リセットは十字キーや回転から離す。PC・横画面は左上の余白、スマホ縦画面はNEXTの下。 */
+#mini-game.is-playing[data-game='tetris'] .arcade-control-deck > .arcade-session-actions { grid-column: 1; grid-row: 1; align-self: start; }
+#mini-game.is-playing[data-game='tetris'] .tetris-tools .arcade-session-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #9fdcff33; align-self: stretch; }
+#mini-game .tetris-tools .arcade-session-actions .btn { min-height: 40px; padding: 6px 4px; font-size: 13px; }
+@media (orientation: landscape) and (max-height: 400px) {
+ #mini-game .arcade-action-pad .btn, #mini-game .arcade-action-pad #tetris-rotate { min-height: 46px; }
+}

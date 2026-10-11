@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "node scripts/serve.cjs",
-    "check": "node --check aniani.js && node --check galaxy.js && node --check arcade-layout.js && node --check trial-gacha-data.js && node --check trial-gacha-sea.js && node --check trial-gacha.js && node --check scripts/serve.cjs",
+    "check": "node --check minigame-ai.js && node --check aniani.js && node --check galaxy.js && node --check arcade-layout.js && node --check trial-gacha-data.js && node --check trial-gacha-sea.js && node --check trial-gacha.js && node --check scripts/serve.cjs",
     "test": "npm run check && node arcade.test.cjs && node arcade-layout.test.cjs && node portal.test.cjs && node trial-gacha.test.cjs && node --test scripts/serve.test.cjs"
   }
 }
