@@ -26,7 +26,7 @@
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="aniani.css?v=20261006a1">
     <link rel="stylesheet" href="galaxy.css?v=20261008a1">
-    <link rel="stylesheet" href="arcade.css?v=20261014a1">
+    <link rel="stylesheet" href="arcade.css?v=20261015a1">
     <link rel="stylesheet" href="trial-gacha.css?v=20261014a1">
 </head>
 <body>
@@ -417,13 +417,13 @@
                 </article>
 
                 <article id="mini-panel-breakout" class="panel mini-game-panel breakout-panel mini-tab-panel" data-mini-panel="breakout" role="tabpanel" aria-labelledby="mini-tab-breakout">
-                    <h4>ブロック崩し（料理ブロック）</h4>
-                    <p class="panel-note">パドルでボールを返してブロックを全破壊。ブロックはレシピ画像です。</p>
+                    <h4>ブロック崩し</h4>
+                    <p class="panel-note">全5ステージ。赤は2回・銀は3回当てると壊れ、紫は周りを巻き込んで爆発、灰色は壊れません。落ちてくるアイテム（貫通・ボール増加・ワイド・スロー・残機+1）をパドルで拾おう。</p>
                     <div class="mini-hud">
-                        <p id="breakout-status">スタートで開始。</p>
-                        <p>スコア: <span id="breakout-score">0</span> / 残機: <span id="breakout-lives">3</span></p>
+                        <p id="breakout-status">スタートで開始。全5ステージ。</p>
+                        <p>ステージ: <span id="breakout-stage">1</span>/5 / スコア: <span id="breakout-score">0</span> / 残機: <span id="breakout-lives">3</span> / ベスト: <span id="breakout-best">0点</span></p>
                     </div>
-                    <canvas id="breakout-canvas" class="breakout-canvas" width="360" height="300" aria-label="ブロック崩しキャンバス"></canvas>
+                    <canvas id="breakout-canvas" class="breakout-canvas" width="360" height="480" aria-label="ブロック崩しキャンバス"></canvas>
                     <div class="form-actions">
                         <button class="btn btn-primary btn-mini" type="button" id="breakout-start">スタート</button>
                         <button class="btn btn-ghost btn-mini" type="button" id="breakout-reset">リセット</button>
@@ -452,7 +452,7 @@
 
                 <article id="mini-panel-tetris" class="panel mini-game-panel mini-tab-panel" data-mini-panel="tetris" role="tabpanel" aria-labelledby="mini-tab-tetris">
                     <h4>簡単テトリス</h4>
-                    <p class="panel-note">ブロックを回転・移動して列をそろえるシンプル版です。</p>
+                    <p class="panel-note">ブロックを回転・移動して列をそろえるシンプル版です。回転はスペース・W・↑、移動はA・D・←→、1段下降はS・↓。</p>
                     <div class="mini-hud">
                         <p id="tetris-status">スタートで開始。</p>
                         <p>スコア: <span id="tetris-score">0</span> / ライン: <span id="tetris-lines">0</span></p>
@@ -471,12 +471,13 @@
 
                 <article id="mini-panel-drop" class="panel mini-game-panel drop-panel mini-tab-panel" data-mini-panel="drop" role="tabpanel" aria-labelledby="mini-tab-drop">
                     <h4>8パズル</h4>
-                    <p class="panel-note">空きマスの隣の数字をタップして、1〜8を左上から順番に並べよう。右下は空きマス！</p>
+                    <p class="panel-note">空きマスの隣の数字をタップして、1〜8を左上から順番に並べよう。右下は空きマス！ そろうと推し駒battleのイラストが完成します。</p>
                     <div class="mini-hud">
                         <p id="drop-status">スタートで開始。</p>
                         <p>手数: <span id="drop-score">0</span></p>
                     </div>
                     <div id="drop-board" class="drop-board" aria-label="8パズル盤面"></div>
+                    <p id="drop-art" class="drop-art-credit"></p>
 <div class="form-actions">
                         <button class="btn btn-primary btn-mini" type="button" id="drop-start">シャッフル</button>
                         <button class="btn btn-ghost btn-mini" type="button" id="drop-reset">やり直す</button>
@@ -498,14 +499,14 @@
                 <div class="tetris-tools"><aside id="tetris-next" aria-label="上が次、下が2番目のテトリス"></aside></div>
                 <div id="arcade-controls" class="arcade-control-deck" aria-label="ゲーム操作">
                   <div class="virtual-pad" aria-label="モバイル用仮想十字キー">
-                    <button class="virtual-pad-button virtual-pad-up" type="button" data-pad-dir="up" aria-label="上へ移動">↑</button>
-                    <button class="virtual-pad-button virtual-pad-left" type="button" data-pad-dir="left" aria-label="左へ移動">←</button>
-                    <button class="virtual-pad-button virtual-pad-down" type="button" data-pad-dir="down" aria-label="下へ移動">↓</button>
-                    <button class="virtual-pad-button virtual-pad-right" type="button" data-pad-dir="right" aria-label="右へ移動">→</button>
+                    <button class="virtual-pad-button virtual-pad-up" type="button" data-pad-dir="up" data-key-hint="W" aria-label="上へ移動（Wキー）">↑</button>
+                    <button class="virtual-pad-button virtual-pad-left" type="button" data-pad-dir="left" data-key-hint="A" aria-label="左へ移動（Aキー）">←</button>
+                    <button class="virtual-pad-button virtual-pad-down" type="button" data-pad-dir="down" data-key-hint="S" aria-label="下へ移動（Sキー）">↓</button>
+                    <button class="virtual-pad-button virtual-pad-right" type="button" data-pad-dir="right" data-key-hint="D" aria-label="右へ移動（Dキー）">→</button>
                   </div>
                   <div class="arcade-action-pad" aria-label="テトリス操作">
-                    <button class="btn" type="button" id="tetris-rotate" aria-label="ブロックを時計回りに回転">↻<span>回転</span></button>
-                    <button class="btn btn-ghost" type="button" id="tetris-down" aria-label="ブロックを1段下降">↓<span>下降</span></button>
+                    <button class="btn" type="button" id="tetris-rotate" data-key-hint="SPACE" aria-label="ブロックを時計回りに回転（スペースキー・Wキー）">↻<span>回転</span></button>
+                    <button class="btn btn-ghost" type="button" id="tetris-down" data-key-hint="S" aria-label="ブロックを1段下降（Sキー）">↓<span>下降</span></button>
                   </div>
                 </div>
             </div>
@@ -812,7 +813,8 @@
     <script src="trial-gacha-sea.js?v=20261013b1"></script>
     <script src="trial-gacha.js?v=20261014a1"></script>
     <script src="minigame-ai.js?v=20261014a1"></script>
-    <script src="aniani.js?v=20261014a1"></script>
+    <script src="minigame-breakout.js?v=20261015a1"></script>
+    <script src="aniani.js?v=20261015a1"></script>
     <script src="galaxy.js?v=20260915a1"></script>
 <script src="arcade-layout.js?v=20261014a1"></script></body>
 </html>

@@ -72,5 +72,5 @@ assert.equal(caseImages.length, 5);
 for (const src of caseImages) assert(src.endsWith('.webp') && fs.existsSync(src), `orbit case image is a light WebP: ${src}`);
 const deepLinkIds = JSON.parse(js.match(/DEEP_LINK_MODAL_IDS = (\[[^\]]+\])/)[1]);
 for (const id of deepLinkIds) assert(html.includes(`id="${id}"`), `deep-link target exists: ${id}`);
-assert(js.includes('function ensureBreakoutImages') && js.includes('BREAKOUT_BRICK_PATHS.map(() =>'), 'breakout images load when the game opens, not on portal load');
+assert(html.includes('minigame-breakout.js?v=') && !js.includes('ensureBreakoutImages'), 'breakout uses plain coloured blocks, no recipe images');
 console.log('PASS: portal links, rights notices, trial gacha entry, assets, release labels, and verification preserved.');

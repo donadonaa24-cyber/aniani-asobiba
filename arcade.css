@@ -247,3 +247,76 @@ body:has(#mini-game.is-open) .site-header { visibility: hidden; }
 @media (orientation: landscape) and (max-height: 400px) {
  #mini-game .arcade-action-pad .btn, #mini-game .arcade-action-pad #tetris-rotate { min-height: 46px; }
 }
+
+/* ミニゲームのボタンは、厚みのある押しボタンにする（押すと沈む）。 */
+#mini-game .btn, #mini-game .virtual-pad-button, #mini-game .mini-setup-choices button, #mini-game .mini-game-tab {
+ position: relative; isolation: isolate; border-radius: 14px;
+ transition: transform .08s ease, box-shadow .08s ease, filter .15s ease;
+ -webkit-tap-highlight-color: transparent;
+}
+#mini-game .btn-primary, #mini-game #tetris-rotate {
+ color: #3a2300; border: 1px solid #fff0c4;
+ background: linear-gradient(180deg, #ffeab0 0%, #ffc548 48%, #ee9d1c 100%);
+ box-shadow: inset 0 2px 0 #fff8dc, inset 0 -3px 0 #c7790f, 0 5px 0 #8a4d06, 0 8px 14px #0009;
+ text-shadow: 0 1px 0 #fff3c8;
+}
+#mini-game .btn-ghost, #mini-game .virtual-pad-button, #mini-game .mini-setup-choices button, #mini-game .mini-game-tab {
+ color: #eef7ff; border: 1px solid #8fcfff88;
+ background: linear-gradient(180deg, #2f6eab 0%, #18447a 55%, #0f2c55 100%);
+ box-shadow: inset 0 2px 0 #a6dbff66, inset 0 -3px 0 #0a1f3d, 0 5px 0 #06152b, 0 8px 14px #0009;
+ text-shadow: 0 1px 2px #000a;
+}
+#mini-game .mini-game-tab.is-active {
+ color: #fff6dd; border-color: #ffd98a;
+ background: linear-gradient(180deg, #5a7fb8 0%, #2a4f86 55%, #183766 100%);
+}
+#mini-game .virtual-pad-button { box-shadow: inset 0 2px 0 #a6dbff66, inset 0 -3px 0 #0a1f3d, 0 3px 0 #06152b, 0 5px 8px #0009; border-radius: 12px; }
+#mini-game .btn:hover:not(:disabled), #mini-game .virtual-pad-button:hover:not(:disabled), #mini-game .mini-setup-choices button:hover, #mini-game .mini-game-tab:hover { transform: translateY(-1px); filter: brightness(1.08); }
+#mini-game .btn:active:not(:disabled), #mini-game .mini-setup-choices button:active, #mini-game .mini-game-tab:active { transform: translateY(4px); filter: brightness(.96); }
+#mini-game .btn-primary:active:not(:disabled), #mini-game #tetris-rotate:active { box-shadow: inset 0 2px 0 #fff8dc, inset 0 -1px 0 #c7790f, 0 1px 0 #8a4d06, 0 2px 5px #0009; }
+#mini-game .btn-ghost:active:not(:disabled), #mini-game .mini-setup-choices button:active, #mini-game .mini-game-tab:active { box-shadow: inset 0 2px 0 #a6dbff44, inset 0 -1px 0 #0a1f3d, 0 1px 0 #06152b, 0 2px 5px #0009; }
+#mini-game .virtual-pad-button:active:not(:disabled) {
+ transform: translateY(3px); color: #331f00;
+ background: linear-gradient(180deg, #ffe0a0 0%, #f2a63a 100%);
+ box-shadow: inset 0 2px 0 #fff3d0, inset 0 -1px 0 #b86d0c, 0 0 0 #06152b, 0 2px 4px #0009;
+}
+#mini-game .btn:disabled { filter: grayscale(.5) brightness(.75); cursor: default; }
+
+/* キーボードの対応キーを、ボタンに透かしで表示する。 */
+#mini-game [data-key-hint]::before {
+ content: attr(data-key-hint); position: absolute; inset: 0; z-index: -1;
+ display: grid; place-items: center; pointer-events: none;
+ font: 900 30px/1 'M PLUS Rounded 1c', sans-serif; color: #ffffff; opacity: .2;
+}
+#mini-game .virtual-pad-button[data-key-hint]::before { place-items: end; padding: 0 5px 2px 0; font-size: 17px; opacity: .38; }
+#mini-game .arcade-action-pad [data-key-hint]::before { place-items: start end; padding: 4px 7px 0 0; font-size: 11px; letter-spacing: .06em; opacity: .45; }
+#mini-game #tetris-rotate[data-key-hint]::before { place-items: start center; padding: 4px 0 0; font-size: 11px; letter-spacing: .08em; white-space: nowrap; color: #5a3300; opacity: .6; }
+#mini-game #tetris-rotate { padding-top: 16px; }
+#mini-game .arcade-action-pad .btn > span { position: relative; }
+
+/* 8パズル：厚みのある木札風のパネルに、推し駒のイラストを透かしで入れる。 */
+#mini-game #drop-board { padding: 8px; gap: 6px; border-radius: 16px; background: linear-gradient(160deg, #10263f, #050f1e); box-shadow: inset 0 4px 14px #000c, inset 0 0 0 2px #2a557a, 0 0 22px #5fc8ff22; }
+#mini-game .slide-tile {
+ position: relative; isolation: isolate; overflow: hidden; border-radius: 12px; border: 1px solid #c4ecff;
+ background: var(--slide-art, none) var(--slide-x, 0) var(--slide-y, 0) / 300% 300% no-repeat, linear-gradient(145deg, #2c6a92, #123045);
+ box-shadow: inset 0 2px 0 #ffffff70, inset 0 -5px 0 #00000066, 0 5px 0 #06182a, 0 9px 14px #000b;
+ transform: translateY(-2px); transition: transform .1s ease, box-shadow .1s ease, filter .2s ease;
+}
+#mini-game .slide-tile::before {
+ content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit;
+ background: linear-gradient(155deg, #ffffff30 0%, #ffffff00 30%), linear-gradient(#08182c55, #04102270);
+ transition: opacity .6s ease;
+}
+#mini-game .slide-tile span { font: 800 clamp(22px, 6vmin, 52px) 'Shippori Mincho', serif; color: #fff7da; text-shadow: 0 2px 0 #06182a, 0 0 10px #000, 0 0 3px #000; transition: opacity .6s ease; }
+#mini-game .slide-tile:disabled { opacity: 1; filter: brightness(.9); }
+#mini-game .slide-tile.is-movable { border-color: #ffe08a; box-shadow: inset 0 2px 0 #ffffff70, inset 0 -5px 0 #00000066, 0 5px 0 #06182a, 0 9px 14px #000b, 0 0 14px #ffd56a55; }
+#mini-game .slide-tile.is-movable:hover { transform: translateY(-3px); filter: brightness(1.08); }
+#mini-game .slide-tile:not(:disabled):active { background: var(--slide-art, none) var(--slide-x, 0) var(--slide-y, 0) / 300% 300% no-repeat, #42789c; transform: translateY(2px); box-shadow: inset 0 2px 0 #ffffff50, inset 0 -2px 0 #00000066, 0 1px 0 #06182a, 0 3px 6px #000b; }
+#mini-game .slide-empty { border: 1px dashed #91bbdb50; border-radius: 12px; background: #01081599; box-shadow: inset 0 5px 12px #000d; }
+#mini-game .slide-empty.is-filled { border: 1px solid #c4ecff; background: var(--slide-art) var(--slide-x) var(--slide-y) / 300% 300% no-repeat; box-shadow: none; animation: slide-piece-in .6s ease both; }
+#mini-game #drop-board.is-complete .slide-tile { filter: none; transform: none; box-shadow: none; }
+#mini-game #drop-board.is-complete .slide-tile::before { opacity: 0; }
+#mini-game #drop-board.is-complete .slide-tile span { opacity: .3; }
+@keyframes slide-piece-in { from { opacity: 0; } to { opacity: 1; } }
+#mini-game .drop-art-credit { margin: 2px 0 0; color: #9fc0d8; font-size: 10px; text-align: center; }
+#mini-game .drop-art-credit:empty { display: none; }
