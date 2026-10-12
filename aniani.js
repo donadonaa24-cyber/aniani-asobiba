@@ -11,6 +11,38 @@
     // 新しい記事は先頭に追加してください。id は記事コメントの保存キーなので、公開後は変えないでください。
     const officialArticles = [
         {
+            id: "2026-10-12-anibato-preview",
+            title: "あにあにバトル！！ 試作版を開発中",
+            category: "開発便り",
+            body: [
+                "あにあに作品のキャラクターたちが戦う2D対戦アクション（プラットフォームファイター）『あにあにバトル！！』（略称：あにバト！！）の試作版を、UnityでWindows向けに開発しています。",
+                "初期の参加キャラは透真（『星の終わりに君は生きる』）、蓮（『推し駒battle』）、千鶴（『Battle à la carte』）。今後作品が増えれば参加キャラも増える予定です。",
+                "試作版は1試合70秒、ハート3つ。通常攻撃は3回当たるとハート1つ、特殊攻撃はハート1つ、超必殺技はハート2つを失います。ステージ外に落ちたら即敗北し、最後の10秒でステージが縮みます。ガード・回避・カウンターの読み合いが特徴です。",
+                "試作版・開発中。プレイ版・ダウンロードは現在未公開です。下の画像は開発中の画面で、画像を押すと別タブで原寸表示できます。"
+            ].join("\n\n"),
+            screenshots: [
+                {
+                    src: "images/anibato/battle-20261012.jpg",
+                    alt: "あにあにバトル！！試作版で千鶴と透真が対戦する画面",
+                    title: "作品を越えたバトル",
+                    caption: "千鶴 vs 透真。Windows向けに開発中の2D対戦アクション。"
+                },
+                {
+                    src: "images/anibato/select-20261012.jpg",
+                    alt: "あにあにバトル！！試作版のキャラクター選択画面",
+                    title: "初期の参加キャラ",
+                    caption: "透真・蓮・千鶴が参加。今後作品が増えれば参加キャラも増える予定です。"
+                },
+                {
+                    src: "images/anibato/special-20261012.jpg",
+                    alt: "あにあにバトル！！試作版で爆弾おにぎりが命中した場面",
+                    title: "必殺技の一場面",
+                    caption: "爆弾おにぎりが命中した場面。プレイ版は未公開です。"
+                }
+            ],
+            createdAt: "2026-10-12T12:00:00+09:00"
+        },
+        {
             id: "2026-10-11-battle-story-v060",
             title: "Battle à la carte：ストーリー特別編と新キャラクター4人／Unity版 v0.6.0 公開",
             category: "アップデート",
@@ -431,7 +463,7 @@
     }
 
     // 作品詳細だけはURL末尾（例: #battle-detail）で直接開けるようにし、共有できるURLにする。
-    const DEEP_LINK_MODAL_IDS = ["battle-detail", "battle-3d-detail", "tumikomi", "oshi-detail", "bunko-detail"];
+    const DEEP_LINK_MODAL_IDS = ["battle-detail", "battle-3d-detail", "tumikomi", "oshi-detail", "bunko-detail", "anibato-detail"];
 
     function getDeepLinkModalId() {
         const id = window.location.hash.slice(1);

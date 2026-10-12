@@ -1907,3 +1907,42 @@ main {
 .bunko-list li + li {
     margin-top: 4px;
 }
+
+/* あにあにバトル！！：紹介画像の全体と未公開の案内を表示する。 */
+.anibato-case .case-face img {
+    inset: 8% 0 auto;
+    height: 46%;
+    object-fit: contain;
+}
+
+.anibato-preview .game-visual,
+.anibato-preview .game-visual-link:hover .game-visual {
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    transform: none;
+}
+
+.anibato-notice {
+    padding: 10px 12px;
+    border-left: 3px solid #ffbc8a;
+    background: #ffbc8a14;
+    color: #ffe0c8;
+}
+
+.anibato-list {
+    padding-left: 1.2em;
+    color: #d1e6ff;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.anibato-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 640px) {
+    .anibato-gallery {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

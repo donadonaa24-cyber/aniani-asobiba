@@ -1,11 +1,38 @@
 const fs = require('node:fs');
 const assert = require('node:assert/strict');
+const vm = require('node:vm');
 const html = fs.readFileSync('index.html', 'utf8');
 assert(!/翠路ロジスティクス|制作途中|公式トップ|>ゲームページへ</.test(html));
 assert(html.includes('data-title="架空運輸"'));
 const cases = [...html.matchAll(/data-orbit="(\d+)"[^>]*data-title="([^"]+)"/g)];
-assert.deepEqual(cases.map(m=>m[1]),['0','1','2','3','4','5']);
+assert.deepEqual(cases.map(m=>m[1]),['0','1','2','3','4','5','6']);
 assert.equal(cases[5][2], 'あにあに文庫');
+assert.equal(cases[6][2], 'あにあにバトル！！');
+const anibatoCase = html.match(/<button class="game-case anibato-case"[\s\S]*?<\/button>/)?.[0];
+assert(anibatoCase && anibatoCase.includes('data-orbit="6"') && anibatoCase.includes('data-modal-target="anibato-detail"'));
+assert(anibatoCase.includes('data-status="試作版・開発中"') && anibatoCase.includes('ANIANI ORIGINAL / 07'));
+assert(anibatoCase.includes('DEVELOPING / WINDOWS') && anibatoCase.includes('プレイ不可'));
+assert(html.includes('id="orbit-status">01 / 07'));
+assert(/<meta name="description"[^>]*あにあにバトル！！/.test(html));
+assert(html.includes('aniani.css?v=20261012a1') && html.includes('aniani.js?v=20261012a1'));
+const anibatoViews = [...html.matchAll(/<article class="game-card active anibato-preview">([\s\S]*?)<\/article>/g)].map(m => m[1]);
+assert.equal(anibatoViews.length, 2, 'anibato has a works card and a detail');
+assert(html.indexOf(anibatoViews[0]) > html.indexOf('<h4>あにあに文庫</h4>'), 'anibato follows bunko in works');
+assert(html.includes('id="anibato-detail"') && html.includes('id="anibato-title"'));
+for (const view of anibatoViews) {
+  assert(view.includes('試作版・開発中。プレイ版・ダウンロードは現在未公開です。'));
+  for (const m of view.matchAll(/href="([^"]+)"/g)) {
+    assert(/^images\/anibato\/(battle|select|special)-20261012\.jpg$/.test(m[1]), `anibato only links to screenshots: ${m[1]}`);
+  }
+  assert(!/\bdownload\s*(?:=|>|\s)|<iframe|<form|\.exe|releases\/|github\.com/.test(view), 'no distribution, download, exe launch, embed, or repository link');
+}
+const anibatoDetail = anibatoViews[1];
+for (const text of ['透真', '星の終わりに君は生きる', '蓮', '推し駒battle', '千鶴', 'Battle à la carte', '70秒', '3つ', '3回', 'ハート2つ', '即敗北', '最後の10秒', 'ガード・回避・カウンター', '今後作品が増えれば参加キャラも増える予定']) assert(anibatoDetail.includes(text), `anibato detail includes ${text}`);
+assert.equal([...anibatoDetail.matchAll(/class="article-screenshot-link"/g)].length, 3);
+for (const m of (anibatoCase + anibatoViews.join('')).matchAll(/<img\b[^>]*src="([^"]+)"[^>]*alt="([^"]+)"/g)) {
+  assert(fs.existsSync(m[1]) && /[ぁ-んァ-ン一-龠]/.test(m[2]), 'anibato image exists and has Japanese alt text');
+}
+for (const img of ['battle', 'select', 'special', 'lineup']) assert(fs.existsSync(`images/anibato/${img}-20261012.jpg`));
 assert(html.includes('id="bunko-detail"'));
 assert(html.split('https://donadonaa24-cyber.github.io/book/').length - 1 >= 4, 'あにあに文庫 links (works, detail, links, footer)');
 for (const img of ['case','shelf','cover','illust']) assert(fs.existsSync(`images/bunko/${img}-20261006.webp`));
@@ -60,6 +87,22 @@ assert(!html.includes('スマホ'), 'portal wording uses モバイル版, not �
 assert(html.includes('Unity / Windows / Android · v0.6.0'));
 assert.equal((html.match(/class="update-note"/g) || []).length, 6); // Battle Web, Battle Unity, 架空運輸 (card + modal each)
 const js = fs.readFileSync('aniani.js', 'utf8');
+const articleSource = js.match(/const officialArticles = ([\s\S]*?);\s*const list =/);
+assert(articleSource, 'official article data is available');
+const articles = vm.runInNewContext(`(${articleSource[1]})`);
+const previewArticles = articles.filter(a => a.id === '2026-10-12-anibato-preview');
+assert.equal(previewArticles.length, 1);
+const previewArticle = previewArticles[0];
+assert.equal(previewArticle.title, 'あにあにバトル！！ 試作版を開発中');
+assert(previewArticle.body.includes('プレイ版・ダウンロードは現在未公開'));
+assert(previewArticle.body.includes('今後作品が増えれば参加キャラも増える予定'));
+for (const text of ['透真', '星の終わりに君は生きる', '蓮', '推し駒battle', '千鶴', 'Battle à la carte', '70秒', '最後の10秒']) assert(previewArticle.body.includes(text));
+assert(!previewArticle.links?.length && !/https?:|\.exe|スタミナ/.test(JSON.stringify(previewArticle)), 'preview article has no distribution, download, executable, or repository links');
+assert(previewArticle.screenshots.length >= 2 && previewArticle.screenshots.length <= 3);
+for (const shot of previewArticle.screenshots) {
+  assert(/^images\/anibato\/(battle|select|special)-20261012\.jpg$/.test(shot.src));
+  assert(fs.existsSync(shot.src) && /[ぁ-んァ-ン一-龠]/.test(shot.alt));
+}
 assert(!/ADMIN|admin-login|adminSession|article-form/.test(js + html.replace(/id="guestbook-form" class="article-form"/, '')), 'article admin mode and its passcode are removed');
 assert(js.includes('const officialArticles') && js.includes('2026-09-29-battle-update'));
 assert(/data-common-coming-soon[\s\S]*?準備中/.test(html), 'account modal shows a coming-soon notice');
@@ -68,9 +111,11 @@ for (const m of html.matchAll(/<meta property="og:image" content="https:\/\/dona
 assert(html.includes('name="twitter:card" content="summary_large_image"'));
 for (const m of html.matchAll(/<link rel="(?:icon|apple-touch-icon)" href="([^"]+)"/g)) assert(fs.existsSync(m[1]), 'icon exists');
 const caseImages = [...html.matchAll(/<span class="case-face">(?:(?!<\/button>)[\s\S])*?<img src="([^"]+)"/g)].map(m => m[1]);
-assert.equal(caseImages.length, 5);
-for (const src of caseImages) assert(src.endsWith('.webp') && fs.existsSync(src), `orbit case image is a light WebP: ${src}`);
+assert.equal(caseImages.length, 6);
+for (const src of caseImages) assert(fs.existsSync(src) && (src.endsWith('.webp') || src === 'images/anibato/lineup-20261012.jpg'), `orbit case image exists in the expected format: ${src}`);
+assert.equal(caseImages.filter(src => src.endsWith('.webp')).length, 5, 'existing light WebP case images are preserved');
 const deepLinkIds = JSON.parse(js.match(/DEEP_LINK_MODAL_IDS = (\[[^\]]+\])/)[1]);
+assert(deepLinkIds.includes('anibato-detail'));
 for (const id of deepLinkIds) assert(html.includes(`id="${id}"`), `deep-link target exists: ${id}`);
 assert(html.includes('minigame-breakout.js?v=') && !js.includes('ensureBreakoutImages'), 'breakout uses plain coloured blocks, no recipe images');
-console.log('PASS: portal links, rights notices, trial gacha entry, assets, release labels, and verification preserved.');
+console.log('PASS: seven portal works, anibato preview without play/download links, existing links, rights notices, assets, and release labels.');

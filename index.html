@@ -5,7 +5,7 @@
     <meta name="google-site-verification" content="EODaZVnp9Jx0SkJDQR-oyGH1baUfiHRkVlnkgVq0A0k" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>あにあにの遊び場</title>
-    <meta name="description" content="あにあに制作ゲームのポータル。Battle a la carte（Web版・Unity版）/ 架空運輸 / 推し駒battle / あにあに文庫 / ミニゲーム / 更新記事をモーダルで確認できます。">
+    <meta name="description" content="あにあに制作ゲームのポータル。Battle a la carte（Web版・Unity版）/ 架空運輸 / 推し駒battle / あにあに文庫 / あにあにバトル！！（試作版・開発中、プレイ不可）/ ミニゲーム / 更新記事をモーダルで確認できます。">
     <link rel="canonical" href="https://donadonaa24-cyber.github.io/aniani-asobiba/">
     <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="aniani.css?v=20261006a1">
+    <link rel="stylesheet" href="aniani.css?v=20261012a1">
     <link rel="stylesheet" href="galaxy.css?v=20261008a1">
     <link rel="stylesheet" href="arcade.css?v=20261015a1">
     <link rel="stylesheet" href="trial-gacha.css?v=20261014a1">
@@ -96,9 +96,13 @@
                     <span class="case-spine" aria-hidden="true">ANIANI BUNKO</span>
                     <span class="case-face"><span class="case-brand">ANIANI ORIGINAL / 06</span><img src="images/bunko/case-20261006.webp" alt="あにあに文庫の本棚"><span class="case-caption"><small>NOVEL / BOOKSHELF</small><strong>あにあに<br>文庫</strong><em>公開中＆追加要素可能性あり</em></span></span>
                 </button>
+                <button class="game-case anibato-case" type="button" data-orbit="6" data-modal-target="anibato-detail" data-title="あにあにバトル！！" data-status="試作版・開発中" data-description="あにあに作品のキャラクターたちが戦う、Windows向け2D対戦アクションの試作版を開発中です。" style="--case-accent:#ffbc8a">
+                    <span class="case-spine" aria-hidden="true">あにあにバトル！！ / 07</span>
+                    <span class="case-face"><span class="case-brand">ANIANI ORIGINAL / 07</span><img src="images/anibato/lineup-20261012.jpg" alt="透真・千鶴・蓮のドット絵が並ぶ" width="1500" height="600"><span class="case-caption"><small>DEVELOPING / WINDOWS</small><strong>あにあに<br>バトル！！</strong><em>試作版・開発中 / プレイ不可</em></span></span>
+                </button>
             </div>
             <div class="selection-panel">
-                <p class="selection-status" id="orbit-status">01 / 06 · 公開中＆追加要素可能性あり</p>
+                <p class="selection-status" id="orbit-status">01 / 07 · 公開中＆追加要素可能性あり</p>
                 <h3 id="orbit-title">Battle a la carte</h3>
                 <p id="orbit-description">料理とバトルが交差する、あなただけの一皿。</p>
                 <div class="orbit-controls">
@@ -217,6 +221,14 @@
                     <div class="game-actions">
                         <a class="btn btn-mini btn-primary" href="https://donadonaa24-cyber.github.io/book/" target="_blank" rel="noopener noreferrer">本棚で読む</a>
                     </div>
+                </article>
+                <article class="game-card active anibato-preview">
+                    <div class="game-status">試作版・開発中</div>
+                    <a class="game-visual-link" href="images/anibato/battle-20261012.jpg" target="_blank" rel="noopener noreferrer" aria-label="あにあにバトル！！の対戦画面を原寸表示（別タブ）"><img class="game-visual" src="images/anibato/battle-20261012.jpg" alt="あにあにバトル！！試作版で千鶴と透真が対戦する画面" width="1280" height="720" loading="lazy"></a>
+                    <h4>あにあにバトル！！</h4><p class="edition-label">Unity / Windows向け · 2D対戦アクション</p>
+                    <p>あにあに作品のキャラクターたちが戦うプラットフォームファイター。透真・蓮・千鶴が参加する試作版を開発中です。今後作品が増えれば参加キャラも増える予定です。</p>
+                    <p class="anibato-notice"><strong>試作版・開発中。プレイ版・ダウンロードは現在未公開です。</strong></p>
+                    <div class="game-actions"><button class="btn btn-mini btn-ghost" type="button" data-modal-target="anibato-detail">開発中の作品紹介へ</button></div>
                 </article>
             </div>
             </div>
@@ -662,6 +674,32 @@
                         <a class="btn btn-mini btn-primary" href="https://donadonaa24-cyber.github.io/book/" target="_blank" rel="noopener noreferrer">本棚で読む</a>
                     </div>
                 </article></div></section>
+<section id="anibato-detail" class="section modal-section" aria-hidden="true"><div class="modal-panel work-detail" role="dialog" aria-modal="true" aria-labelledby="anibato-title"><button class="modal-close" type="button" data-modal-close aria-label="閉じる">×</button><article class="game-card active anibato-preview">
+                    <div class="game-status">試作版・開発中</div>
+                    <h4 id="anibato-title">あにあにバトル！！</h4><p class="edition-label">あにバト！！ / Unity / Windows向け · 開発中</p>
+                    <p class="anibato-notice"><strong>試作版・開発中。プレイ版・ダウンロードは現在未公開です。</strong></p>
+                    <p>あにあに作品のキャラクターたちが戦う2D対戦アクション（プラットフォームファイター）。作品の垣根を越えたバトルを目指して、Windows向けに試作版を開発しています。</p>
+                    <div class="article-gallery anibato-gallery" aria-label="あにあにバトル！！試作版の画面">
+                        <figure class="article-screenshot">
+                            <a class="article-screenshot-link" href="images/anibato/battle-20261012.jpg" target="_blank" rel="noopener noreferrer" aria-label="千鶴と透真の対戦画面を原寸表示（別タブ）"><img src="images/anibato/battle-20261012.jpg" alt="千鶴と透真がステージ上で対戦する試作版の画面" width="1280" height="720" loading="lazy"><span class="article-image-hint" aria-hidden="true">原寸で見る</span></a>
+                            <figcaption><strong>千鶴 vs 透真</strong><p>試作版の対戦画面。画像を押すと別タブで原寸表示できます。</p></figcaption>
+                        </figure>
+                        <figure class="article-screenshot">
+                            <a class="article-screenshot-link" href="images/anibato/select-20261012.jpg" target="_blank" rel="noopener noreferrer" aria-label="キャラクター選択画面を原寸表示（別タブ）"><img src="images/anibato/select-20261012.jpg" alt="あにあにバトル！！試作版のキャラクター選択画面" width="1280" height="720" loading="lazy"><span class="article-image-hint" aria-hidden="true">原寸で見る</span></a>
+                            <figcaption><strong>参加キャラクター</strong><p>あにあに作品から透真・蓮・千鶴が参加。</p></figcaption>
+                        </figure>
+                        <figure class="article-screenshot">
+                            <a class="article-screenshot-link" href="images/anibato/special-20261012.jpg" target="_blank" rel="noopener noreferrer" aria-label="爆弾おにぎりが命中した画面を原寸表示（別タブ）"><img src="images/anibato/special-20261012.jpg" alt="試作版の対戦で爆弾おにぎりが命中した場面" width="1280" height="720" loading="lazy"><span class="article-image-hint" aria-hidden="true">原寸で見る</span></a>
+                            <figcaption><strong>必殺技の一場面</strong><p>爆弾おにぎりが命中した場面。</p></figcaption>
+                        </figure>
+                    </div>
+                    <h5>初期の参加キャラ</h5>
+                    <ul class="anibato-list"><li><strong>透真</strong> — 『星の終わりに君は生きる』</li><li><strong>蓮</strong> — 『推し駒battle』</li><li><strong>千鶴</strong> — 『Battle à la carte』</li></ul>
+                    <p>今後作品が増えれば参加キャラも増える予定です。</p>
+                    <h5>試作版のルールの特徴</h5>
+                    <ul class="anibato-list"><li>1試合70秒、ハートは3つ。</li><li>通常攻撃は3回当たるとハート1つ、特殊攻撃はハート1つ、超必殺技はハート2つを失います。</li><li>ステージ外に落ちたら即敗北。最後の10秒でステージが縮みます。</li><li>ガード・回避・カウンターの読み合い。</li></ul>
+                    <p class="rights-notice">本作品の画像・文章・ゲームデータの無断転載・無断配布を禁止します。</p>
+                </article></div></section>
     </main>
 
     <section id="trial-gacha" class="section modal-section" aria-hidden="true">
@@ -814,7 +852,7 @@
     <script src="trial-gacha.js?v=20261014a1"></script>
     <script src="minigame-ai.js?v=20261014a1"></script>
     <script src="minigame-breakout.js?v=20261015a1"></script>
-    <script src="aniani.js?v=20261015a1"></script>
+    <script src="aniani.js?v=20261012a1"></script>
     <script src="galaxy.js?v=20260915a1"></script>
 <script src="arcade-layout.js?v=20261014a1"></script></body>
 </html>
