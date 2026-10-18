@@ -36,6 +36,7 @@ Browser
 | `trial-gacha-sea.js` | ガチャ開始演出の夜の海・夜空・流れ星をCanvasで描画。波紋は高さ場シミュレーション、画面が開いている間だけ描画ループを動かす |
 | `trial-gacha.js` | 無料10連抽選、1枚ずつの状態遷移、スキップ、Web Audio効果音、端末内所持数、図鑑表示 |
 | `common/portal.css` | 共通アカウント、ウォレット、ガチャ、カード図鑑 |
+| `anibato/`（`index.html` / `anibato.css` / `anibato.js`） | あにあにバトル！！の紹介ページ。ポータル本体とは独立した静的ページで、画像は `images/anibato/` を参照。JSは画像の切替と目次の強調だけ |
 | `minigame-breakout.js` | ブロック崩し（全5ステージ）の進行・当たり判定・アイテム・描画。ボタンと入力は `aniani.js`。Node.jsのテストからも読み込める |
 | `minigame-ai.js` | 〇×ゲーム（9×9・5目並べ）と神経衰弱のCPU（やさしい・ふつう・つよい）。Node.jsのテストからも読み込める |
 | `aniani.js` | モーダル、localStorage、記事/コメント、8ミニゲームのロジック |

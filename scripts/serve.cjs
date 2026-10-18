@@ -43,7 +43,8 @@ function createServer(root = path.resolve(__dirname, '..')) {
       send(400, 'Bad request');
       return;
     }
-    const requestedFile = path.resolve(publicRoot, `.${pathname === '/' ? '/index.html' : pathname}`);
+    // GitHub Pages と同じく、末尾が / のURLはそのフォルダの index.html を返す。
+    const requestedFile = path.resolve(publicRoot, `.${pathname.endsWith('/') ? `${pathname}index.html` : pathname}`);
     if (!isPublic(requestedFile)) {
       send(404, 'Not found');
       return;

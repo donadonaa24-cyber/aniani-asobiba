@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>あにあにバトル！！（あにバト！！）｜あにあにの遊び場</title>
+    <meta name="description" content="あにあに作品のキャラクター9人が戦う2D対戦アクション『あにあにバトル！！』の紹介ページ。チーム戦のルール、操作方法、全キャラクター、ステージ、開発状況を掲載。試作版・開発中で、プレイ版・ダウンロードは未公開です。">
+    <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="あにあにの遊び場">
+    <meta property="og:title" content="あにあにバトル！！（あにバト！！）">
+    <meta property="og:description" content="あにあに作品のキャラクター9人が戦う2D対戦アクション。試作版・開発中。">
+    <meta property="og:url" content="https://donadonaa24-cyber.github.io/aniani-asobiba/anibato/">
+    <meta property="og:image" content="https://donadonaa24-cyber.github.io/aniani-asobiba/images/anibato/ogp-20261018.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="あにあにバトル！！の9人が紙の舞台で戦う集合イラスト">
+    <meta property="og:locale" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Shippori+Mincho:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="anibato.css?v=20261018a1">
+</head>
+<body>
+    <a class="skip-link" href="#main">本文へ移動</a>
+    <header class="site-bar">
+        <a class="bar-back" href="../">← あにあにの遊び場</a>
+        <nav class="bar-nav" aria-label="ページ内の目次">
+            <a href="#about">作品紹介</a>
+            <a href="#modes">モード</a>
+            <a href="#rules">ルール</a>
+            <a href="#actions">攻撃と防御</a>
+            <a href="#controls">操作</a>
+            <a href="#characters">キャラクター</a>
+            <a href="#stages">ステージ</a>
+            <a href="#status">開発状況</a>
+        </nav>
+    </header>
+
+    <main id="main">
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="theatre">
+                <span class="tape tape-tl" aria-hidden="true"></span>
+                <span class="tape tape-tr" aria-hidden="true"></span>
+                <img class="hero-art" src="../images/anibato/ensemble-20261018.webp" alt="透真・湊・シロ・蓮・結衣・黒獅子王・千鶴・暁・龍太の9人が、紙の舞台の上で作品ごとに戦っている集合イラスト" width="1600" height="900">
+                <div class="hero-plate">
+                    <p class="hero-kicker">ANIANI ORIGINAL / 2D PLATFORM FIGHTER</p>
+                    <h1 id="hero-title">あにあにバトル！！</h1>
+                    <p class="hero-sub">略称：あにバト！！</p>
+                </div>
+            </div>
+            <div class="hero-copy">
+                <div>
+                    <p class="hero-lead">3つのあにあに作品から集まった<strong>9人</strong>が、紙の舞台で戦う。<br>3人ずつのチームを組んで、先に2勝したチームの勝ち！</p>
+                    <p class="status-badge"><strong>試作版・開発中</strong> プレイ版・ダウンロードは現在未公開です。</p>
+                </div>
+                <ul class="hero-facts" aria-label="作品の概要">
+                    <li><span>ジャンル</span>2D横スクロール対戦アクション</li>
+                    <li><span>人数</span>CPU対戦・同じPCで2人対戦</li>
+                    <li><span>対応予定</span>Windows／PCブラウザ（開発中）</li>
+                    <li><span>操作</span>キーボード・ゲームパッド</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="about" class="section" aria-labelledby="about-title">
+            <h2 id="about-title" class="section-title"><span>ABOUT</span>作品紹介</h2>
+            <div class="paper">
+                <p>『あにあにバトル！！』は、あにあにが制作する作品のキャラクターたちが、作品の垣根を越えて戦うオリジナルの2D対戦アクション（プラットフォームファイター）です。</p>
+                <p>参加するのは『星の終わりに君は生きる』『推し駒battle』『Battle à la carte』の3作品から3人ずつ、計9人。厚紙と切り絵を重ねたような「ペープサート（紙人形劇）」風の舞台で、キャラクターのイラストがそのまま動いて戦います。</p>
+                <p>ハートを削り合う駆け引きに加えて、ステージの外に落ちたら即敗北。時間が残り少なくなると床が消えていき、最後は中央の足場だけが残ります。</p>
+                <p class="note">今後、あにあにの作品が増えれば参加キャラクターも増える予定です。</p>
+            </div>
+            <figure class="shot">
+                <img src="../images/anibato/select-20261018.webp" alt="キャラクター選択画面。作品ごとに並んだ9人の集合絵から、P1とCPUのチームを選ぶ" width="1280" height="720" loading="lazy">
+                <figcaption>キャラクター選択。9人の集合絵から3人ずつ選んでチームを組みます（開発中の画面）。</figcaption>
+            </figure>
+        </section>
+
+        <section id="modes" class="section" aria-labelledby="modes-title">
+            <h2 id="modes-title" class="section-title"><span>MODE</span>モード</h2>
+            <div class="card-grid">
+                <article class="paper mode">
+                    <h3>CPUチーム対戦</h3>
+                    <p>自分のチーム3人と、CPUのチーム3人を選んで対戦。CPUの強さは「やさしい／ふつう／むずかしい」から選べます。</p>
+                </article>
+                <article class="paper mode">
+                    <h3>2人チーム対戦</h3>
+                    <p>同じPCで2人対戦。P1とP2がそれぞれ3人を選びます。キーボード2人、ゲームパッド、その組み合わせで遊べます。</p>
+                </article>
+                <article class="paper mode">
+                    <h3>練習モード</h3>
+                    <p>1人ずつ選んで自由に練習。超必殺技のゲージは最初から満タンで、何度でも使えます。速度変更・一時停止・コマ送り・当たり判定の表示にも対応。</p>
+                </article>
+                <article class="paper mode">
+                    <h3>設定</h3>
+                    <p>BGM・効果音の音量、フレームレート、画面の揺れ、キーコンフィグ、操作説明、チュートリアルなど。対戦中もポーズから開けます。</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="rules" class="section" aria-labelledby="rules-title">
+            <h2 id="rules-title" class="section-title"><span>RULE</span>ルール</h2>
+            <div class="rule-columns">
+                <article class="paper">
+                    <h3>チーム戦（3人×3ラウンド）</h3>
+                    <ol class="steps">
+                        <li>自分のチームの3人を順番に選び、続いて相手（CPUまたはP2）の3人を選ぶ。</li>
+                        <li>選んだ順に、ラウンド1・2・3へ1人ずつ出場。</li>
+                        <li><strong>先に2勝したチームの勝ち。</strong>2対0で決まったら3戦目は行いません。</li>
+                    </ol>
+                    <ul class="dots">
+                        <li>同じチームに同じキャラは入れられません。相手チームと同じキャラは選べます。</li>
+                        <li>ラウンドごとにハート・ゲージ・位置・足場はすべて元に戻ります。勝ったキャラの居残りやダメージの持ち越しはありません。</li>
+                        <li>引き分けのラウンドは得点にならず、同じ出場者でもう一度戦います。</li>
+                    </ul>
+                </article>
+                <article class="paper">
+                    <h3>1ラウンドの決まり</h3>
+                    <ul class="dots">
+                        <li>制限時間は<strong>70秒</strong>、ハートは<strong>3つ</strong>。ハートが0になったら負け。</li>
+                        <li><strong>ステージの外（左右・下）に出たら、その場で負け。</strong></li>
+                        <li>同時に決着した場合は「場外 → ハート0 → 時間切れ」の順に判定します。</li>
+                        <li>時間切れはハートが多い方の勝ち。同じなら、たまっている被弾が少ない方の勝ち。それも同じなら引き分け。</li>
+                    </ul>
+                    <table class="damage">
+                        <caption>受けたときに減るハート</caption>
+                        <tbody>
+                            <tr><th scope="row">通常攻撃</th><td>3回当たるとハート1つ（頭上に 0/3 → 3/3 と表示）</td></tr>
+                            <tr><th scope="row">特殊攻撃</th><td>ハート1つ</td></tr>
+                            <tr><th scope="row">超必殺技</th><td>ハート2つ</td></tr>
+                        </tbody>
+                    </table>
+                </article>
+            </div>
+            <article class="paper shrink">
+                <h3>残り時間で床が消える</h3>
+                <ol class="timeline" aria-label="床が消える流れ">
+                    <li><b>残り15秒</b>床が消える予告</li>
+                    <li><b>残り10秒</b>左右の床から順に消え始める（消える1秒前に点滅）</li>
+                    <li><b>残り約6秒</b>上の小さな足場も消える</li>
+                    <li><b>最後</b>中央の足場だけが残る</li>
+                </ol>
+                <p class="note">床が消えると落下し、場外に出れば負け。最後まで足場の位置に気を付けよう。</p>
+            </article>
+        </section>
+
+        <section id="actions" class="section" aria-labelledby="actions-title">
+            <h2 id="actions-title" class="section-title"><span>BATTLE SYSTEM</span>攻撃と防御</h2>
+            <div class="card-grid">
+                <article class="paper">
+                    <h3>通常攻撃</h3>
+                    <ul class="dots">
+                        <li>ボタンを押すたびに最大<strong>3段</strong>までつながる。3連続で当てると「COMBO FINISH」で大きく吹っ飛ばす。</li>
+                        <li><b>上＋通常</b>で上攻撃、<b>下＋通常</b>でガードを崩す下攻撃、<b>背後＋通常</b>で後ろへの攻撃。</li>
+                        <li>地上で<strong>1〜3秒長押し</strong>して離すと溜め攻撃。長く溜めるほど遠くへ吹っ飛ばす。</li>
+                        <li>空中の通常攻撃は1種類。動きながら落下を続けます。</li>
+                        <li>通常攻撃同士が同時にぶつかると<strong>相殺</strong>して、両方の攻撃が止まります。</li>
+                    </ul>
+                </article>
+                <article class="paper">
+                    <h3>特殊攻撃・超必殺技</h3>
+                    <ul class="dots">
+                        <li><b>特殊攻撃</b>はキャラごとに1種類。当たると相手のハートを1つ減らします。</li>
+                        <li><b>超必殺技</b>は「LINK」ゲージが100になると<strong>1試合に1回</strong>使える大技。ゲージは攻撃を当てたり受けたりするとたまります。</li>
+                        <li>超必殺技を出すと、キャラの名前と技名のカットインが入り、その間は時間が止まります。</li>
+                    </ul>
+                </article>
+                <article class="paper">
+                    <h3>防御と読み合い</h3>
+                    <ul class="dots">
+                        <li><b>ガード</b>：押している間すべての攻撃を防ぐ。ただしスタミナを使い、足りないとガードが壊れる（ブレイク）。下攻撃にはガードを崩される。</li>
+                        <li><b>ジャストガード／ジャスト回避</b>：当たる直前に合わせると、スタミナを使わずに防げて反撃のチャンス。</li>
+                        <li><b>回避</b>：一瞬だけ無敵になって攻撃をかわす。</li>
+                        <li><b>カウンター</b>：近くからの通常攻撃を受け止めて返す。特殊攻撃や超必殺技には効かない。</li>
+                    </ul>
+                </article>
+                <article class="paper">
+                    <h3>移動とスタミナ</h3>
+                    <ul class="dots">
+                        <li>2段ジャンプ、ダッシュ（左右2回入力または専用ボタン）、空中ダッシュ、急降下、しゃがみ。</li>
+                        <li>上の小さな足場は下からすり抜けられ、下を長押しすると降りられます。</li>
+                        <li>空中ジャンプ・ダッシュ・回避・ガードで<strong>スタミナ</strong>を使います。地上で止まっていると早く回復。攻撃にスタミナは要りません。</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <section id="controls" class="section" aria-labelledby="controls-title">
+            <h2 id="controls-title" class="section-title"><span>CONTROLS</span>操作方法</h2>
+            <div class="paper table-paper">
+                <p class="note">Windows版の初期設定です。設定の「キーコンフィグ」で変更できます。PCブラウザ版は一部のキー（P2・ポーズなど）が異なります。</p>
+                <div class="table-scroll">
+                    <table class="controls">
+                        <thead>
+                            <tr><th scope="col">操作</th><th scope="col">P1キーボード</th><th scope="col">P2キーボード</th><th scope="col">ゲームパッド</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><th scope="row">移動</th><td>A / D</td><td>← / →</td><td>左スティック・十字キー</td></tr>
+                            <tr><th scope="row">上・下（しゃがみ）</th><td>W / S</td><td>↑ / ↓</td><td>左スティック・十字キー</td></tr>
+                            <tr><th scope="row">ジャンプ・2段ジャンプ</th><td>Space</td><td>右Ctrl</td><td>A（×）</td></tr>
+                            <tr><th scope="row">通常攻撃（長押しで溜め）</th><td>J</td><td>Delete</td><td>X（□）</td></tr>
+                            <tr><th scope="row">特殊攻撃</th><td>K</td><td>End</td><td>Y（△）</td></tr>
+                            <tr><th scope="row">ガード</th><td>L</td><td>PageDown</td><td>LT（L2）</td></tr>
+                            <tr><th scope="row">回避</th><td>左Shift</td><td>右Shift</td><td>RT（R2）</td></tr>
+                            <tr><th scope="row">カウンター</th><td>I</td><td>PageUp</td><td>RB（R1）</td></tr>
+                            <tr><th scope="row">超必殺技</th><td>U</td><td>Home</td><td>LB（L1）</td></tr>
+                            <tr><th scope="row">ダッシュ</th><td>F／左右2回</td><td>右Alt／左右2回</td><td>左スティック押し込み／左右2回</td></tr>
+                            <tr><th scope="row">ポーズ</th><td>Esc</td><td>Backspace</td><td>Start（OPTIONS）</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="note">ゲームパッドはXbox系・PlayStation系に対応予定（実機での確認は開発中）。P2はテンキー（0〜6）でも操作できます。</p>
+            </div>
+        </section>
+
+        <section id="characters" class="section" aria-labelledby="characters-title">
+            <h2 id="characters-title" class="section-title"><span>CHARACTERS</span>キャラクター</h2>
+            <p class="section-lead">3作品から3人ずつ、計9人。イラストを押すと攻撃中の姿に切り替わります。</p>
+
+            <div class="work-group" data-work="hoshi">
+                <h3 class="work-title">『星の終わりに君は生きる』</h3>
+                <div class="char-grid">
+                    <article class="char-card" style="--accent:#5aa8ff">
+                        <button class="char-art" type="button" aria-pressed="false" aria-label="透真のイラストを攻撃中の姿に切り替える"><img src="../images/anibato/chars/toma-idle.webp" data-action="../images/anibato/chars/toma-action.webp" alt="黒いスーツ姿の透真" width="538" height="600" loading="lazy"></button>
+                        <div class="char-body">
+                            <h4>透真 <small>とうま</small></h4>
+                            <p class="char-role">湊の兄</p>
+                            <p>弟を思う気持ちを抱えながら、管理AIに守られた世界で自分の道を歩む。</p>
+                            <dl class="moves">
+                                <dt>通常</dt><dd>拳銃で撃つ（3段目は二丁拳銃）</dd>
+                                <dt>特殊</dt><dd>ドローン特攻</dd>
+                                <dt>超必殺</dt><dd>画面の外から相手の頭上へロケットを落とす</dd>
+                            </dl>
+                        </div>
+                    </article>
+                    <article class="char-card" style="--accent:#8fb4d8">
+                        <button class="char-art" type="button" aria-pressed="false" aria-label="湊のイラストを攻撃中の姿に切り替える"><img src="../images/anibato/chars/minato-idle.webp" data-action="../images/anibato/chars/minato-action.webp" alt="左腕が機械の義手の湊" width="541" height="600" loading="lazy"></button>
+                        <div class="char-body">
+                            <h4>湊 <small>みなと</small></h4>
+                            <p class="char-role">透真の弟</p>
+                            <p>左目と左腕に機械を備え、仲間とともに生きる。</p>
+                            <dl class="moves">
+                                <dt>通常</dt><dd>義手で打撃</dd>
+                                <dt>特殊</dt><dd>意識フィールドへ接続し、相手の近くへ瞬間移動して攻撃</dd>
+                                <dt>超必殺</dt><dd>霧のような意識状態になり、触れるとダメージを受けるブラックホールのような空間を出す</dd>
+                            </dl>
+                        </div>
+                    </article>
+                    <article class="char-card" style="--accent:#b7e3ff">
+                        <button class="char-art" type="button" aria-pressed="false" aria-label="シロのイラストを攻撃中の姿に切り替える"><img src="../images/anibato/chars/shiro-idle.webp" data-action="../images/anibato/chars/shiro-action.webp" alt="白い体と青い瞳の犬型AI、シロ" width="543" height="600" loading="lazy"></button>
+                        <div class="char-body">
+                            <h4>シロ</h4>
+                            <p class="char-role">犬型AI</p>
+                            <p>白い体と青い瞳をもつ犬型AI。人とAIの関係を映す存在。</p>
+                            <dl class="moves">
+                                <dt>通常</dt><dd>体当たり・噛みつき（3段目は頭突き）</dd>
+                                <dt>特殊</dt><dd>ALMAと融合して電磁パルス。当たった相手は少しの間しびれる</dd>
+                                <dt>超必殺</dt><dd>0と1が流れる空間の後、ALMAが攻撃</dd>
+                            </dl>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="work-group" data-work="oshikoma">
+                <h3 class="work-title">『推し駒battle』</h3>
+                <div class="char-grid">
+                    <article class="char-card" style="--accent:#ff8a5c">
+                        <button class="char-art" type="button" aria-pressed="false" aria-label="蓮のイラストを攻撃中の姿に切り替える"><img src="../images/anibato/chars/ren-idle.webp" data-action="../images/anibato/chars/ren-action.webp" alt="犬のフードをかぶった男の子、蓮" width="539" height="600" loading="lazy"></button>
+                        <div class="char-body">
+                            <h4>蓮 <small>れん</small></h4>
+                            <p class="char-role">犬の男の子／飛車</p>
+                            <p>純粋無垢で一直線。結衣とは張り合うライバル。固有スキルは「直線番長」。</p>
+                            <dl class="moves">
+                                <dt>通常</dt><dd>頭突きや倒立蹴りを含む、カポエラー風の打撃</dd>
+                                <dt>特殊</dt><dd>飛車の駒に変身して、前へ高速突進</dd>
+                                <dt>超必殺</dt><dd>飛車の往復急襲</dd>
+                            </dl>
+                        </div>
+                    </article>
+                    <article class="char-card" style="--accent:#b48cff">
+                        <button class="char-art" type="button" aria-pressed="false" aria-label="結衣のイラストを攻撃中の姿に切り替える"><img src="../images/anibato/chars/yui-idle.webp" data-action="../images/anibato/chars/yui-action.webp" alt="猫耳のフードと杖を持った女の子、結衣" width="530" height="600" loading="lazy"></button>
+                        <div class="char-body">
+                            <h4>結衣 <small>ゆい</small></h4>
+                            <p class="char-role">猫の女の子／角</p>
+                            <p>気分屋で誇り高い。蓮にはつい対抗心が出る。固有スキルは「斜めバリア」。</p>
+                            <dl class="moves">
+                                <dt>通常</dt><dd>可愛い肉球パンチ（3段目は魔法）</dd>
+                                <dt>特殊</dt><dd>角の駒に変身して、斜め上から斜め下へ急襲</dd>
+                                <dt>超必殺</dt><dd>角の交差急襲</dd>
+                            </dl>
+                        </div>
+                    </article>
+                    <article class="char-card" style="--accent:#e0b04a">
+                        <button class="char-art" type="button" aria-pressed="false" aria-label="黒獅子王のイラストを攻撃中の姿に切り替える"><img src="../images/anibato/chars/king-idle.webp" data-action="../images/anibato/chars/king-action.webp" alt="ライオンのたてがみの衣装をまとった黒獅子王" width="539" height="600" loading="lazy"></button>
+                        <div class="char-body">
+                            <h4>黒獅子王 <small>くろじしおう</small></h4>
+                            <p class="char-role">ライオンの首領／王</p>
+                            <p>黒金会を率いる絶対王。部下の豹妬レイラ・銀狼シオン・鹿角ノアを呼び出して戦う。</p>
+                            <dl class="moves">
+                                <dt>通常</dt><dd>爪で打撃・ひっかき（3段目は吠えて蹴り飛ばす）</dd>
+                                <dt>特殊</dt><dd>王の駒に変身し、部下3人を呼んで頭上から攻撃</dd>
+                                <dt>超必殺</dt><dd>部下の軍勢による総攻撃</dd>
+                            </dl>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="work-group" data-work="battle">
+                <h3 class="work-title">『Battle à la carte』</h3>
+                <div class="char-grid">
+                    <article class="char-card" style="--accent:#ff9b4a">
+                        <button class="char-art" type="button" aria-pressed="false" aria-label="千鶴のイラストを攻撃中の姿に切り替える"><img src="../images/anibato/chars/chizuru-idle.webp" data-action="../images/anibato/chars/chizuru-action.webp" alt="オレンジの長袖と紺のスカートの私服姿の千鶴" width="560" height="567" loading="lazy"></button>
+                        <div class="char-body">
+                            <h4>千鶴 <small>ちづる</small></h4>
+                            <p class="char-role">暁のライバル</p>
+                            <p>「もう一回勝負！ 今度は私が勝つから！」 本作では私服姿で参戦。</p>
+                            <dl class="moves">
+                                <dt>通常</dt><dd>フライパンで打撃</dd>
+                                <dt>特殊</dt><dd>おにぎり投げ。当たった相手は「もぐもぐ」で少しの間動けない</dd>
+                                <dt>超必殺</dt><dd>満腹カレーをぶちまける</dd>
+                            </dl>
+                        </div>
+                    </article>
+                    <article class="char-card is-wip" style="--accent:#7fb0ff">
+                        <div class="char-art"><img src="../images/anibato/chars/akatsuki-idle.webp" alt="眼鏡をかけた学生服姿の暁" width="535" height="600" loading="lazy"><span class="wip-tag">攻撃イラスト制作中</span></div>
+                        <div class="char-body">
+                            <h4>暁 <small>あかつき</small></h4>
+                            <p class="char-role">千鶴のライバル</p>
+                            <p>「しゃあないな。ほな、相手したるわ。」</p>
+                            <dl class="moves">
+                                <dt>通常</dt><dd>カードで攻撃（カード投げ）</dd>
+                                <dt>特殊</dt><dd>カード投げ</dd>
+                                <dt>超必殺</dt><dd>砂をこねてピラミッドを作り、相手の頭上へ落とす</dd>
+                            </dl>
+                        </div>
+                    </article>
+                    <article class="char-card is-wip" style="--accent:#ffd56a">
+                        <div class="char-art"><img src="../images/anibato/chars/ryuta-idle.webp" alt="金髪で学生服姿の龍太" width="541" height="600" loading="lazy"><span class="wip-tag">攻撃イラスト制作中</span></div>
+                        <div class="char-body">
+                            <h4>龍太 <small>りゅうた</small></h4>
+                            <p class="char-role">幼馴染編のキャラクター</p>
+                            <p>「上等だ。やるからには、負けるつもりはねぇよ。」</p>
+                            <dl class="moves">
+                                <dt>通常</dt><dd>素手で打撃（ジャブ→アッパー）</dd>
+                                <dt>特殊</dt><dd>バットで殴る</dd>
+                                <dt>超必殺</dt><dd>英語の本を開き、謎の呪文を唱えて攻撃</dd>
+                            </dl>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <p class="note center">技や演出は本作だけのクロスオーバー表現で、それぞれの原作の設定ではありません。</p>
+        </section>
+
+        <section id="stages" class="section" aria-labelledby="stages-title">
+            <h2 id="stages-title" class="section-title"><span>STAGE</span>ステージ</h2>
+            <p class="section-lead">3作品をモチーフにした3つの舞台。地形と当たり判定はどれも同じで、大きな床1つと上の小さな足場2つでできています。</p>
+            <div class="stage-list">
+                <figure class="stage">
+                    <img src="../images/anibato/stage-future-20261018.webp" alt="青い未来都市を切り絵で表した夜の舞台" width="1280" height="720" loading="lazy">
+                    <figcaption><strong>星の終わり</strong>夜空と未来都市を、厚紙の切り絵で重ねた舞台。</figcaption>
+                </figure>
+                <figure class="stage">
+                    <img src="../images/anibato/stage-board-20261018.webp" alt="中央に将棋盤がそびえる、赤と金の和風の舞台" width="1280" height="720" loading="lazy">
+                    <figcaption><strong>推し駒Battle</strong>大きな将棋盤がそびえる、赤と金の和風の舞台。</figcaption>
+                </figure>
+                <figure class="stage">
+                    <img src="../images/anibato/stage-festival-20261018.webp" alt="屋台と紅葉に囲まれた、学校の文化祭の舞台" width="1280" height="720" loading="lazy">
+                    <figcaption><strong>Battle à la carte</strong>屋台が並ぶ、にぎやかな文化祭の舞台。</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section id="status" class="section" aria-labelledby="status-title">
+            <h2 id="status-title" class="section-title"><span>DEVELOPMENT</span>開発状況</h2>
+            <div class="rule-columns">
+                <article class="paper">
+                    <h3>できていること</h3>
+                    <ul class="checks">
+                        <li>9人のチーム戦（CPU対戦・2人対戦）と練習モード、設定画面</li>
+                        <li>3つのステージと床が消える演出、BGM・効果音</li>
+                        <li>7人の攻撃イラスト（透真・湊・シロ・蓮・結衣・黒獅子王・千鶴）</li>
+                        <li>キーボード・ゲームパッドの操作とキーコンフィグ</li>
+                        <li>Windows版とPCブラウザ版の試作（どちらも未公開）</li>
+                    </ul>
+                </article>
+                <article class="paper">
+                    <h3>これから</h3>
+                    <ul class="dots">
+                        <li>暁・龍太の攻撃イラスト</li>
+                        <li>溜め攻撃・やられ姿などのイラストの追加</li>
+                        <li>ゲームパッドの実機確認、操作感の調整</li>
+                        <li>公開の時期・方法は未定</li>
+                    </ul>
+                    <p class="note">開発中のため、ルール・技・画面は今後変わることがあります。サポートキャラやオンライン対戦は最初の版には入りません。</p>
+                </article>
+            </div>
+            <p class="status-badge center"><strong>試作版・開発中</strong> プレイ版・ダウンロードは現在未公開です。</p>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>キャラクター・舞台のイラストは、生成AIを使用して制作しています。画面は開発中のものです。</p>
+        <p>本作品の画像・文章・ゲームデータの無断転載・無断配布を禁止します。</p>
+        <p><a href="../">← あにあにの遊び場へ戻る</a></p>
+        <p class="copy">© ANIANI PLAYGROUND PORTAL</p>
+    </footer>
+    <script src="anibato.js?v=20261018a1"></script>
+</body>
+</html>
