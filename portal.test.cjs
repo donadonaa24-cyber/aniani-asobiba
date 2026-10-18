@@ -42,6 +42,8 @@ for (const img of ['battle', 'select', 'special']) assert(fs.existsSync(`images/
   assert.equal(cards.length, 9, 'nine character cards');
   names.forEach((name, i) => assert(cards[i].includes(`<h4>${name}`), `character ${i + 1} is ${name}`));
   for (const card of cards) for (const label of ['通常', '特殊', '超必殺']) assert(card.includes(`<dt>${label}</dt>`), 'each character lists normal/special/super');
+  for (const card of cards) assert(/<button class="char-art"[^>]*>[\s\S]*?data-action="[^"]+-action\.webp"/.test(card), 'every character can switch to an attack pose');
+  assert(/<h4>龍太[\s\S]*?<p class="char-role">暁のライバル<\/p>/.test(page), '龍太 is 暁\'s rival');
   assert.equal([...page.matchAll(/<figure class="stage">/g)].length, 3, 'three stages');
   for (const m of page.matchAll(/(?:src|href|data-action)="([^"#]+)"/g)) {
     if (/^https:\/\/fonts\./.test(m[1])) continue;
