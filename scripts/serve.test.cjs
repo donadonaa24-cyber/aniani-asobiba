@@ -15,6 +15,8 @@ before(async () => {
   await writeFile(path.join(root, 'index.html'), '<title>Portal</title>');
   await writeFile(path.join(root, 'app.js'), 'window.portal = true;');
   await writeFile(path.join(root, 'images', 'card.png'), Buffer.from([0, 1, 2, 3]));
+  await mkdir(path.join(root, 'anibato'));
+  await writeFile(path.join(root, 'anibato', 'index.html'), '<title>Anibato</title>');
   for (const filename of ['.env', '.git/config', 'supabase.txt', 'package.json']) {
     await writeFile(path.join(root, filename), 'private');
   }
@@ -49,6 +51,13 @@ test('serves HTML, versioned JavaScript and binary images with correct MIME type
   assert.equal(image.status, 200);
   assert.equal(image.headers.get('content-type'), 'image/png');
   assert.deepEqual(Buffer.from(await image.arrayBuffer()), Buffer.from([0, 1, 2, 3]));
+});
+
+test('a folder URL ending in / serves that folder index.html like GitHub Pages', async () => {
+  const page = await fetch(`${base}/anibato/`);
+  assert.equal(page.status, 200);
+  assert.equal(await page.text(), '<title>Anibato</title>');
+  assert.equal((await fetch(`${base}/images/`)).status, 404);
 });
 
 test('HEAD has content headers and no response body', async () => {
