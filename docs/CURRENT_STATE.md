@@ -1,3 +1,7 @@
+# 2026-10-23 配信版の切り替え待ち
+
+タッチ版PR19を公開した後、以前のService Workerが残る更新経路を点検。readyだけでは旧版の準備完了を返すため、新しい配信版のscriptURLを持つcontrollerへの切替を待ってからUnityデータを読み込む。ゲームのWasm・16分割データ・原画・所持は変更なし。旧ready/旧controller・途中の別版・初回・現行版・時間切れ解除をNodeで検証する。
+
 # 2026-10-23 半透明タッチ操作を追加
 
 ゲーム正本：aniani-battle commit 872fb2c。
