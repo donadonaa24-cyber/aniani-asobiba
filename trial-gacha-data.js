@@ -5,7 +5,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function () {
     "use strict";
 
-    const prefixes = { "Battle a la carte": "BAL", "架空運輸": "KUU", "星の終わりに君は生きる": "HOS", "花散るさきの、幸せのかたち": "HAN", "EchoShion": "ECH", "推し駒battle": "OSK" };
+    const prefixes = { "Battle a la carte": "BAL", "架空運輸": "KUU", "星の終わりに君は生きる": "HOS", "花散るさきの、幸せのかたち": "HAN", "EchoShion": "ECH", "推し駒battle": "OSK", "あにあにバトル！！": "ANI" };
     let number = 0;
     const cards = [];
 
@@ -211,6 +211,27 @@
         description: `${introduction}固有スキル「${skill}」。`,
         ...(rarity === "UR" ? { quote: introduction, quoteLabel: "キャラクター紹介" } : {})
     }));
+
+
+    // PAPER_CARDS_BEGIN
+    add("あにあにバトル！！", "SSR", "紙キャラ", "透真（紙の舞台）", "images/gacha/anibato-paper/toma.webp", {"sourceWork":"星の終わりに君は生きる","role":"星の終わりに君は生きる / 紙キャラ","generatedWithAI":true,"description":"『星の終わりに君は生きる』から、あにあにバトル！！に参戦する透真。ゲームで採用している待機原画を使ったコレクションカード。カードの所持でゲームの強さは変わりません。"});
+    add("あにあにバトル！！", "SSR", "紙キャラ", "蓮（紙の舞台）", "images/gacha/anibato-paper/ren.webp", {"sourceWork":"推し駒battle","role":"推し駒battle / 紙キャラ","generatedWithAI":true,"description":"『推し駒battle』から、あにあにバトル！！に参戦する蓮。ゲームで採用している待機原画を使ったコレクションカード。カードの所持でゲームの強さは変わりません。"});
+    add("あにあにバトル！！", "SSR", "紙キャラ", "千鶴（紙の舞台）", "images/gacha/anibato-paper/chizuru.webp", {"sourceWork":"Battle à la carte","role":"Battle à la carte / 紙キャラ","generatedWithAI":true,"description":"『Battle à la carte』から、あにあにバトル！！に参戦する千鶴。ゲームで採用している待機原画を使ったコレクションカード。カードの所持でゲームの強さは変わりません。"});
+    add("あにあにバトル！！", "SSR", "紙キャラ", "湊（紙の舞台）", "images/gacha/anibato-paper/minato.webp", {"sourceWork":"星の終わりに君は生きる","role":"星の終わりに君は生きる / 紙キャラ","generatedWithAI":true,"description":"『星の終わりに君は生きる』から、あにあにバトル！！に参戦する湊。ゲームで採用している待機原画を使ったコレクションカード。カードの所持でゲームの強さは変わりません。"});
+    add("あにあにバトル！！", "SSR", "紙キャラ", "シロ（紙の舞台）", "images/gacha/anibato-paper/shiro.webp", {"sourceWork":"星の終わりに君は生きる","role":"星の終わりに君は生きる / 紙キャラ","generatedWithAI":true,"description":"『星の終わりに君は生きる』から、あにあにバトル！！に参戦するシロ。ゲームで採用している待機原画を使ったコレクションカード。カードの所持でゲームの強さは変わりません。"});
+    add("あにあにバトル！！", "SSR", "紙キャラ", "結衣（紙の舞台）", "images/gacha/anibato-paper/yui.webp", {"sourceWork":"推し駒battle","role":"推し駒battle / 紙キャラ","generatedWithAI":true,"description":"『推し駒battle』から、あにあにバトル！！に参戦する結衣。ゲームで採用している待機原画を使ったコレクションカード。カードの所持でゲームの強さは変わりません。"});
+    add("あにあにバトル！！", "SSR", "紙キャラ", "黒獅子王（紙の舞台）", "images/gacha/anibato-paper/king.webp", {"sourceWork":"推し駒battle","role":"推し駒battle / 紙キャラ","generatedWithAI":true,"description":"『推し駒battle』から、あにあにバトル！！に参戦する黒獅子王。ゲームで採用している待機原画を使ったコレクションカード。カードの所持でゲームの強さは変わりません。"});
+    add("あにあにバトル！！", "SSR", "紙キャラ", "暁（紙の舞台）", "images/gacha/anibato-paper/akatsuki.webp", {"sourceWork":"Battle à la carte","role":"Battle à la carte / 紙キャラ","generatedWithAI":true,"description":"『Battle à la carte』から、あにあにバトル！！に参戦する暁。ゲームで採用している待機原画を使ったコレクションカード。カードの所持でゲームの強さは変わりません。"});
+    add("あにあにバトル！！", "SSR", "紙キャラ", "龍太（紙の舞台）", "images/gacha/anibato-paper/ryuta.webp", {"sourceWork":"Battle à la carte","role":"Battle à la carte / 紙キャラ","generatedWithAI":true,"description":"『Battle à la carte』から、あにあにバトル！！に参戦する龍太。ゲームで採用している待機原画を使ったコレクションカード。カードの所持でゲームの強さは変わりません。"});
+    add("あにあにバトル！！", "SR", "紙サポート", "ALMA（紙サポート）", "images/gacha/anibato-paper/alma.webp", {"sourceWork":"星の終わりに君は生きる","role":"星の終わりに君は生きる / 紙サポート","generatedWithAI":true,"description":"意識フィールドを展開し、相手の移動を5秒間60％にする。攻撃速度は変わらない。 あにバト独自のクロスオーバー演出です。ガチャの所持と試合内の出現・効果は連動しません。"});
+    add("あにあにバトル！！", "SR", "紙サポート", "志遠の車（紙サポート）", "images/gacha/anibato-paper/shion_car.webp", {"sourceWork":"EchoShion","role":"EchoShion / 紙サポート","generatedWithAI":true,"description":"赤い車で舞台を走り抜け、命中した相手を2秒間麻痺させる。 あにバト独自のクロスオーバー演出です。ガチャの所持と試合内の出現・効果は連動しません。"});
+    add("あにあにバトル！！", "SR", "紙サポート", "咲と花（紙サポート）", "images/gacha/anibato-paper/saki_hana.webp", {"sourceWork":"花散るさきの、幸せのかたち","role":"花散るさきの、幸せのかたち / 紙サポート","generatedWithAI":true,"description":"もやしカレーを届け、5秒間スタミナ消費をなくす。 あにバト独自のクロスオーバー演出です。ガチャの所持と試合内の出現・効果は連動しません。"});
+    add("あにあにバトル！！", "SR", "紙サポート", "紗良（紙サポート）", "images/gacha/anibato-paper/sara.webp", {"sourceWork":"星の終わりに君は生きる","role":"星の終わりに君は生きる / 紙サポート","generatedWithAI":true,"description":"緊急箱を持って登場。ハートを1つ回復する（上限まで）。 あにバト独自のクロスオーバー演出です。ガチャの所持と試合内の出現・効果は連動しません。"});
+    add("あにあにバトル！！", "SR", "紙サポート", "舞依（紙サポート）", "images/gacha/anibato-paper/mai.webp", {"sourceWork":"Battle à la carte","role":"Battle à la carte / 紙サポート","generatedWithAI":true,"description":"弓道着で登場し、相手へハート1つ分の矢を放つ。 あにバト独自のクロスオーバー演出です。ガチャの所持と試合内の出現・効果は連動しません。"});
+    add("あにあにバトル！！", "SR", "紙サポート", "剛（紙サポート）", "images/gacha/anibato-paper/tsuyoshi.webp", {"sourceWork":"Battle à la carte","role":"Battle à la carte / 紙サポート","generatedWithAI":true,"description":"財布を舞台のどこかへ落とす。財布はどちらも拾え、スタミナを全回復する。 あにバト独自のクロスオーバー演出です。ガチャの所持と試合内の出現・効果は連動しません。"});
+    add("あにあにバトル！！", "SR", "紙サポート", "美桜（紙サポート）", "images/gacha/anibato-paper/mio.webp", {"sourceWork":"推し駒battle","role":"推し駒battle / 紙サポート","generatedWithAI":true,"description":"5秒間、または通常3回・特殊1回分までのバリア。超必殺は貫通する。 あにバト独自のクロスオーバー演出です。ガチャの所持と試合内の出現・効果は連動しません。"});
+    add("あにあにバトル！！", "SR", "紙サポート", "歩太（紙サポート）", "images/gacha/anibato-paper/hota.webp", {"sourceWork":"推し駒battle","role":"推し駒battle / 紙サポート","generatedWithAI":true,"description":"上空から6個の歩の駒を降らせる。相手に当たると1個につきスタミナ15減少。 あにバト独自のクロスオーバー演出です。ガチャの所持と試合内の出現・効果は連動しません。"});
+    // PAPER_CARDS_END
 
     return Object.freeze({
         version: 1,

@@ -10,19 +10,19 @@ assert.equal(cases[5][2], 'あにあに文庫');
 assert.equal(cases[6][2], 'あにあにバトル！！');
 const anibatoCase = html.match(/<button class="game-case anibato-case"[\s\S]*?<\/button>/)?.[0];
 assert(anibatoCase && anibatoCase.includes('data-orbit="6"') && anibatoCase.includes('data-modal-target="anibato-detail"'));
-assert(anibatoCase.includes('data-status="試作版・開発中"') && anibatoCase.includes('ANIANI ORIGINAL / 07'));
-assert(anibatoCase.includes('DEVELOPING / WINDOWS') && anibatoCase.includes('プレイ不可'));
+assert(anibatoCase.includes('data-status="無料ブラウザ試作版"') && anibatoCase.includes('ANIANI ORIGINAL / 07'));
+assert(anibatoCase.includes('PLAY / PC BROWSER') && anibatoCase.includes('無料ブラウザ試作版'));
 assert(html.includes('id="orbit-status">01 / 07'));
 assert(/<meta name="description"[^>]*あにあにバトル！！/.test(html));
-assert(html.includes('aniani.css?v=20261018a1') && html.includes('aniani.js?v=20261018a1'));
+assert(html.includes('aniani.css?v=20261022a1') && html.includes('aniani.js?v=20261022a1'));
 const anibatoViews = [...html.matchAll(/<article class="game-card active anibato-preview">([\s\S]*?)<\/article>/g)].map(m => m[1]);
 assert.equal(anibatoViews.length, 2, 'anibato has a works card and a detail');
 assert(html.indexOf(anibatoViews[0]) > html.indexOf('<h4>あにあに文庫</h4>'), 'anibato follows bunko in works');
 assert(html.includes('id="anibato-detail"') && html.includes('id="anibato-title"'));
 for (const view of anibatoViews) {
-  assert(view.includes('試作版・開発中。プレイ版・ダウンロードは現在未公開です。'));
+  assert(view.includes('無料ブラウザ試作版を公開。PC・キーボード／ゲームパッド向けです。'));
   for (const m of view.matchAll(/href="([^"]+)"/g)) {
-    assert(m[1] === 'anibato/' || /^images\/anibato\/(select|stage-board)-20261018\.webp$/.test(m[1]), `anibato only links to its intro page or screenshots: ${m[1]}`);
+    assert(m[1] === 'anibato/' || m[1] === 'games/anibato/' || /^images\/anibato\/(select|stage-board)-20261018\.webp$/.test(m[1]), `anibato only links to its intro page or screenshots: ${m[1]}`);
   }
   assert(!/\bdownload\s*(?:=|>|\s)|<iframe|<form|\.exe|releases\/|github\.com/.test(view), 'no distribution, download, exe launch, embed, or repository link');
 }
@@ -33,10 +33,10 @@ for (const m of (anibatoCase + anibatoViews.join('')).matchAll(/<img\b[^>]*src="
   assert(fs.existsSync(m[1]) && /[ぁ-んァ-ン一-龠]/.test(m[2]), 'anibato image exists and has Japanese alt text');
 }
 for (const img of ['battle', 'select', 'special']) assert(fs.existsSync(`images/anibato/${img}-20261012.jpg`), 'the 2026-10-12 article keeps its screenshots');
-// あにあにバトル！！の紹介ページ（anibato/）：ルール・9人・ステージを載せ、プレイ・配布への導線は置かない。
+// 2026-10-22公開依頼：9人と3舞台の紹介・無料ブラウザへの許可済み導線。Windows配布等は追加しない。
 {
   const page = fs.readFileSync('anibato/index.html', 'utf8');
-  for (const text of ['試作版・開発中', 'プレイ版・ダウンロードは現在未公開', 'CPUチーム対戦', '2人チーム対戦', '練習モード', '先に2勝', '70秒', 'ハート2つ', 'ステージの外', '中央の足場', 'COMBO FINISH', '溜め攻撃', '相殺', 'LINK', 'ジャストガード', 'カウンター', 'スタミナ', 'キーコンフィグ', '生成AI', 'クロスオーバー表現', '無断転載']) assert(page.includes(text), `anibato page includes ${text}`);
+  for (const text of ['試作版・開発中', '無料ブラウザ試作版を公開中', 'CPUチーム対戦', '2人チーム対戦', '練習モード', '先に2勝', '70秒', 'ハート2つ', '場外ライン', '中央の足場', 'COMBO FINISH', '溜め攻撃', '相殺', 'LINK', 'ジャストガード', 'カウンター', 'スタミナ', 'キーコンフィグ', '生成AI', 'クロスオーバー表現', '無断転載']) assert(page.includes(text), `anibato page includes ${text}`);
   const names = ['透真', '湊', 'シロ', '蓮', '結衣', '黒獅子王', '千鶴', '暁', '龍太'];
   const cards = [...page.matchAll(/<article class="char-card[\s\S]*?<\/article>/g)].map(m => m[0]);
   assert.equal(cards.length, 9, 'nine character cards');
@@ -97,7 +97,7 @@ assert(html.includes('無料お試し版'));
 assert(html.includes('ログイン・コイン・実際のお金は必要ありません'));
 assert(html.includes('id="trial-reveal-skip"'));
 assert(html.includes('id="trial-reveal-next"'));
-assert(html.includes('trial-gacha-data.js?v=20261012b1'));
+assert(html.includes('trial-gacha-data.js?v=20261022a1'));
 assert(html.includes('trial-gacha.js?v=20261014a1'));
 assert(html.includes('trial-gacha.css?v=20261014a1')); assert(html.includes('trial-gacha-sea.js?v=20261013b1'));
 assert(html.includes('架空運輸 ホームページへ'));
@@ -141,4 +141,4 @@ const deepLinkIds = JSON.parse(js.match(/DEEP_LINK_MODAL_IDS = (\[[^\]]+\])/)[1]
 assert(deepLinkIds.includes('anibato-detail'));
 for (const id of deepLinkIds) assert(html.includes(`id="${id}"`), `deep-link target exists: ${id}`);
 assert(html.includes('minigame-breakout.js?v=') && !js.includes('ensureBreakoutImages'), 'breakout uses plain coloured blocks, no recipe images');
-console.log('PASS: seven portal works, anibato preview without play/download links, existing links, rights notices, assets, and release labels.');
+console.log('PASS: seven portal works, anibato browser release with an allowlisted play link, existing links, rights notices, assets, and release labels.');

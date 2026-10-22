@@ -17,6 +17,9 @@ before(async () => {
   await writeFile(path.join(root, 'images', 'card.png'), Buffer.from([0, 1, 2, 3]));
   await mkdir(path.join(root, 'anibato'));
   await writeFile(path.join(root, 'anibato', 'index.html'), '<title>Anibato</title>');
+  await mkdir(path.join(root,'games/anibato/Build'),{recursive:true});
+  await writeFile(path.join(root,'games/anibato/online-config.json'),'{"plan":"free"}');
+  await writeFile(path.join(root,'games/anibato/Build/game.data.unityweb'),Buffer.from([1,2,3]));
   for (const filename of ['.env', '.git/config', 'supabase.txt', 'package.json']) {
     await writeFile(path.join(root, filename), 'private');
   }
@@ -58,6 +61,12 @@ test('a folder URL ending in / serves that folder index.html like GitHub Pages',
   assert.equal(page.status, 200);
   assert.equal(await page.text(), '<title>Anibato</title>');
   assert.equal((await fetch(`${base}/images/`)).status, 404);
+});
+
+test('serves WebGL configuration and payload only inside the game distribution',async()=>{
+  const config=await fetch(base+'/games/anibato/online-config.json');assert.equal(config.status,200);assert.equal(config.headers.get('content-type'),'application/json');
+  const data=await fetch(base+'/games/anibato/Build/game.data.unityweb');assert.equal(data.status,200);assert.equal(data.headers.get('content-encoding'),null);assert.deepEqual(Buffer.from(await data.arrayBuffer()),Buffer.from([1,2,3]));
+  assert.equal((await fetch(base+'/package.json')).status,404);assert.equal((await fetch(base+'/supabase.txt')).status,404);
 });
 
 test('HEAD has content headers and no response body', async () => {
