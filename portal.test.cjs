@@ -11,16 +11,16 @@ assert.equal(cases[6][2], 'あにあにバトル！！');
 const anibatoCase = html.match(/<button class="game-case anibato-case"[\s\S]*?<\/button>/)?.[0];
 assert(anibatoCase && anibatoCase.includes('data-orbit="6"') && anibatoCase.includes('data-modal-target="anibato-detail"'));
 assert(anibatoCase.includes('data-status="無料ブラウザ試作版"') && anibatoCase.includes('ANIANI ORIGINAL / 07'));
-assert(anibatoCase.includes('PLAY / PC BROWSER') && anibatoCase.includes('無料ブラウザ試作版'));
+assert(anibatoCase.includes('PLAY / BROWSER') && anibatoCase.includes('無料ブラウザ試作版'));
 assert(html.includes('id="orbit-status">01 / 07'));
 assert(/<meta name="description"[^>]*あにあにバトル！！/.test(html));
-assert(html.includes('aniani.css?v=20261022a1') && html.includes('aniani.js?v=20261022a1'));
+assert(html.includes('aniani.css?v=20261023m1') && html.includes('aniani.js?v=20261023m1'));
 const anibatoViews = [...html.matchAll(/<article class="game-card active anibato-preview">([\s\S]*?)<\/article>/g)].map(m => m[1]);
 assert.equal(anibatoViews.length, 2, 'anibato has a works card and a detail');
 assert(html.indexOf(anibatoViews[0]) > html.indexOf('<h4>あにあに文庫</h4>'), 'anibato follows bunko in works');
 assert(html.includes('id="anibato-detail"') && html.includes('id="anibato-title"'));
 for (const view of anibatoViews) {
-  assert(view.includes('無料ブラウザ試作版を公開。PC・キーボード／ゲームパッド向けです。'));
+  assert(view.includes('無料ブラウザ試作版を公開。キーボード／ゲームパッド／タッチ操作に対応しています。'));
   for (const m of view.matchAll(/href="([^"]+)"/g)) {
     assert(m[1] === 'anibato/' || m[1] === 'games/anibato/' || /^images\/anibato\/(select|stage-board)-20261018\.webp$/.test(m[1]), `anibato only links to its intro page or screenshots: ${m[1]}`);
   }
