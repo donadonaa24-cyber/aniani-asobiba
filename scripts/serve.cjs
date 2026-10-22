@@ -5,6 +5,11 @@ const { readFile, realpath } = require('node:fs/promises');
 const { parseArgs } = require('node:util');
 
 const contentTypes = {
+  '.json': 'application/json',
+  '.bin': 'application/octet-stream',
+  '.unityweb': 'application/octet-stream',
+  '.wasm': 'application/wasm',
+  '.txt': 'text/plain; charset=utf-8',
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
@@ -23,6 +28,7 @@ function createServer(root = path.resolve(__dirname, '..')) {
   const publicRoot = realpathSync(root);
   function isPublic(file) {
     const relative = path.relative(publicRoot, file);
+    if (['.json','.bin','.unityweb','.wasm','.txt'].includes(path.extname(file).toLowerCase()) && !relative.replaceAll(path.sep,'/').startsWith('games/anibato/')) return false;
     return relative !== '..' && !relative.startsWith(`..${path.sep}`) &&
       !path.isAbsolute(relative) && !relative.split(path.sep).some(part => part.startsWith('.')) &&
       Boolean(contentTypes[path.extname(file).toLowerCase()]);

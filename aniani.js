@@ -11,6 +11,31 @@
     // 新しい記事は先頭に追加してください。id は記事コメントの保存キーなので、公開後は変えないでください。
     const officialArticles = [
         {
+    "id": "2026-10-22-anibato-paper-release",
+    "title": "あにあにバトル！！ 無料ブラウザ試作版と紙の舞台ガチャ",
+    "category": "アップデート",
+    "body": "9人・3作品のペープサート風チームバトルを、PCブラウザで遊べる無料試作版として公開しました。3人ずつ選び、先に2勝したチームの勝ちです。\n\n崖つかまりとスタミナの駆け引き、8種類のサポート、専用の動作原画、紙の舞台を実装。オンラインは無料の直接通信による招待対戦の試験版です。回線によって接続できない場合があります。\n\n無料試験ガチャにも紙キャラ9枚（SSR）とサポート8組（SR）を追加。既存159枚の所持データとレアリティ排出率を維持しています。同じレアリティ内の1枚あたりの確率は枚数の増加に応じて変わります。ガチャは観賞用で、ゲーム内のキャラやサポートを解放するものではありません。",
+    "screenshots": [
+        {
+            "src": "images/anibato/battle-20261022.webp",
+            "alt": "紙の舞台で透真と蓮が戦い、サポート効果の説明が表示されている画面",
+            "title": "小さな紙HUDとサポート",
+            "caption": "9人の専用原画・紙の舞台・スタミナ管理で戦う無料試作版。"
+        }
+    ],
+    "links": [
+        {
+            "href": "anibato/",
+            "label": "あにバトのホームページへ"
+        },
+        {
+            "href": "games/anibato/",
+            "label": "PCブラウザで遊ぶ"
+        }
+    ],
+    "createdAt": "2026-10-22T23:00:00+09:00"
+},
+        {
             id: "2026-10-12-anibato-preview",
             title: "あにあにバトル！！ 試作版を開発中",
             category: "開発便り",
@@ -463,7 +488,7 @@
     }
 
     // 作品詳細だけはURL末尾（例: #battle-detail）で直接開けるようにし、共有できるURLにする。
-    const DEEP_LINK_MODAL_IDS = ["battle-detail", "battle-3d-detail", "tumikomi", "oshi-detail", "bunko-detail", "anibato-detail"];
+    const DEEP_LINK_MODAL_IDS = ["battle-detail", "battle-3d-detail", "tumikomi", "oshi-detail", "bunko-detail", "anibato-detail", "trial-gacha"];
 
     function getDeepLinkModalId() {
         const id = window.location.hash.slice(1);

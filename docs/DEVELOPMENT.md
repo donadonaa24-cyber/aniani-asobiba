@@ -35,7 +35,7 @@ npm run dev -- --host 0.0.0.0 --port 3000
 
 環境が別のポートを要求する場合は `--port` を変更します。Codexのクラウド環境のセットアップコマンドには、リポジトリルートでの `npm ci --ignore-scripts --no-audit --no-fund` を設定できます。環境の設定画面やポート公開方法は利用中の環境に従ってください。
 
-開発サーバーはHTML/CSS/JS・画像・Webフォントだけを配信し、ディレクトリ一覧、隠しファイル、`.env`、`supabase.txt`、Git情報、ルート外へのシンボリックリンクは配信しません。これは開発用サーバーです。公開先は引き続きGitHub Pagesです。
+開発サーバーはHTML/CSS/JS・画像・Webフォントと、games/anibato/内に限るWebGLのJSON/分割データ/WASM/ライセンスを配信し、ディレクトリ一覧、隠しファイル、`.env`、`supabase.txt`、Git情報、ルート外へのシンボリックリンクは配信しません。これは開発用サーバーです。公開先は引き続きGitHub Pagesです。
 
 ## 公開版と未公開ローカル版の差
 
@@ -70,3 +70,12 @@ Google Fontsの `fonts.googleapis.com` / `fonts.gstatic.com` は許可されて�
 ## Gitでの作業
 
 cloneしたリポジトリで作業ブランチを作り、`npm test` とPC・モバイル幅の確認後にコミットし、main向けPRを作ります。公開を依頼されるまでmainへマージしません。認証情報を含む `.env` / `supabase.txt` はGit対象外です。
+
+
+## あにバトの静的配布（2026-10-23）
+
+`games/anibato/` は検証済みUnity WebGLの出力。原本の開発は別のaniani-battleリポジトリで行い、この場所でバイナリを手修正しない。圧縮データは8MiBの16片へ分割し、Service Workerが各片のSHA-256を検査して元バイト列で配信する。ゲーム範囲だけを制御し、ポータルや無料ガチャには介入しない。HTTPSまたはlocalhostとService Worker対応ブラウザが必要。読み込みはユーザーのクリックから開始する。
+
+接続設定は専用Edge Functionの公開URLとFree指定だけ。APIキーを追加しない。共通アカウントやコイン連携は対象外。無料STUNによる直接通信のため、TURNが必要な回線は接続できない。招待待ち同時4室/日80室/120秒、接続後20分で制限する。有料へ切り替える処理はない。
+
+`paper-release.test.cjs` は既存159枚と保存キー/レア率の保持、新規17枚、採用原画の出典、静的データの分割再現性を検査する。画像の更新は `docs/paper-cards-assets.json` の出典SHAと合わせる。旧デスクトップのコピーを公開mainへ上書きしない。
