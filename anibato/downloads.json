@@ -1,22 +1,24 @@
 {
-  "version": "v0.1.0-trial.20261023",
-  "sourceCommit": "e9593928c577ba5fa68037b862b609de986b33fc",
+  "version": "v0.1.1-trial.20261023",
+  "sourceCommit": "6d03f30b7dace204679a651370435d44847fa457",
   "date": "2026-10-23",
   "androidDeviceVerified": false,
   "files": [
     {
-      "name": "AniBato-Windows-x64-v0.1.0-trial.20261023.zip",
-      "bytes": 509049136,
-      "sha256": "6625b8d052fddf263c3fc9795724b80af02a26dadbed02e8a5a43475dc592a12",
-      "url": "https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.0-trial.20261023/AniBato-Windows-x64-v0.1.0-trial.20261023.zip"
+      "name": "AniBato-Windows-x64-v0.1.1-trial.20261023.zip",
+      "version": "v0.1.1-trial.20261023",
+      "bytes": 204935031,
+      "sha256": "2274257752f263c0d5c10649f1c40c8001ca85cf0f6928106dac94b26c76b52d",
+      "url": "https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.1-trial.20261023/AniBato-Windows-x64-v0.1.1-trial.20261023.zip"
     },
     {
       "name": "AniBato-Android-arm64-v0.1.0-trial.20261023.apk",
+      "version": "v0.1.0-trial.20261023",
       "bytes": 161961932,
       "sha256": "138f9e9e1395d2056bbd0e054cfa82bf7dc6dd2e91fc43dc391c334bdd978571",
       "url": "https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.0-trial.20261023/AniBato-Android-arm64-v0.1.0-trial.20261023.apk"
     }
   ],
-  "checksums": "https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.0-trial.20261023/SHA256SUMS.txt",
-  "readme": "https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.0-trial.20261023/README.txt"
+  "checksums": "https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.1-trial.20261023/SHA256SUMS.txt",
+  "readme": "https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.1-trial.20261023/README.txt"
 }
