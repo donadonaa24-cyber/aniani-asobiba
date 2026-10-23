@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>あにあにバトル！！（あにバト！！）｜あにあにの遊び場</title>
-    <meta name="description" content="あにあに作品のキャラクター9人が戦う2D対戦アクション『あにあにバトル！！』の紹介ページ。チーム戦のルール、操作方法、全キャラクター、ステージ、開発状況を掲載。無料ブラウザ試作版を公開しています。">
+    <meta name="description" content="あにあに作品のキャラクター9人が戦う2D対戦アクション『あにあにバトル！！』の紹介ページ。チーム戦のルール、操作方法、全キャラクター、ステージ、開発状況を掲載。無料ブラウザ試作版とWindows・Android版を公開しています。">
     <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
     <meta property="og:type" content="website">
@@ -21,14 +21,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Shippori+Mincho:wght@500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="anibato.css?v=20261022a1">
+    <link rel="stylesheet" href="anibato.css?v=20261023d1">
 </head>
 <body>
     <a class="skip-link" href="#main">本文へ移動</a>
     <header class="site-bar">
         <a class="bar-back" href="../">← あにあにの遊び場</a>
         <nav class="bar-nav" aria-label="ページ内の目次">
-            <a href="#about">作品紹介</a>
+            <a href="#downloads">ダウンロード</a><a href="#about">作品紹介</a>
             <a href="#modes">モード</a>
             <a href="#rules">ルール</a>
             <a href="#actions">攻撃と防御</a>
@@ -54,15 +54,38 @@
             <div class="hero-copy">
                 <div>
                     <p class="hero-lead">3つのあにあに作品から集まった<strong>9人</strong>が、紙の舞台で戦う。<br>3人ずつのチームを組んで、先に2勝したチームの勝ち！</p>
-                    <p class="status-badge"><strong>無料ブラウザ試作版</strong> キーボード／ゲームパッド／タッチ操作に対応</p><p class="play-actions"><a class="play-link" href="../games/anibato/">ブラウザで開演！</a><a href="../#trial-gacha">紙キャラの無料ガチャへ</a></p>
+                    <p class="status-badge"><strong>無料ブラウザ試作版</strong> キーボード／ゲームパッド／タッチ操作に対応</p><p class="play-actions"><a class="play-link" href="../games/anibato/">ブラウザで開演！</a><a href="#downloads">Windows・Android版をダウンロード</a><a href="../#trial-gacha">紙キャラの無料ガチャへ</a></p>
                 </div>
                 <ul class="hero-facts" aria-label="作品の概要">
                     <li><span>ジャンル</span>2D横スクロール対戦アクション</li>
                     <li><span>人数</span>CPU対戦・同じPCで2人対戦・オンライン招待</li>
-                    <li><span>対応</span>PC・スマホのブラウザ（試作版）</li>
+                    <li><span>対応</span>Windows・Android・ブラウザ（試作版）</li>
                     <li><span>操作</span>キーボード・ゲームパッド・タッチ</li>
                 </ul>
             </div>
+        </section>
+
+
+        <section id="downloads" class="section" aria-labelledby="downloads-title">
+            <h2 id="downloads-title" class="section-title"><span>DOWNLOAD</span>ダウンロードして遊ぶ</h2>
+            <p>Windows版・Android版も無料で遊べます。現在は試作版です。<strong>v0.1.0-trial.20261023</strong> ／ 2026年10月23日公開</p>
+            <div class="download-grid">
+                <article class="paper download-card">
+                    <p class="download-label">WINDOWS / 64bit</p><h3>Windows版</h3>
+                    <p>キーボードやゲームパッドで、CPU対戦・練習・同じPCでの2人対戦。</p>
+                    <a class="play-link" href="https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.0-trial.20261023/AniBato-Windows-x64-v0.1.0-trial.20261023.zip">Windows版 ZIPをダウンロード<span>約509MB ／ 展開後 約2.5GB</span></a>
+                    <ol><li>ダウンロードしたZIPを右クリックして「すべて展開」。</li><li>展開先の「AniBato」フォルダにある「AniBato.exe」を起動。</li></ol>
+                    <p class="note">DataフォルダやDLLも必要です。展開したファイル一式を同じフォルダに置いてください。</p>
+                </article>
+                <article class="paper download-card">
+                    <p class="download-label">ANDROID / ARM64</p><h3>Android版</h3>
+                    <p>Android 8.0以降・64bit ARM端末向け。横持ちの半透明タッチパッドで操作。</p>
+                    <a class="play-link" href="https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.0-trial.20261023/AniBato-Android-arm64-v0.1.0-trial.20261023.apk">Android版 APKをダウンロード<span>約162MB ／ 試作版</span></a>
+                    <ol><li>Android端末でAPKをダウンロードして開く。</li><li>端末の案内に従い、ダウンロード元アプリからのインストールを許可して進める。</li></ol>
+                    <p class="note">Google Play外の試作用署名APKです。Android実機での起動・操作・発熱は未確認です。</p>
+                </article>
+            </div>
+            <div class="paper download-help"><p><strong>オンライン招待対戦はブラウザ版で。</strong>ダウンロード版はCPU対戦・練習・ローカル操作向けです。招待コードで遊ぶときは<a href="../games/anibato/">ブラウザ版を開いてください</a>。</p><p>ファイル確認用：<a href="https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.0-trial.20261023/SHA256SUMS.txt">SHA-256一覧</a> ／ <a href="https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.0-trial.20261023/README.txt">導入案内</a></p></div>
         </section>
 
         <section id="about" class="section" aria-labelledby="about-title">
@@ -386,7 +409,7 @@
                         <li>3つのステージと床が消える演出、BGM・効果音</li>
                         <li>9人全員の攻撃イラスト</li>
                         <li>キーボード・ゲームパッドの操作とキーコンフィグ</li>
-                        <li>ブラウザ試作版を無料公開。半透明のタッチ操作を追加</li>
+                        <li>ブラウザ・Windows・Android試作版を無料公開。半透明のタッチ操作を追加</li>
                     </ul>
                 </article>
                 <article class="paper">
