@@ -2,7 +2,7 @@
 
 所有者の新規公開依頼により、従来の「配布リンクなし」を変更。ゲーム本体のGitHub Releases v0.1.0-trial.20261023 にWindows x64 ZIP（509049136bytes、165エントリ全文照合）とAndroid ARM64 APK（161961932bytes、既存署名検査済み）を公開し、作品一覧・作品詳細・紹介ページの3か所へ直接リンク。導入手順とSHA-256一覧も同梱。
 
-WindowsはZIPをすべて展開して起動、Android8以降/ARM64・試作用署名・実機未確認。招待対戦はブラウザ版のみ。ゲームバイナリ・468原画・WebGL・ガチャ176枚・既存159枚・所持・レア率・無料通信設定は変更しない。Git LFS/Supabase Storageなし。ゲーム側の実Unity834/111件とWindows/Android成果物は前工程の検証を引き継ぐ。今回のWeb/配布検証は公開確認後に記録する。
+WindowsはZIPをすべて展開して起動、Android8以降/ARM64・試作用署名・実機未確認。招待対戦はブラウザ版のみ。ゲームバイナリ・468原画・WebGL・ガチャ176枚・既存159枚・所持・レア率・無料通信設定は変更しない。Git LFS/Supabase Storageなし。ゲーム側の実Unity834/111件とWindows/Android成果物は前工程の検証を引き継ぐ。npm test全通過（Windowsのsymlink検査1skip）、Linux CI成功（PR21、19秒）。通常merge7cb2706、Pages built。公開ZIP/APKを認証なしで全バイト取得してサイズ/SHA一致、案内2ファイルもHTTP200。実公開でPC1366px・モバイル390px・作品詳細の両リンクと導入案内への移動を確認、console error0。
 
 # 2026-10-23 配信版の切り替え待ち
 
