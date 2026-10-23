@@ -2,6 +2,9 @@ const fs = require('node:fs');
 const assert = require('node:assert/strict');
 const vm = require('node:vm');
 const html = fs.readFileSync('index.html', 'utf8');
+const nativeDownloads = require('./anibato/downloads.json');
+const nativeUrls = new Set(nativeDownloads.files.map(f => f.url));
+const releaseHelpUrls = new Set([nativeDownloads.checksums, nativeDownloads.readme]);
 assert(!/翠路ロジスティクス|制作途中|公式トップ|>ゲームページへ</.test(html));
 assert(html.includes('data-title="架空運輸"'));
 const cases = [...html.matchAll(/data-orbit="(\d+)"[^>]*data-title="([^"]+)"/g)];
@@ -10,21 +13,22 @@ assert.equal(cases[5][2], 'あにあに文庫');
 assert.equal(cases[6][2], 'あにあにバトル！！');
 const anibatoCase = html.match(/<button class="game-case anibato-case"[\s\S]*?<\/button>/)?.[0];
 assert(anibatoCase && anibatoCase.includes('data-orbit="6"') && anibatoCase.includes('data-modal-target="anibato-detail"'));
-assert(anibatoCase.includes('data-status="無料ブラウザ試作版"') && anibatoCase.includes('ANIANI ORIGINAL / 07'));
-assert(anibatoCase.includes('PLAY / BROWSER') && anibatoCase.includes('無料ブラウザ試作版'));
+assert(anibatoCase.includes('data-status="無料試作版"') && anibatoCase.includes('ANIANI ORIGINAL / 07'));
+assert(anibatoCase.includes('PLAY / BROWSER・DOWNLOAD') && anibatoCase.includes('無料試作版'));
 assert(html.includes('id="orbit-status">01 / 07'));
 assert(/<meta name="description"[^>]*あにあにバトル！！/.test(html));
-assert(html.includes('aniani.css?v=20261023m1') && html.includes('aniani.js?v=20261023m1'));
+assert(html.includes('aniani.css?v=20261023d1') && html.includes('aniani.js?v=20261023d1'));
 const anibatoViews = [...html.matchAll(/<article class="game-card active anibato-preview">([\s\S]*?)<\/article>/g)].map(m => m[1]);
 assert.equal(anibatoViews.length, 2, 'anibato has a works card and a detail');
 assert(html.indexOf(anibatoViews[0]) > html.indexOf('<h4>あにあに文庫</h4>'), 'anibato follows bunko in works');
 assert(html.includes('id="anibato-detail"') && html.includes('id="anibato-title"'));
 for (const view of anibatoViews) {
-  assert(view.includes('無料ブラウザ試作版を公開。キーボード／ゲームパッド／タッチ操作に対応しています。'));
+  assert(view.includes('ブラウザ・Windows・Androidの無料試作版を公開。キーボード／ゲームパッド／タッチ操作に対応しています。'));
   for (const m of view.matchAll(/href="([^"]+)"/g)) {
-    assert(m[1] === 'anibato/' || m[1] === 'games/anibato/' || /^images\/anibato\/(select|stage-board)-20261018\.webp$/.test(m[1]), `anibato only links to its intro page or screenshots: ${m[1]}`);
+    assert(nativeUrls.has(m[1]) || m[1] === 'anibato/#downloads' || m[1] === 'anibato/' || m[1] === 'games/anibato/' || /^images\/anibato\/(select|stage-board)-20261018\.webp$/.test(m[1]), `only approved play, download, intro and screenshot links: ${m[1]}`);
   }
-  assert(!/\bdownload\s*(?:=|>|\s)|<iframe|<form|\.exe|releases\/|github\.com/.test(view), 'no distribution, download, exe launch, embed, or repository link');
+  for (const url of nativeUrls) assert.equal(view.split(`href="${url}"`).length - 1, 1, 'each platform appears once');
+  assert(!/\bdownload\s*(?:=|>|\s)|<iframe|<form|href="[^"]*\.exe/.test(view), 'no executable launch, embed or forms');
 }
 const anibatoDetail = anibatoViews[1];
 for (const text of ['透真・湊・シロ', '星の終わりに君は生きる', '蓮・結衣・黒獅子王', '推し駒battle', '千鶴・暁・龍太', 'Battle à la carte', '9人', '先に2勝', '70秒', '3つ', '3回', 'ハート2つ', '即敗北', '最後の10秒', 'ガード・回避・カウンター', '生成AI', '今後作品が増えれば参加キャラも増える予定']) assert(anibatoDetail.includes(text), `anibato detail includes ${text}`);
@@ -33,7 +37,7 @@ for (const m of (anibatoCase + anibatoViews.join('')).matchAll(/<img\b[^>]*src="
   assert(fs.existsSync(m[1]) && /[ぁ-んァ-ン一-龠]/.test(m[2]), 'anibato image exists and has Japanese alt text');
 }
 for (const img of ['battle', 'select', 'special']) assert(fs.existsSync(`images/anibato/${img}-20261012.jpg`), 'the 2026-10-12 article keeps its screenshots');
-// 2026-10-22公開依頼：9人と3舞台の紹介・無料ブラウザへの許可済み導線。Windows配布等は追加しない。
+// 2026-10-23公開依頼：既存プレイ導線と許可済みのWindows ZIP/Android APKを検査。
 {
   const page = fs.readFileSync('anibato/index.html', 'utf8');
   for (const text of ['試作版・開発中', '無料ブラウザ試作版を公開中', 'CPUチーム対戦', '2人チーム対戦', '練習モード', '先に2勝', '70秒', 'ハート2つ', '場外ライン', '中央の足場', 'COMBO FINISH', '溜め攻撃', '相殺', 'LINK', 'ジャストガード', 'カウンター', 'スタミナ', 'キーコンフィグ', '生成AI', 'クロスオーバー表現', '無断転載']) assert(page.includes(text), `anibato page includes ${text}`);
@@ -48,12 +52,15 @@ for (const img of ['battle', 'select', 'special']) assert(fs.existsSync(`images/
   assert.equal([...page.matchAll(/<figure class="stage">/g)].length, 3, 'three stages');
   for (const m of page.matchAll(/(?:src|href|data-action)="([^"#]+)"/g)) {
     if (/^https:\/\/fonts\./.test(m[1])) continue;
-    const local = m[1].replace(/\?.*$/, '');
+    if (nativeUrls.has(m[1]) || releaseHelpUrls.has(m[1])) continue;
+    assert(!/^https?:/.test(m[1]), `no unapproved external resource: ${m[1]}`);
+    const local = m[1].replace(/[?#].*$/, '');
     const target = local === '../' ? 'index.html' : local.startsWith('../') ? local.slice(3) : `anibato/${local}`;
     assert(fs.existsSync(target), `anibato page resource exists: ${m[1]}`);
   }
   for (const m of page.matchAll(/<img\b[^>]*alt="([^"]*)"/g)) assert(/[ぁ-んァ-ン一-龠]/.test(m[1]), 'Japanese alt text');
-  assert(!/\bdownload\b|<iframe|<form|\.exe|releases\/|github\.com|\.zip|\.apk/.test(page), 'no play, download, exe, embed, or repository link');
+  for (const url of nativeUrls) assert.equal(page.split(`href="${url}"`).length - 1, 1, 'one direct download per platform');
+  assert(!/<iframe|<form|href="[^"]*\.exe/.test(page), 'no executable launch, embed or forms');
   for (const m of page.matchAll(/<meta property="og:image" content="https:\/\/donadonaa24-cyber\.github\.io\/aniani-asobiba\/([^"]+)"/g)) assert(fs.existsSync(m[1]), 'anibato OGP image exists');
 }
 assert(html.includes('id="bunko-detail"'));

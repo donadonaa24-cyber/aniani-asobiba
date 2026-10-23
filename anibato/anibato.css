@@ -230,3 +230,14 @@ button.char-art[aria-pressed="true"]::after { content: '押すと元の姿'; }
 }
 
 .play-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap}.play-link{display:inline-block;padding:16px 28px;background:#ffd879;color:#302017;border:3px solid #755133;border-radius:6px;box-shadow:4px 5px 0 #866244;font-weight:800;text-decoration:none}.support-art{display:block;max-height:210px;max-width:100%;width:auto;margin:auto;object-fit:contain}
+
+/* 配布案内も舞台の厚紙札に合わせる */
+.download-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.download-card { min-width: 0; }
+.download-label { font-weight: 800; letter-spacing: .12em; color: var(--wood); }
+.download-card .play-link { display: block; padding: 16px; margin: 20px 0; text-align: center; line-height: 1.6; }
+.download-card .play-link span { display: block; margin-top: 4px; font-size: 12px; font-weight: 500; }
+.download-card ol { padding-left: 1.4em; }
+.download-help { margin-top: 24px; }
+.download-help a { color: var(--wood); font-weight: 700; }
+@media (max-width: 700px) { .download-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; } }
