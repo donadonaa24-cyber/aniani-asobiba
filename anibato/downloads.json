@@ -1,24 +1,30 @@
 {
-  "version": "v0.1.1-trial.20261023",
-  "sourceCommit": "6d03f30b7dace204679a651370435d44847fa457",
-  "date": "2026-10-23",
+  "version": "v0.1.2-trial.20261024",
+  "sourceCommit": "e2016eee46df5499380b3a191fd69020484edecf",
+  "date": "2026-10-24",
   "androidDeviceVerified": false,
+  "priorAndroidStartupReport": {
+    "version": "v0.1.0-trial.20261023",
+    "date": "2026-10-24",
+    "source": "owner report; startup only"
+  },
+  "windowsExtractedBytes": 276883383,
   "files": [
     {
-      "name": "AniBato-Windows-x64-v0.1.1-trial.20261023.zip",
-      "version": "v0.1.1-trial.20261023",
-      "bytes": 204935031,
-      "sha256": "2274257752f263c0d5c10649f1c40c8001ca85cf0f6928106dac94b26c76b52d",
-      "url": "https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.1-trial.20261023/AniBato-Windows-x64-v0.1.1-trial.20261023.zip"
+      "name": "AniBato-Windows-x64-v0.1.2-trial.20261024.zip",
+      "version": "v0.1.2-trial.20261024",
+      "bytes": 205149208,
+      "sha256": "36dbdbb88f3c20cbdf3baa692d21e49791e71ad7f3417ee50d5e941a3ab6fd6e",
+      "url": "https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.2-trial.20261024/AniBato-Windows-x64-v0.1.2-trial.20261024.zip"
     },
     {
-      "name": "AniBato-Android-arm64-v0.1.0-trial.20261023.apk",
-      "version": "v0.1.0-trial.20261023",
-      "bytes": 161961932,
-      "sha256": "138f9e9e1395d2056bbd0e054cfa82bf7dc6dd2e91fc43dc391c334bdd978571",
-      "url": "https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.0-trial.20261023/AniBato-Android-arm64-v0.1.0-trial.20261023.apk"
+      "name": "AniBato-Android-arm64-v0.1.2-trial.20261024.apk",
+      "version": "v0.1.2-trial.20261024",
+      "bytes": 162327300,
+      "sha256": "468d348d8d0b5ccdb28aa4507c1e1b82331ef409ddb1c5ce4a2307193d0e0fbb",
+      "url": "https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.2-trial.20261024/AniBato-Android-arm64-v0.1.2-trial.20261024.apk"
     }
   ],
-  "checksums": "https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.1-trial.20261023/SHA256SUMS.txt",
-  "readme": "https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.1-trial.20261023/README.txt"
+  "checksums": "https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.2-trial.20261024/SHA256SUMS.txt",
+  "readme": "https://github.com/donadonaa24-cyber/aniani-battle/releases/download/v0.1.2-trial.20261024/README.txt"
 }
