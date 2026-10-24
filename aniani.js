@@ -11,6 +11,23 @@
     // 新しい記事は先頭に追加してください。id は記事コメントの保存キーなので、公開後は変えないでください。
     const officialArticles = [
 {
+    "id": "2026-10-24-battle-unity-android-size",
+    "title": "Battle à la carte Unity版：Android軽量版を約429MBで試験公開",
+    "category": "アップデート",
+    "body": "Android v0.6.0の軽量版APKを追加しました。約498MBから約429MBへ、約69MB（13.88%）削減しています。圧縮方式の比較から画質を優先したASTC 4×4版を選び、72画像だけを圧縮。顔・Modeアイコン・カットインはRGBA32のままです。\n\n全15話のストーリー、画像の原寸、キャラクターの表情差分・着せ替え、BGMとテーマ曲、ゲームコード・保存形式を維持。署名・アプリID・ARM64・Manifestの端末要件は従来版と一致し、ASTC必須GPU条件を追加していません。\n\nPC Editorの画像比較とAPK署名検査を実施しましたが、実機の起動・画質・更新／セーブ引継ぎ・タッチ・復帰・長時間性能・メモリとASTC非対応GPUでの動作は未検証です。Google Play外の試験公開で、従来版約498MBも残しています。既存データを残す更新操作で導入し、アンインストールは避けてください。実通信・実ログイン・実聴も今回未検証です。\n\nWindows軽量化版約412MBも引き続き配布中です。MBは1,000,000 bytes。",
+    "links": [
+        {
+            "href": "https://github.com/donadonaa24-cyber/battle-a-la-carte-3d/releases/download/v0.6.0/BattleALaCarte-3D-Android-v0.6.0-optimized-astc4-preview.apk",
+            "label": "Android軽量版（約429MB・実機未検証）"
+        },
+        {
+            "href": "https://donadonaa24-cyber.github.io/battle-a-la-carte-3d/#android-optimization",
+            "label": "容量・画質・検証範囲を見る"
+        }
+    ],
+    "createdAt": "2026-10-24T14:35:00+09:00"
+},
+{
     "id": "2026-10-24-battle-unity-size",
     "title": "Battle à la carte Unity版：Windowsを約412MBに軽量化",
     "category": "アップデート",
