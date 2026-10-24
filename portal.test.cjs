@@ -17,7 +17,7 @@ assert(anibatoCase.includes('data-status="無料試作版"') && anibatoCase.incl
 assert(anibatoCase.includes('PLAY / BROWSER・DOWNLOAD') && anibatoCase.includes('無料試作版'));
 assert(html.includes('id="orbit-status">01 / 07'));
 assert(/<meta name="description"[^>]*あにあにバトル！！/.test(html));
-assert(html.includes('aniani.css?v=20261023d1') && html.includes('aniani.js?v=20261023d1'));
+assert(html.includes('aniani.css?v=20261023d1') && html.includes('aniani.js?v=20261024balcsize1'));
 const anibatoViews = [...html.matchAll(/<article class="game-card active anibato-preview">([\s\S]*?)<\/article>/g)].map(m => m[1]);
 assert.equal(anibatoViews.length, 2, 'anibato has a works card and a detail');
 assert(html.indexOf(anibatoViews[0]) > html.indexOf('<h4>あにあに文庫</h4>'), 'anibato follows bunko in works');
@@ -68,8 +68,8 @@ assert(html.split('https://donadonaa24-cyber.github.io/book/').length - 1 >= 4, 
 for (const img of ['case','shelf','cover','illust']) assert(fs.existsSync(`images/bunko/${img}-20261006.webp`));
 assert.deepEqual(cases.slice(0,3).map(m=>m[2]),['Battle a la carte','Battle à la carte Unity版（3D版）','架空運輸']);
 assert(html.includes('id="battle-3d-detail"'));
-assert(html.includes('Windows ZIP v0.6.0'));
-assert(html.includes('battle-a-la-carte-3d/releases/download/v0.6.0/BattleALaCarte-3D-Windows-v0.6.0.zip'));
+assert(html.includes('Windows軽量化版 ZIP'));
+assert(html.includes('battle-a-la-carte-3d/releases/download/v0.6.0/BattleALaCarte-3D-Windows-v0.6.0-optimized.zip'));
 assert(!/href="[^"]+\.exe"/.test(html),'Never launch a Windows exe in-browser');
 const groups = [...html.matchAll(/<div class="game-actions">([\s\S]*?)<\/div>/g)]
   .map(m => [...m[1].matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(a => ({url:a[1],label:a[2]})))

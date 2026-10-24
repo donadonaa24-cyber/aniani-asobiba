@@ -11,6 +11,23 @@
     // 新しい記事は先頭に追加してください。id は記事コメントの保存キーなので、公開後は変えないでください。
     const officialArticles = [
 {
+    "id": "2026-10-24-battle-unity-size",
+    "title": "Battle à la carte Unity版：Windowsを約412MBに軽量化",
+    "category": "アップデート",
+    "body": "Unity版v0.6.0のWindows軽量化版を公開しました。ZIPは約499MBから約412MBへ、約87MB（17.36%）削減。展開後も約1,063MBから約759MBへ、約303MB（28.54%）小さくなっています。\n\n全15話のストーリー、キャラクターの表情差分・着せ替え、BGMとテーマ曲、CPU対戦などの収録内容を維持。画像を小さくせず、確認済み72画像の圧縮設定を調整しました。顔・Modeアイコン・カットインは非圧縮のままです。画像の原寸比較とWindowsの自動動作検証を完了しています。\n\nAndroid公開版は約498MBのままです。ETC2・ASTC 4×4・背景6×6／8×8のAPKを比較しましたが、Android実機の画質・動作・更新時のセーブ引継ぎが未確認のため、軽量化候補は未公開です。今回の実通信・実アカウントログイン・実聴も未検証です。\n\n軽量化版は従来と同じv0.6.0です。以前の配布物はそのまま残しています。Windows ZIPはすべて展開し、同梱ファイル一式を保ったまま起動してください。MBは1,000,000 bytesです。",
+    "links": [
+        {
+            "href": "https://github.com/donadonaa24-cyber/battle-a-la-carte-3d/releases/download/v0.6.0/BattleALaCarte-3D-Windows-v0.6.0-optimized.zip",
+            "label": "Windows軽量化版（約412MB）"
+        },
+        {
+            "href": "https://donadonaa24-cyber.github.io/battle-a-la-carte-3d/#optimization",
+            "label": "詳しい容量比較・検証結果"
+        }
+    ],
+    "createdAt": "2026-10-24T08:58:00+09:00"
+},
+{
     "id": "2026-10-23-anibato-touch-controls",
 "screenshots": [{"src":"images/anibato/touch-20261023.webp","alt":"紙の舞台で千鶴と蓮が対戦し、左右下に半透明のタッチ操作ボタンがある画面","title":"横持ちのタッチ操作","caption":"中央を空けた配置で移動・通常・特殊・ジャンプなどを操作。実ブラウザの844×390px表示枠で撮影。スマホ実機は未確認。"}],
     "title": "あにバト！！ 半透明のタッチ操作を追加",
