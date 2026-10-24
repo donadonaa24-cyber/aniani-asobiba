@@ -17,7 +17,7 @@ canvas{display:block;width:100%;height:100%;outline:0}#curtain{position:absolute
 <div id="curtain"><p id="load">紙の舞台へようこそ！</p><progress id="progress" max="1" value="0" hidden></progress><button id="boot">ゲームを読み込む</button><button id="play" hidden>音を有効にして開演！</button></div></main><p id="touch-hint">スマホは横持ちがおすすめです。左下で移動、右下で攻撃・ジャンプ。</p></div>
 <footer>キーボード／ゲームパッド／タッチ操作。スマホは横持ち推奨。ゲーム画面を押して操作。<br>P1：WASD 移動・J 通常・K 特殊・U 超必殺・Space ジャンプ　／　P2：矢印・テンキー0〜6　／　P ポーズ・選択中 M 技表<br>練習：1 速度・2 静止・3 コマ送り・4 判定表示。戻る：K／Esc。全画面の解除：Esc／上のボタン。 <a href="ThirdPartyNotices.txt" style="color:inherit">ライセンス</a></footer>
 <pre id="verify" hidden></pre>
-<script id="anibato-payload-config" type="application/json">{"version":"2438e123759e0b4b"}</script>
+<script id="anibato-payload-config" type="application/json">{"version":"7d842dbdd0a8e211"}</script>
 <section id="online-dialog" role="dialog" aria-modal="true" aria-labelledby="online-title" hidden><div class="online-paper">
 <div class="online-top"><h2 id="online-title">無料オンライン対戦・試験版</h2><button id="online-close" aria-label="オンライン設定を閉じる">閉じる</button></div>
 <p>自分の3人を選び、招待コードで友だちと対戦。同じキャラはチーム内で重複できません。<br>どちらもP1のキー・ゲームパッド・タッチ操作を使います。</p>
@@ -52,7 +52,7 @@ if(verification){
   setTimeout(()=>{b.pressed=b.touched=false;b.value=0;pad.timestamp=performance.now();},250);
  };
 }
-window.AniBatoBuild='c90a34d33035b21de0395dab823ce49c.data.unityweb';
+window.AniBatoBuild='6aa1eb04255785ecd627e54caa8b54c2.data.unityweb';
 window.AniBatoStatus=json=>{window.AniBatoOnline?.onStatus(JSON.parse(json));if(verification)document.querySelector('#verify').textContent=json+'\n音声: '+(window.AniBatoAudioState||'未開始');};
 const send=(method,arg)=>window.unityInstance?.SendMessage('Web Player',method,arg);
 let touchMode=matchMedia('(pointer:coarse)').matches||/Android|iPhone|iPad/.test(navigator.userAgent);
@@ -80,9 +80,9 @@ async function preparePayload(){
 document.querySelector('#boot').onclick=async()=>{
  document.querySelector('#boot').hidden=true;progress.hidden=false;load.textContent='舞台を準備しています…';
  try{await preparePayload();}catch(error){load.textContent=error.message;progress.hidden=true;document.querySelector('#boot').hidden=false;return;}
- const script=document.createElement('script');script.src='Build/b36a97a91d171ed38d68f9df9e0df381.loader.js';
+ const script=document.createElement('script');script.src='Build/30fe178abcfe2f1114f6f25df0e29dbb.loader.js';
  script.onload=()=>createUnityInstance(canvas,{
-  dataUrl:'Build/c90a34d33035b21de0395dab823ce49c.data.unityweb',frameworkUrl:'Build/eb37690ff2eeb1443b2f3be54175970a.framework.js.unityweb',codeUrl:'Build/bb52f547ef9379071b8eee8282088696.wasm.unityweb',
+  dataUrl:'Build/6aa1eb04255785ecd627e54caa8b54c2.data.unityweb',frameworkUrl:'Build/eb37690ff2eeb1443b2f3be54175970a.framework.js.unityweb',codeUrl:'Build/b52d78aa4897a92f7ff431b84f56eff2.wasm.unityweb',
   streamingAssetsUrl:'StreamingAssets',companyName:'aniani',productName:'あにあにバトル！！',productVersion:'0.1',autoSyncPersistentDataPath:true,
   showBanner:(message,type)=>{if(type==='error'){load.textContent='起動エラー：'+message;curtain.hidden=false;}}
  },p=>progress.value=p).then(instance=>{
