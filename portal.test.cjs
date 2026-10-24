@@ -17,7 +17,7 @@ assert(anibatoCase.includes('data-status="無料試作版"') && anibatoCase.incl
 assert(anibatoCase.includes('PLAY / BROWSER・DOWNLOAD') && anibatoCase.includes('無料試作版'));
 assert(html.includes('id="orbit-status">01 / 07'));
 assert(/<meta name="description"[^>]*あにあにバトル！！/.test(html));
-assert(html.includes('aniani.css?v=20261023d1') && html.includes('aniani.js?v=20261024balcsize1'));
+assert(html.includes('aniani.css?v=20261023d1') && html.includes('aniani.js?v=20261024balcandroid1'));
 const anibatoViews = [...html.matchAll(/<article class="game-card active anibato-preview">([\s\S]*?)<\/article>/g)].map(m => m[1]);
 assert.equal(anibatoViews.length, 2, 'anibato has a works card and a detail');
 assert(html.indexOf(anibatoViews[0]) > html.indexOf('<h4>あにあに文庫</h4>'), 'anibato follows bunko in works');
