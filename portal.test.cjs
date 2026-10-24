@@ -17,7 +17,7 @@ assert(anibatoCase.includes('data-status="無料試作版"') && anibatoCase.incl
 assert(anibatoCase.includes('PLAY / BROWSER・DOWNLOAD') && anibatoCase.includes('無料試作版'));
 assert(html.includes('id="orbit-status">01 / 07'));
 assert(/<meta name="description"[^>]*あにあにバトル！！/.test(html));
-assert(html.includes('aniani.css?v=20261023d1') && html.includes('aniani.js?v=20261024anibatostick2'));
+assert(html.includes('aniani.css?v=20261023d1') && html.includes('aniani.js?v=20261024oshi1'));
 const anibatoViews = [...html.matchAll(/<article class="game-card active anibato-preview">([\s\S]*?)<\/article>/g)].map(m => m[1]);
 assert.equal(anibatoViews.length, 2, 'anibato has a works card and a detail');
 assert(html.indexOf(anibatoViews[0]) > html.indexOf('<h4>あにあに文庫</h4>'), 'anibato follows bunko in works');
@@ -86,8 +86,8 @@ for(const m of html.matchAll(/data-status="([^"]+)"/g)) {
 }
 assert(!html.includes('近日公開予定'), '推し駒battle is released as a free trial');
 assert(/data-title="推し駒battle" data-status="無料試験版 公開中"/.test(html));
-assert(html.split('oshikoma/releases/download/v1.0-trial.2/OshigomaBattle-trial2-win64.zip').length - 1 >= 2);
-assert(html.split('oshikoma/releases/download/v1.0-trial.2/OshigomaBattle-trial2-android.apk').length - 1 >= 2, '推し駒battle Android APK is linked from the card and the detail');
+assert(html.split('oshikoma/releases/download/v1.0-trial.2/OshigomaBattle-trial2-win64-optimized.zip').length - 1 >= 2);
+assert(html.split('oshikoma/releases/download/v1.0-trial.2/OshigomaBattle-trial2-android-optimized.apk').length - 1 >= 2, '推し駒battle optimized APK is linked from the card and the detail');
 assert(html.split('https://donadonaa24-cyber.github.io/oshikoma/').length - 1 >= 4);
 assert(fs.existsSync('images/oshikoma-board.jpg'));
 for (const screen of ['board', 'select', 'inspect', 'blessing']) {
