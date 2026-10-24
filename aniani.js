@@ -24,7 +24,7 @@
         {"href": "anibato/#downloads", "label": "Windows・Android版と導入案内"},
         {"href": "anibato/#controls", "label": "操作と配置編集の使い方"}
     ],
-    "createdAt": "2026-10-24T09:20:00+09:00"
+    "createdAt": "2026-10-24T15:23:49+09:00"
 },
 {
     "id": "2026-10-24-battle-unity-android-size",
