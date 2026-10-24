@@ -5,13 +5,13 @@ const root = fs.readFileSync('index.html', 'utf8');
 const intro = fs.readFileSync('anibato/index.html', 'utf8');
 const section = intro.match(/<section id="downloads"[\s\S]*?<\/section>/)?.[0];
 assert(section, 'download section has a stable destination');
-assert.equal(manifest.version, 'v0.1.2-trial.20261024');
+assert.equal(manifest.version, 'v0.1.3-trial.20261025');
 assert.equal(manifest.androidDeviceVerified, false);
 const base = `https://github.com/donadonaa24-cyber/aniani-battle/releases/download/${manifest.version}/`;
 assert.deepEqual(manifest.files.map(f => f.name), [
-  `AniBato-Windows-x64-${manifest.version}.zip`, 'AniBato-Android-arm64-v0.1.2-trial.20261024.apk'
+  `AniBato-Windows-x64-${manifest.version}.zip`, 'AniBato-Android-arm64-v0.1.3-trial.20261025.apk'
 ]);
-assert.deepEqual(manifest.files.map(f => f.bytes), [205149208,162327300]);
+assert.deepEqual(manifest.files.map(f => f.bytes), [205150711,162329904]);
 for (const file of manifest.files) {
   const fileBase = `https://github.com/donadonaa24-cyber/aniani-battle/releases/download/${file.version}/`;
   assert.equal(file.version, manifest.version);
@@ -33,5 +33,8 @@ assert(!/sb_secret_|service_role|supabaseKey|publishableKey/.test(JSON.stringify
 console.log('PASS: 2 platforms × 3 entry points, exact release allowlist, sizes/SHA, installation steps and browser-only online.');
 
 assert.equal(manifest.priorAndroidStartupReport.version,'v0.1.0-trial.20261023');
-assert.equal(manifest.windowsExtractedBytes,276883383);
+assert.equal(manifest.windowsExtractedBytes,276886462);
 for(const text of ['スティック','丸ボタン','操作・HUDの配置','不透明度','変更を破棄','初期配置へ','ユーザー','更新版の実機操作']) assert(intro.includes(text),text);
+
+assert.deepEqual(manifest.touchMovementDefaults,{combat:"stick",menu:"dpad"});
+for(const label of ["タッチ移動（戦闘中）","タッチ移動（戦闘以外）","十字キー"])assert(intro.includes(label),label);

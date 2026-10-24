@@ -11,6 +11,28 @@
     // 新しい記事は先頭に追加してください。id は記事コメントの保存キーなので、公開後は変えないでください。
     const officialArticles = [
 {
+    "id": "2026-10-25-anibato-touch-context",
+    "screenshots": [{"src":"images/anibato/menu-dpad-20261025.png","alt":"メニューの左下に半透明の十字キーを表示","title":"メニューでは十字キー","caption":"Unityの実画面。戦闘へ入ると既定のスティックへ切り替わります。"},{"src":"images/anibato/pad-settings-20261025.png","alt":"戦闘中と戦闘以外の移動方式を別々に設定する画面","title":"2つの場面を別々に設定","caption":"例では戦闘中を十字キー、戦闘以外をスティックへ変更しています。設定は端末内に保存。"}],
+    "title": "あにバト！！：戦闘はスティック、メニューは十字キーに",
+    "category": "アップデート",
+    "body": "タッチ操作の初期設定を、戦闘・練習・開幕カウント中はスティック、それ以外のタイトル・選択・ポーズ・リザルト等は十字キーへ変更しました。\n\n設定の「タッチ移動（戦闘中）」「タッチ移動（戦闘以外）」でそれぞれ変更できます。どちらもスティック、どちらも十字キーにもでき、端末に保存されます。移動パッドの位置・大きさ・不透明度は両方で共通なので、以前のカスタム配置も引き継ぎます。\n\nWindows・Android・ブラウザ版で共通です。ゲームの攻撃判定や移動性能、原画は変更していません。更新APKの実機操作は未確認です。",
+    "links": [
+        {
+            "href": "games/anibato/",
+            "label": "ブラウザで遊ぶ"
+        },
+        {
+            "href": "anibato/#downloads",
+            "label": "Windows・Android版"
+        },
+        {
+            "href": "anibato/#controls",
+            "label": "操作と設定の使い方"
+        }
+    ],
+    "createdAt": "2026-10-25T02:10:00+09:00"
+},
+{
     "id": "2026-10-24-oshigoma-size-icon",
     "title": "推し駒battle：Windows・Androidの軽量版と専用アイコンを公開",
     "category": "アップデート",
