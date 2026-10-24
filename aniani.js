@@ -11,6 +11,17 @@
     // 新しい記事は先頭に追加してください。id は記事コメントの保存キーなので、公開後は変えないでください。
     const officialArticles = [
 {
+    "id": "2026-10-24-oshigoma-size-icon",
+    "title": "推し駒battle：Windows・Androidの軽量版と専用アイコンを公開",
+    "category": "アップデート",
+    "body": "推し駒battleの試験版 v1.0-trial.2に軽量化版を追加しました。Windows ZIPは約102MB、展開後は約155MB。Android APKは約85MBです。MBは1,000,000 bytes。従来の配布ファイルはそのまま残しています。\n\n24人のキャラ画像・解像度、全10階、ゲームのルール・演出・セーブ形式は変更していません。画像を縮小せず、不要コードの除去と可逆圧縮を調整しました。Androidのホーム画面は、犬コスプレの蓮と黄金の「推」駒の専用アイコンになります。\n\nEditMode 25件・PlayMode 2件とWindows起動検査に合格。AndroidはAPK署名を検査し、従来と同じ署名・アプリIDで更新番号を4にしました。今回のAPKの実機動作・更新時のセーブ引継ぎは未確認です。セーブを残す場合はアンインストールせず更新してください。Google Play外の試験配布です。",
+    "links": [
+        {"href": "https://donadonaa24-cyber.github.io/oshikoma/#download", "label": "軽量版をダウンロード・導入案内"},
+        {"href": "https://github.com/donadonaa24-cyber/oshikoma/releases/tag/v1.0-trial.2", "label": "検証結果・SHA-256・従来版"}
+    ],
+    "createdAt": "2026-10-24T21:08:00+09:00"
+},
+{
     "id": "2026-10-24-anibato-stick-layout-camera",
     "title": "あにバト！！ スティック操作・ボタンとHUDの配置編集を追加",
     "screenshots": [

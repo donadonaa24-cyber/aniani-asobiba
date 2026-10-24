@@ -1,0 +1,20 @@
+{
+  "version": "v1.0-trial.2",
+  "updated": "2026-10-24",
+  "androidDeviceVerified": false,
+  "windowsExtractedBytes": 154917539,
+  "files": [
+    {
+      "name": "OshigomaBattle-trial2-win64-optimized.zip",
+      "bytes": 101675543,
+      "sha256": "aff7c8aec8d748f7253f0386e28825dafcabd9226726f0038bcf57a554dc3a81",
+      "url": "https://github.com/donadonaa24-cyber/oshikoma/releases/download/v1.0-trial.2/OshigomaBattle-trial2-win64-optimized.zip"
+    },
+    {
+      "name": "OshigomaBattle-trial2-android-optimized.apk",
+      "bytes": 85177192,
+      "sha256": "7b9f4712e4394dd5535d703534b09975d7cefdecf21828b13eb76cfd7b4a88c0",
+      "url": "https://github.com/donadonaa24-cyber/oshikoma/releases/download/v1.0-trial.2/OshigomaBattle-trial2-android-optimized.apk"
+    }
+  ]
+}
